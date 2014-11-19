@@ -42,7 +42,7 @@
     <IncludePath>C:\Users\James\Documents\gitRepos\GeneDrop\GeneDropBackEnd;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Users\James\Documents\gitRepos\GeneDrop\GeneDropBackEnd;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Boost\include\boost-1_55;..\GeneDropBackEnd;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

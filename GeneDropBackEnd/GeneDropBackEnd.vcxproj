@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>C:\Program Files\boost_1_57_0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Boost\include\boost-1_55;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>C:\Program Files\boost_1_57_0;$(IncludePath)</IncludePath>
@@ -69,14 +69,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Pedigree.cpp" />
+    <ClCompile Include="Population.cpp" />
     <ClCompile Include="RNGController.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
+    <ClCompile Include="SimulationManagerFactory.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Maybe.h" />
+    <ClInclude Include="Pedigree.h" />
+    <ClInclude Include="Population.h" />
     <ClInclude Include="RNGController.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SimulationManager.h" />
+    <ClInclude Include="SimulationManagerFactory.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

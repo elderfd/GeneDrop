@@ -42,3 +42,14 @@ unsigned long long RNGController::seed() const
 {
 	return _seed;
 }
+
+
+void RNGController::reseed(unsigned long long newSeed)
+{
+	// Change the internal seed
+	_seed = newSeed;
+	engine.seed(_seed);
+
+	// Now update all of the generators
+	uniformGenerator.distribution.reset();
+}

@@ -1,5 +1,6 @@
 #include "CommandLineParser.h"
 #include <initializer_list>
+#include "Maybe.h"
 
 const std::string
 	CommandLineParser::pedigreeFileKey = "pedigree",
@@ -29,14 +30,21 @@ bool CommandLineParser::parse(int argc, char *argv[])
 {
 	bool success = true;
 
-	// First see if we've specified a pedigree
-	if (auto pedigreeFile = getValueForKey(pedigreeFileKey, argc, argv))
+	// First see if we've specified the traditional input files
+	Maybe<std::string> pedigreeFile, lociFile, genotypeFile;
+	
+	if ((pedigreeFile = getValueForKey(pedigreeFileKey, argc, argv))
+		&& (lociFile = getValueForKey(lociFileKey, argc, argv))
+		&& (genotypeFile = getValueForKey(genotypeFileKey, argc, argv))
+		)
 	{
-		// Look for the other inputs too then
-	}	// If no pedigree, have a look for a settings XML file
+		// TODO: Verify that these files exist
+		// TODO: Parse the files
+	}	// Otherwise have a look for a settings XML file
 	else if (auto settingsFile = getValueForKey(settingsFileKey, argc, argv))
 	{
 		// If we found a settings file we need to parse it to extract the needed data
+		// TODO: Implement this new input file
 	}
 	else success = false;
 
@@ -44,7 +52,7 @@ bool CommandLineParser::parse(int argc, char *argv[])
 }
 
 
-CommandLineParser::Maybe<std::string> CommandLineParser::getValueForKey(std::string key, int argc, char *argv[])
+Maybe<std::string> CommandLineParser::getValueForKey(std::string key, int argc, char *argv[])
 {
 	Maybe<std::string> retVal;
 
@@ -71,11 +79,11 @@ bool CommandLineParser::unambigiousKeyMatch(std::string toCheck, std::string key
 	bool matchedRightKey = false;
 	bool matchedOtherKey = false;
 
-	for (int i = 0; i < allKeys.size(); i++)
+	for (unsigned int i = 0; i < allKeys.size(); i++)
 	{
 		bool matched = true;
 
-		for (int j = 0; j < toCheck.size(); j++)
+		for (unsigned int j = 0; j < toCheck.size(); j++)
 		{
 			if (toupper(toCheck[j]) != toupper(allKeys[i][j]))
 			{

@@ -24,6 +24,15 @@
     <ClCompile Include="Simulation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="SimulationManagerFactory.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pedigree.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Population.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SimulationManager.h">
@@ -33,6 +42,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Simulation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationManagerFactory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pedigree.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Population.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Maybe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

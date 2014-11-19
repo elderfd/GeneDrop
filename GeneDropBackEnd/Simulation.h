@@ -1,4 +1,7 @@
 #pragma once
+#include "Pedigree.h"
+#include "Population.h"
+
 //! A single run of the simulation model
 class Simulation
 {
@@ -11,5 +14,11 @@ public:
 
 protected:
 	bool _finished;
+
+	// The pedigree to be simulated
+	Pedigree pedigree;
+
+	// The population the pedigree should be applied to
+	Population population;
 };
 

@@ -3,53 +3,22 @@
 #include <string>
 #include <vector>
 #include <assert.h>
+#include "SimulationManager.h"
+#include "Maybe.h"
 
+//! Used to extract options from the args supplied to the program
+/*!
+	Verifies the input.
+*/
 class CommandLineParser
 {
 public:
 	CommandLineParser(int argc, char *argv[]);
 	~CommandLineParser();
 
-	class SuccessfulParseResults
-	{
-		std::string pedigreeFileName;
-	};
+	SimulationManager createSimulationManagerFromInput();
 
 protected:
-	//! Class emulating Haskell's Maybe type
-	template<class T> class Maybe
-	{
-	public:
-		Maybe()
-		{
-			_set = false;
-		}
-
-		bool set() const
-		{
-			return _set;
-		}
-
-		T value() const
-		{
-			// Only allow access if the value has been set
-			assert(hasValue);
-			return _value;
-		}
-
-		void setValue(T value)
-		{
-			_value = value;
-		}
-
-		explicit operator bool() const {
-			return set();
-		}
-	protected:
-		bool _set;
-		T _value;
-	};
-	
 	// Parses the input and returns true if successful
 	bool parse(int argc, char *argv[]);
 

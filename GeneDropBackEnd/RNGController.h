@@ -19,6 +19,11 @@ public:
 	//! Returns a double uniformly distributed in [0, 1)
 	double getUniformlyDistributed();
 
+	//! Used for resetting the random number generator with a new seed
+	void reseed(unsigned long long seed);
+
+	// TODO: Implement other distributions
+
 	//! Returns the seed that was used
 	unsigned long long seed() const;
 
