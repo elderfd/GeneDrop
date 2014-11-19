@@ -4,6 +4,7 @@
 #include <string>
 #include "Simulation.h"
 #include "RNGController.h"
+#include "Maybe.h"
 
 //! This is the main class that sets up, runs and looks after the simulations
 class SimulationManager
@@ -14,15 +15,25 @@ public:
 	SimulationManager();
 	~SimulationManager();
 
-protected:
-	//! Sets up the class into a useable state, returns false if something went wrong with set-up
-	bool init();
+	// Runs the simulations
+	void run();
 
+	// Checks that the prototypes can all work together
+	Maybe<std::string> verifySimulationPrototype();
+
+protected:
 	//! Handles all of the random number generation
 	RNGController rng;
 
 	//! The simulations that the manager is looking after
 	std::vector<Simulation> simulations;
+
+	// For now assume that all simulations will use same data, relatively easy to change later
+	Pedigree prototypePedigree;
+	Population prototypePopulation;
+
+	// How many processes to spawn to run simulations
+	int numberOfThreads;
 };
 
 

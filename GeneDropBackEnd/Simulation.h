@@ -1,6 +1,7 @@
 #pragma once
 #include "Pedigree.h"
 #include "Population.h"
+#include "Breeder.h"
 
 //! A single run of the simulation model
 class Simulation
@@ -20,5 +21,8 @@ protected:
 
 	// The population the pedigree should be applied to
 	Population population;
+
+	// The object which handles the breeding of two individuals
+	Breeder breeder;
 };
 

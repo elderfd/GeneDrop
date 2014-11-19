@@ -11,6 +11,8 @@ int main(int argc, char *argv[])
 	SimulationManager simManager = cLineParser.createSimulationManagerFromInput();
 
 	// Do some sims
+	simManager.run();
 
 	// Exit cleanly
+	return 0;
 }

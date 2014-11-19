@@ -11,9 +11,15 @@ SimulationManager::~SimulationManager()
 }
 
 
-bool SimulationManager::init()
+Maybe<std::string> SimulationManager::verifySimulationPrototype()
 {
-	bool success = true;
+	Maybe<std::string> returnValue;
 
-	return success;
+	// Check pedigree by itself first
+	if (auto error = prototypePedigree.isNotUsable())
+	{
+		return error;
+	}
+
+	
 }
