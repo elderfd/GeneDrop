@@ -11,5 +11,5 @@ public:
 	~SimulationManagerFactory();
 
 	//! Produces a SimulationManager matching the specification in pedigree, loci and genotype files
-	SimulationManager createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileNae, std::string lociFileName);
+	SimulationManager createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName);
 };

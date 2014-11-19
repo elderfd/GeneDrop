@@ -43,6 +43,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>C:\Boost\include\boost-1_55;..\GeneDropBackEnd;$(IncludePath)</IncludePath>
+    <SourcePath>$(SourcePath)</SourcePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -69,10 +70,29 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\GeneDropBackEnd\Breeder.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\Genotype.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\Organism.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\Pedigree.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\Population.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\RNGController.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\Simulation.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\SimulationManager.cpp" />
+    <ClCompile Include="..\GeneDropBackEnd\SimulationManagerFactory.cpp" />
     <ClCompile Include="commandLineFrontEnd.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\GeneDropBackEnd\Breeder.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Genotype.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Maybe.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Organism.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Pedigree.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Population.h" />
+    <ClInclude Include="..\GeneDropBackEnd\RNGController.h" />
+    <ClInclude Include="..\GeneDropBackEnd\Simulation.h" />
+    <ClInclude Include="..\GeneDropBackEnd\SimulationManager.h" />
+    <ClInclude Include="..\GeneDropBackEnd\SimulationManagerFactory.h" />
     <ClInclude Include="CommandLineParser.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

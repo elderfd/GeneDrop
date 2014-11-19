@@ -68,29 +68,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="Breeder.cpp" />
-    <ClCompile Include="Genotype.cpp" />
-    <ClCompile Include="Organism.cpp" />
-    <ClCompile Include="Pedigree.cpp" />
-    <ClCompile Include="Population.cpp" />
-    <ClCompile Include="RNGController.cpp" />
-    <ClCompile Include="Simulation.cpp" />
-    <ClCompile Include="SimulationManager.cpp" />
-    <ClCompile Include="SimulationManagerFactory.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Breeder.h" />
-    <ClInclude Include="Genotype.h" />
-    <ClInclude Include="Maybe.h" />
-    <ClInclude Include="Organism.h" />
-    <ClInclude Include="Pedigree.h" />
-    <ClInclude Include="Population.h" />
-    <ClInclude Include="RNGController.h" />
-    <ClInclude Include="Simulation.h" />
-    <ClInclude Include="SimulationManager.h" />
-    <ClInclude Include="SimulationManagerFactory.h" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

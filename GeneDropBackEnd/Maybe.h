@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cassert>
+
 //! Class emulating Haskell's Maybe type
 template<class T> class Maybe
 {

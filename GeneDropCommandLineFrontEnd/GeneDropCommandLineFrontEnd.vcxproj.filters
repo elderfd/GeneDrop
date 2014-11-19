@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\backEndFiles">
+      <UniqueIdentifier>{8e31cd7a-cfdd-4445-a2c8-a124128375b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\backEndFiles">
+      <UniqueIdentifier>{112b51e7-11d4-40e9-8f9a-09ae0f34c662}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="commandLineFrontEnd.cpp">
@@ -21,10 +27,67 @@
     <ClCompile Include="CommandLineParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\RNGController.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Simulation.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\SimulationManager.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\SimulationManagerFactory.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Pedigree.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Population.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Organism.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Genotype.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\GeneDropBackEnd\Breeder.cpp">
+      <Filter>Source Files\backEndFiles</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandLineParser.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\RNGController.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Simulation.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\SimulationManager.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\SimulationManagerFactory.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Pedigree.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Population.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Maybe.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Organism.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Genotype.h">
+      <Filter>Header Files\backEndFiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\GeneDropBackEnd\Breeder.h">
+      <Filter>Header Files\backEndFiles</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

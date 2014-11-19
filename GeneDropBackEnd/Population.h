@@ -2,6 +2,7 @@
 #include <map>
 #include <string>
 #include "Organism.h"
+#include "Maybe.h"
 
 //! All individuals that exist in the simulation
 class Population

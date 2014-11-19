@@ -11,7 +11,8 @@ SimulationManagerFactory::~SimulationManagerFactory()
 }
 
 
-SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileNae, std::string lociFileName)
+SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName)
 {
-	
+	// TODO: Implement
+	return SimulationManager();
 }

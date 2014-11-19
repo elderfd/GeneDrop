@@ -1,6 +1,7 @@
 #include "CommandLineParser.h"
 #include <initializer_list>
 #include "Maybe.h"
+#include "SimulationManagerFactory.h"
 
 const std::string
 	CommandLineParser::pedigreeFileKey = "pedigree",
@@ -110,4 +111,13 @@ bool CommandLineParser::unambigiousKeyMatch(std::string toCheck, std::string key
 	{
 		return false;
 	}
+}
+
+SimulationManager createSimulationManagerFromInput()
+{
+	SimulationManagerFactory factory;
+
+	// TODO: PRovide actual strings
+
+	return factory.createFromSimpleInput("", "", "");
 }

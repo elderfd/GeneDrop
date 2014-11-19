@@ -79,3 +79,36 @@ Maybe<std::string> Pedigree::isNotUsable() const
 
 	return returnValue;
 }
+
+
+std::vector<std::string> Pedigree::getNamesOfAllIndividuals()
+{
+	std::vector<std::string> returnVec;
+	std::map<std::string, bool> foundSoFar;
+
+	std::function<void (BreedEventNode&)> addNode = [&] (BreedEventNode& node)
+	{
+		try
+		{
+			foundSoFar.at(node.name);
+		}
+		catch (std::out_of_range)
+		{
+			// If not found then add it
+			returnVec.push_back(node.name);
+			foundSoFar[node.name] = true;
+		}
+
+		for (unsigned int i = 0; i < node.dependencies.size(); i++)
+		{
+			addNode(node.dependencies[i]);
+		}
+	};
+
+	for (unsigned int i = 0; i < roots.size(); i++)
+	{
+		addNode(roots[i]);
+	}
+
+	return returnVec;
+}
