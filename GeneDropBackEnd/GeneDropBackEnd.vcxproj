@@ -10,13 +10,36 @@
       <Platform>Win32</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Breeder.h" />
+    <ClInclude Include="Genotype.h" />
+    <ClInclude Include="Maybe.h" />
+    <ClInclude Include="Organism.h" />
+    <ClInclude Include="Pedigree.h" />
+    <ClInclude Include="Population.h" />
+    <ClInclude Include="RNGController.h" />
+    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="SimulationManager.h" />
+    <ClInclude Include="SimulationManagerFactory.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Breeder.cpp" />
+    <ClCompile Include="Genotype.cpp" />
+    <ClCompile Include="Organism.cpp" />
+    <ClCompile Include="Pedigree.cpp" />
+    <ClCompile Include="Population.cpp" />
+    <ClCompile Include="RNGController.cpp" />
+    <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="SimulationManager.cpp" />
+    <ClCompile Include="SimulationManagerFactory.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}</ProjectGuid>
     <RootNamespace>GeneDropBackEnd</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>

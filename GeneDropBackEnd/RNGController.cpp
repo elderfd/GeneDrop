@@ -51,5 +51,5 @@ void RNGController::reseed(unsigned long long newSeed)
 	engine.seed(_seed);
 
 	// Now update all of the generators
-	uniformGenerator.distribution.reset();
+	uniformGenerator.distribution().reset();
 }
