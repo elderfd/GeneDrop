@@ -1,5 +1,6 @@
 #include "SimulationManager.h"
-
+#include <thread>
+#include <atomic>
 
 SimulationManager::SimulationManager()
 {
@@ -36,12 +37,14 @@ Maybe<std::string> SimulationManager::verifySimulationPrototype()
 			// Throws exception when not found
 			auto organism = prototypePopulation.organismByName(*name);
 		}
-		catch (std::out_of_range &e)
+		catch (std::out_of_range)
 		{
 			returnValue.setValue(generateMissingOrganismError(*name));
 			return returnValue;
 		}
 	}
+
+	// TODO: Verify that the founder lines all have genotypes already specified
 
 	return returnValue;
 }
@@ -49,5 +52,31 @@ Maybe<std::string> SimulationManager::verifySimulationPrototype()
 
 void SimulationManager::run()
 {
-	// TODO: Implement
+	std::vector<std::thread> threads;
+
+	// For synchronisation of multithreaded runs
+	std::atomic<int> numberOfThreadsCurrentlyRunning = 0;
+	int indexOfLastSimulationStarted = -1;
+	
+	bool keepRunning = true;
+
+	// For passing to the thread
+	auto threadFunc = [&numberOfThreadsCurrentlyRunning] (Simulation& sim)
+	{
+		sim.run();
+
+		// Notify that we've finished a simulation
+		numberOfThreadsCurrentlyRunning--;
+	};
+
+	while (numberOfThreadsCurrentlyRunning == 0 && indexOfLastSimulationStarted >= (int)simulations.size())
+	{
+		// See if we should spawn a new thread
+		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size())
+		{
+			indexOfLastSimulationStarted++;
+			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted]));
+			numberOfThreadsCurrentlyRunning++;
+		}
+	}
 }

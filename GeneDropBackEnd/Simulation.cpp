@@ -16,3 +16,9 @@ bool Simulation::finished() const
 {
 	return _finished;
 }
+
+
+void Simulation::run()
+{
+
+}

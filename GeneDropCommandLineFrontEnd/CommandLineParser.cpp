@@ -113,7 +113,7 @@ bool CommandLineParser::unambigiousKeyMatch(std::string toCheck, std::string key
 	}
 }
 
-SimulationManager createSimulationManagerFromInput()
+SimulationManager CommandLineParser::createSimulationManagerFromInput()
 {
 	SimulationManagerFactory factory;
 
