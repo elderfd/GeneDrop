@@ -136,3 +136,27 @@ void Pedigree::evaluate(const Breeder* breeder)
 		recursiveEvaluate(&(*it), breeder);
 	}
 }
+
+
+Maybe<BreedEventNode*> Pedigree::findNodeByName(std::string name)
+{
+	Maybe<BreedEventNode*> retVal;
+
+	std::function<bool (BreedEventNode*)> findFunc = [&](BreedEventNode* node)
+	{
+		if (node->result().name == name)
+		{
+			retVal.setValue(node);
+			return true
+		};
+
+		// Check all dependencies
+		for (int i = 0; i < node->numberOfDependencies(); i++)
+		{
+			if (findFunc(node->dependency(i)))
+			{
+				return true;
+			}
+		}
+	};
+}

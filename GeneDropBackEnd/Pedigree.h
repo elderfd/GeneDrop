@@ -118,6 +118,9 @@ public:
 	//! Evaluates all of the breed events
 	void evaluate(const Breeder* breeder);
 
+	//! Returns the node with the specified name, or a false if not found
+	Maybe<BreedEventNode*> findNodeByName(std::string name);
+
 protected:
 	// The final products of breeding
 	std::list<BreedEventNode> leaves;
