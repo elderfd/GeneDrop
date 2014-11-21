@@ -30,7 +30,6 @@ protected:
 
 	// For now assume that all simulations will use same data, relatively easy to change later
 	Pedigree prototypePedigree;
-	Population prototypePopulation;
 
 	// How many processes to spawn to run simulations
 	int numberOfThreads;

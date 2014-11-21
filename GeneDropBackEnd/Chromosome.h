@@ -30,6 +30,7 @@ public:
 	//double getRecombinationProbability(std::string firstLocusID, std::string secondLocusID) const;
 
 	Locus getLocusCopy(int locusIndex) const;
+	const Locus& locus(int index) const;
 
 	void addLocus(const Locus &newLocus);
 

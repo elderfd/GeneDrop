@@ -13,10 +13,35 @@ public:
 	Organism();
 	~Organism();
 
+	std::string name() const
+	{
+		return _name;
+	}
+
+	unsigned int numberOfChromosomes() const
+	{
+		return _genotype.numberOfChromosomes();
+	}
+
+	const Genotype& genotype() const
+	{
+		return _genotype;
+	}
+
+	Genotype& genotype()
+	{
+		return _genotype;
+	}
+
+	void setGenotype(const Genotype& genotype)
+	{
+		this->_genotype = genotype;
+	}
+
 protected:
 	// Identifier for this organism
-	std::string name;
+	std::string _name;
 
-	Genotype genotype;
+	Genotype _genotype;
 };
 

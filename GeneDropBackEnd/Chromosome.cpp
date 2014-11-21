@@ -174,3 +174,9 @@ double Chromosome::distanceBetweenLoci(std::string firstLocus, std::string secon
 {
 	return distanceBetweenLoci(getLocusIndexFromID(firstLocus), getLocusIndexFromID(secondLocus));
 }
+
+
+const Locus& Chromosome::locus(int index) const
+{
+	return loci[index];
+}

@@ -12,11 +12,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Breeder.h" />
+    <ClInclude Include="Chromosome.h" />
     <ClInclude Include="Genotype.h" />
+    <ClInclude Include="Locus.h" />
     <ClInclude Include="Maybe.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="Pedigree.h" />
-    <ClInclude Include="Population.h" />
     <ClInclude Include="RNGController.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SimulationManager.h" />
@@ -24,10 +25,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Breeder.cpp" />
+    <ClCompile Include="Chromosome.cpp" />
     <ClCompile Include="Genotype.cpp" />
+    <ClCompile Include="Locus.cpp" />
     <ClCompile Include="Organism.cpp" />
     <ClCompile Include="Pedigree.cpp" />
-    <ClCompile Include="Population.cpp" />
     <ClCompile Include="RNGController.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
