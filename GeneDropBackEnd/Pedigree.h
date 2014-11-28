@@ -28,6 +28,9 @@ public:
 
 	virtual std::pair<const Organism*, const Organism*> parents() = 0;
 
+	//! Whether or not this node is complete (i.e. has any parents if it needs them)
+	virtual bool complete() const = 0;
+
 protected:
 	// Which round of breeding this breeding event is part of
 	// Not important for calculation but useful for human-readable IO
@@ -84,6 +87,11 @@ public:
 		assert(false);
 	}
 
+	bool complete() const
+	{
+		return true;
+	}
+
 protected:
 	Organism founder;
 };
@@ -98,6 +106,18 @@ public:
 		this->firstParent = firstParent;
 		this->secondParent = secondParent;
 		_evaluated = false;
+		_parentsSet = true;
+	}
+
+	BreedEventNode()
+	{
+		_evaluated = false;
+		_parentsSet = false;
+	}
+
+	bool complete() const
+	{
+		return _parentsSet;
 	}
 
 	//BreedEventNode(const Organism &organism)
@@ -172,6 +192,8 @@ protected:
 	// The organism produced by this breed event
 	Organism result;
 
+	bool _parentsSet;
+
 	// Breeding events that need to happen before this one
 	std::vector<BreedEventNode*> dependencies;
 };
@@ -207,5 +229,8 @@ protected:
 
 	// The founders of the pedigree
 	std::list<FounderNode> roots;
+
+	// A flat vector of all of the organisms present
+	std::vector<Organism> population;
 };
 

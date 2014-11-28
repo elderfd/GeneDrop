@@ -2,6 +2,7 @@
 #include <fstream>
 #include <map>
 #include <tuple>
+#include <initializer_list>
 
 
 SimulationManagerFactory::SimulationManagerFactory()
@@ -278,55 +279,38 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 			// See if this node already exists
 			Maybe<PedigreeNode*> child = newManager.prototypePedigree.findNodeByName(ID);
-
-			// Events that need to be added but haven't been yet - ID, firstParent, secondParent
-			std::vector<std::tuple<std::string, std::string, std::string>> unresolvedEvents;
+			PedigreeNode* childNode;
 
 			if (child)
 			{
-				// If it already exists check that it matches the definition we just found
-				PedigreeNode* existingNode = child.value();
-				std::pair<const Organism*, const Organism*> parents = existingNode->parents();
-
-				bool namesWrong = false;
-				
-				if (parents.first->name() == firstParentName)
-				{
-					if (parents.second->name() != secondParentName)
-					{
-						namesWrong = true;
-					}
-				}
-				else if (parents.first->name() == secondParentName)
-				{
-					if (parents.second->name() != firstParentName)
-					{
-						namesWrong = true;
-					}
-				}
-				else
-				{
-					namesWrong = true;
-				}
-
-				if (namesWrong)
-				{
-					throw std::runtime_error("Individual " + ID + " specified twice in pedigree file but with different parents.");
-				}
+				// If it already exists then add the parents to it
+				childNode = child.value();
 			}
 			else
 			{
-				// See if both parents exist
-				Maybe<PedigreeNode*> firstParent = newManager.prototypePedigree.findNodeByName(firstParentName);
-				Maybe<PedigreeNode*> secondParent = newManager.prototypePedigree.findNodeByName(secondParentName);
-
-				// Store away for later if parents don't exist
-				if (!firstParent || ! secondParent)
-				{
-					std::tuple<std::string, std::string, std::string> tupleToAdd = {ID, firstParentName, secondParentName};
-					unresolvedEvents.push_back(tupleToAdd);
-				}
+				// Otherwise make a new node that matches it
+				newManager.prototypePedigree.population.emplace_back();
+			
+				childNode = &newManager.prototypePedigree.population.back();
 			}
+
+			// See if the parents are in the founder list, otherwise 
+
+			// Get the parents
+			Maybe<PedigreeNode*> firstParent = newManager.prototypePedigree.findNodeByName(firstParentName);
+			Maybe<PedigreeNode*> secondParent = newManager.prototypePedigree.findNodeByName(secondParentName);
+
+			auto makeNewParentlessNode = [&] (Maybe<PedigreeNode*> nonExistantNode)
+			{
+
+			};
+
+			// If parents don't exist then make a node for them
+			if (!firstParent)
+			{
+
+			}
+	
 
 			
 		}
