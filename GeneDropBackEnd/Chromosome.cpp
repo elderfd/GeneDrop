@@ -180,3 +180,9 @@ const Locus& Chromosome::locus(int index) const
 {
 	return loci[index];
 }
+
+
+std::string Chromosome::getLocusID(int locusIndex) const
+{
+	return loci[locusIndex].getID();
+}

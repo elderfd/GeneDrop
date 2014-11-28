@@ -32,6 +32,8 @@ public:
 	Locus getLocusCopy(int locusIndex) const;
 	const Locus& locus(int index) const;
 
+	std::string getLocusID(int locusIndex) const;
+
 	void addLocus(const Locus &newLocus);
 
 	int getNumberOfLoci() const;

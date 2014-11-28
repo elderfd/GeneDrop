@@ -18,6 +18,11 @@ public:
 		return _name;
 	}
 
+	void setName(std::string name)
+	{
+		_name = name;
+	}
+
 	unsigned int numberOfChromosomes() const
 	{
 		return _genotype.numberOfChromosomes();

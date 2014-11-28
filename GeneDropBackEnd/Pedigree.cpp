@@ -21,65 +21,67 @@ Maybe<std::string> Pedigree::isNotUsable() const
 
 	// TODO: Second check might also guarantee the first in this implementation
 
-	auto generateCycleErrorMessage = [] (const BreedEventNode *firstNode, const BreedEventNode *secondNode)
-	{
-		return "Cycle discovered in pedigree (i.e. an organism is its own ancestor). Found back edge between " + firstNode->result().name() + " and " + secondNode->result().name() + ".";
-	};
+	auto returnValue = Maybe<std::string>();
 
-	auto generateDuplicateErrorMessage = [](const BreedEventNode &node)
-	{
-		return "Organism designated as " + node.result().name() + " was produced more than once in the pedigree.";
-	};
+	//auto generateCycleErrorMessage = [] (const BreedEventNode *firstNode, const BreedEventNode *secondNode)
+	//{
+	//	return "Cycle discovered in pedigree (i.e. an organism is its own ancestor). Found back edge between " + firstNode->organism().name() + " and " + secondNode->organism().name() + ".";
+	//};
 
-	std::map<std::string, const BreedEventNode*> namesAndBreedEventsFound;
+	//auto generateDuplicateErrorMessage = [](const BreedEventNode &node)
+	//{
+	//	return "Organism designated as " + node.organism().name() + " was produced more than once in the pedigree.";
+	//};
 
-	std::function<Maybe<std::string> (const BreedEventNode*)> checkDependencies = [&] (const BreedEventNode *node)
-	{
-		Maybe<std::string> returnValue;
+	//std::map<std::string, const BreedEventNode*> namesAndBreedEventsFound;
 
-		// Check that we haven't seen this name produced by a different breed event elsewhere
-		try
-		{
-			if (*namesAndBreedEventsFound.at(node->result().name()) != *node)
-			{
-				returnValue.setValue(generateDuplicateErrorMessage(*node));
-			}
-		}
-		catch (std::out_of_range)
-		{
-			// Not in map so far so add it
-			namesAndBreedEventsFound[node->result().name()] = node;
-		}
+	//std::function<Maybe<std::string> (const BreedEventNode*)> checkDependencies = [&] (const BreedEventNode *node)
+	//{
+	//	Maybe<std::string> returnValue;
 
-		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
-		{
-			// Check for cycle by looking for back edge
-			try
-			{
-				namesAndBreedEventsFound.at(node->dependency(i)->result().name());
-			}
-			catch (std::out_of_range)
-			{
-				// If cycle found, produce an error
-				returnValue.setValue(generateCycleErrorMessage(node, node->dependency(i)));
-				return returnValue;
-			}
+	//	// Check that we haven't seen this name produced by a different breed event elsewhere
+	//	try
+	//	{
+	//		if (*namesAndBreedEventsFound.at(node->organism().name()) != *node)
+	//		{
+	//			returnValue.setValue(generateDuplicateErrorMessage(*node));
+	//		}
+	//	}
+	//	catch (std::out_of_range)
+	//	{
+	//		// Not in map so far so add it
+	//		namesAndBreedEventsFound[node->organism().name()] = node;
+	//	}
 
-			returnValue = checkDependencies(node->dependency(i));
-		}
+	//	for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
+	//	{
+	//		// Check for cycle by looking for back edge
+	//		try
+	//		{
+	//			namesAndBreedEventsFound.at(node->dependency(i)->organism().name());
+	//		}
+	//		catch (std::out_of_range)
+	//		{
+	//			// If cycle found, produce an error
+	//			returnValue.setValue(generateCycleErrorMessage(node, node->dependency(i)));
+	//			return returnValue;
+	//		}
 
-		return returnValue;
-	};
+	//		returnValue = checkDependencies(node->dependency(i));
+	//	}
 
-	Maybe<std::string> returnValue;
+	//	return returnValue;
+	//};
 
-	for (auto it = leaves.begin(); it != leaves.end(); it++)
-	{
-		if (auto error = checkDependencies(&(*it)))
-		{
-			returnValue.setValue(error.value());
-		}
-	}
+	//Maybe<std::string> returnValue;
+
+	//for (auto it = leaves.begin(); it != leaves.end(); it++)
+	//{
+	//	if (auto error = checkDependencies(&(*it)))
+	//	{
+	//		returnValue.setValue(error.value());
+	//	}
+	//}
 
 	return returnValue;
 }
@@ -90,17 +92,17 @@ std::vector<std::string> Pedigree::getNamesOfAllIndividuals()
 	std::vector<std::string> returnVec;
 	std::map<std::string, bool> foundSoFar;
 
-	std::function<void (BreedEventNode*)> addNode = [&] (BreedEventNode* node)
+	std::function<void (PedigreeNode*)> addNode = [&] (PedigreeNode* node)
 	{
 		try
 		{
-			foundSoFar.at(node->result().name());
+			foundSoFar.at(node->organism().name());
 		}
 		catch (std::out_of_range)
 		{
 			// If not found then add it
-			returnVec.push_back(node->result().name());
-			foundSoFar[node->result().name()] = true;
+			returnVec.push_back(node->organism().name());
+			foundSoFar[node->organism().name()] = true;
 		}
 
 		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
@@ -120,7 +122,7 @@ std::vector<std::string> Pedigree::getNamesOfAllIndividuals()
 
 void Pedigree::evaluate(const Breeder* breeder)
 {
-	std::function<void (BreedEventNode*, const Breeder*)> recursiveEvaluate = [&](BreedEventNode *node, const Breeder* breeder)
+	std::function<void (PedigreeNode*, const Breeder*)> recursiveEvaluate = [&](PedigreeNode *node, const Breeder* breeder)
 	{
 		// Evaluate all dependencies, then evaluate yourself
 		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
@@ -128,7 +130,10 @@ void Pedigree::evaluate(const Breeder* breeder)
 			recursiveEvaluate(node->dependency(i), breeder);
 		}
 
-		node->breed(breeder);
+		if (!node->evaluated())
+		{
+			node->breed(breeder);
+		}
 	};
 
 	for (auto it = leaves.begin(); it != leaves.end(); it++)
@@ -138,25 +143,38 @@ void Pedigree::evaluate(const Breeder* breeder)
 }
 
 
-Maybe<BreedEventNode*> Pedigree::findNodeByName(std::string name)
+Maybe<PedigreeNode*> Pedigree::findNodeByName(std::string name)
 {
-	Maybe<BreedEventNode*> retVal;
+	Maybe<PedigreeNode*> retVal;
 
-	std::function<bool (BreedEventNode*)> findFunc = [&](BreedEventNode* node)
+	std::function<bool(PedigreeNode*, Maybe<PedigreeNode*>&)> findFunc = [&](PedigreeNode* node, Maybe<PedigreeNode*> &found)
 	{
-		if (node->result().name == name)
+		if (node->organism().name() == name)
 		{
 			retVal.setValue(node);
-			return true
+			return true;
 		};
 
 		// Check all dependencies
-		for (int i = 0; i < node->numberOfDependencies(); i++)
+		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
 		{
-			if (findFunc(node->dependency(i)))
+			if (findFunc(node->dependency(i), found))
 			{
+				retVal.setValue(node);
 				return true;
 			}
 		}
+
+		return false;
 	};
+
+	for (auto it = roots.begin(); it != roots.end(); it++)
+	{
+		if (findFunc(&(*it), retVal))
+		{
+			break;
+		}
+	}
+
+	return retVal;
 }
