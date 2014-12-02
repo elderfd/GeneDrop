@@ -8,7 +8,7 @@
 class Breeder
 {
 public:
-	Breeder(RNGController& rng);
+	Breeder(RNGController* rng);
 	~Breeder();
 
 	//! Breeds and sets the child genotype 
@@ -20,7 +20,7 @@ public:
 	virtual Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const = 0;
 
 protected:
-	RNGController &rng;
+	RNGController *rng;
 
 	class ParentalChromosomeSwitcher
 	{
@@ -63,8 +63,12 @@ protected:
 };
 
 //! Uses the Haldane mapping function for producing offspring
-class HaldaneBreeder : Breeder
+class HaldaneBreeder : public Breeder
 {
+public:
+	HaldaneBreeder(RNGController* rng) : Breeder(rng)
+	{};
+
 	Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const;
 
 	//! Converts distance in centimorgans to probability of recombination
@@ -74,7 +78,7 @@ class HaldaneBreeder : Breeder
 // TODO: Implement Kosambi
 
 //! Uses the Kosambi mapping function for producing offspring
-//class KosambiBreeder : Breeder
+//class KosambiBreeder : public Breeder
 //{
 //	Organism breed(const Genotype& firstParent, const Genotype& secondParent) const;
 //};

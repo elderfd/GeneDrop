@@ -15,11 +15,14 @@ public:
 	SimulationManager();
 	~SimulationManager();
 
-	// Runs the simulations
+	//! Runs the simulations
 	void run();
 
-	// Checks that the prototypes can all work together
+	//! Checks that the prototypes can all work together
 	Maybe<std::string> verifySimulationPrototype();
+
+	//! Builds the specified number of simulations
+	void generateSimulations(int numberOfSimulations);
 
 protected:
 	//! Handles all of the random number generation
@@ -33,6 +36,11 @@ protected:
 
 	// How many processes to spawn to run simulations
 	int numberOfThreads;
+
+	// For now we only have the Haldane mapping function
+	// TODO: Implement choice of breeders
+	HaldaneBreeder breeder;
+
 };
 
 

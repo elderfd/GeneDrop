@@ -15,7 +15,7 @@ SimulationManagerFactory::~SimulationManagerFactory()
 }
 
 
-SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName)
+SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns)
 {
 	SimulationManager newManager;
 
@@ -286,9 +286,9 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 		throw e;
 	}
-	
 
-	
+	// Add the right number of simulations
+	newManager.generateSimulations(numberOfRuns);
 
-	return SimulationManager();
+	return newManager;
 }

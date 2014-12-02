@@ -8,6 +8,7 @@ class Simulation
 {
 public:
 	Simulation();
+	Simulation(const Pedigree& pedigree, const Breeder* breeder);
 	~Simulation();
 
 	//! Whether or not the simulation has run and finished
@@ -23,6 +24,6 @@ protected:
 	Pedigree pedigree;
 
 	// The object which handles the breeding of two individuals
-	Breeder *breeder;
+	const Breeder *breeder;
 };
 

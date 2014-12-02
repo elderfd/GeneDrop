@@ -7,6 +7,14 @@ Simulation::Simulation()
 }
 
 
+Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder)
+{
+	_finished = false;
+	this->pedigree = pedigree.cloneStructureAndInitialState();
+	this->breeder = breeder;
+}
+
+
 Simulation::~Simulation()
 {
 }

@@ -17,6 +17,8 @@ int main(int argc, char *argv[])
 	catch (std::exception& e)
 	{
 		std::cout << "Error in parsing input: " << e.what() << std::endl;
+		returnVal = 1;
+		return returnVal;
 	}
 
 	// Then set up an appropriate simulation state
@@ -38,6 +40,9 @@ int main(int argc, char *argv[])
 
 		// TODO: Get some output
 	}
+
+	//For debug
+	getchar();
 
 	// Exit cleanly
 	return returnVal;

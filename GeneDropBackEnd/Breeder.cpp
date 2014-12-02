@@ -2,8 +2,9 @@
 #include <cassert>
 
 
-Breeder::Breeder(RNGController& rng) : rng(rng)
+Breeder::Breeder(RNGController* rng)
 {
+	this->rng = rng;
 }
 
 
@@ -46,11 +47,11 @@ Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& seco
 				Chromosome hybridChromosome;
 
 				// Select a random chromosome from each parent
-				int firstParentChromosomeIndex = rng.getUniformlyDistributed(0, firstParent.ploidy());
-				int secondParentChromosomeIndex = rng.getUniformlyDistributed(0, secondParent.ploidy());
+				int firstParentChromosomeIndex = rng->getUniformlyDistributed(0, firstParent.ploidy());
+				int secondParentChromosomeIndex = rng->getUniformlyDistributed(0, secondParent.ploidy());
 
 				// Randomly choose one of the chromosomes to start drawing from
-				ParentalChromosomeSwitcher chromosomeSwitcher(&firstParent.chromosome(j, firstParentChromosomeIndex), &secondParent.chromosome(j, secondParentChromosomeIndex), rng);
+				ParentalChromosomeSwitcher chromosomeSwitcher(&firstParent.chromosome(j, firstParentChromosomeIndex), &secondParent.chromosome(j, secondParentChromosomeIndex), *rng);
 
 				// Draw first allele
 				hybridChromosome.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(0));

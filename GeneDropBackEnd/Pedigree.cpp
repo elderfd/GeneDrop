@@ -10,7 +10,10 @@ Pedigree::Pedigree()
 
 Pedigree::~Pedigree()
 {
-	// TODO: Delete everything
+	for (unsigned int i = 0; i < nodes.size(); i++)
+	{
+		delete nodes[i];
+	}
 }
 
 
@@ -169,11 +172,23 @@ Maybe<PedigreeNode*> Pedigree::findNodeByName(std::string name)
 		return false;
 	};
 
-	for (auto it = roots.begin(); it != roots.end(); it++)
+	for (auto it = leaves.begin(); it != leaves.end(); it++)
 	{
-		if (findFunc(&(*it), retVal))
+		if (findFunc(*it, retVal))
 		{
 			break;
+		}
+	}
+
+	// Also check the founders
+	if (!retVal)
+	{
+		for (auto it = roots.begin(); it != roots.end(); it++)
+		{
+			if (it->organism().name() == name)
+			{
+				retVal.setValue(&(*it));
+			}
 		}
 	}
 
@@ -234,6 +249,7 @@ void Pedigree::addOrganism(std::string name, std::string firstParentName, std::s
 	
 	// Add to our list o things
 	nodes.push_back(childNode);
+	leaves.push_back(childNode);
 }
 
 
@@ -243,4 +259,53 @@ void Pedigree::addFounder(std::string name, const Genotype& genotype)
 
 	// Add to the list of things we've added
 	nodes.push_back(&roots.back());
+}
+
+
+Pedigree Pedigree::cloneStructureAndInitialState() const
+{
+	Pedigree clone;
+
+	// Traverse the tree and add organisms to new clone
+
+	std::function<void(PedigreeNode*, Pedigree*)> cloneNode = [&](PedigreeNode* node, Pedigree* clone)
+	{
+		if (node->numberOfDependencies() == 0)
+		{
+			// Founder
+			clone->addFounder(node->organism().name(), node->organism().genotype());
+		}
+		else
+		{
+			// Not founder
+
+			// TODO: Could probably do this much better
+
+			std::string firstParentName = node->dependency(0)->organism().name();
+			std::string secondParentName;
+			
+			if (node->numberOfDependencies() > 1)
+			{
+				secondParentName = node->dependency(1)->organism().name();
+			}
+			else
+			{
+				secondParentName = firstParentName;
+			}
+
+			clone->addOrganism(node->organism().name(), firstParentName, secondParentName);
+
+			for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
+			{
+				cloneNode(node->dependency(i), clone);
+			}
+		}
+	};
+
+	for (auto it = leaves.begin(); it != leaves.end(); it++)
+	{
+		cloneNode(*it, &clone);
+	}
+
+	return clone;
 }

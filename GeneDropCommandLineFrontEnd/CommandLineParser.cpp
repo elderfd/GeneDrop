@@ -2,18 +2,21 @@
 #include <initializer_list>
 #include "Maybe.h"
 #include "SimulationManagerFactory.h"
+#include <fstream>
 
 const std::string
 	CommandLineParser::pedigreeFileKey = "pedigree",
 	CommandLineParser::genotypeFileKey = "genotype",
 	CommandLineParser::lociFileKey = "loci",
-	CommandLineParser::settingsFileKey = "settings";
+	CommandLineParser::settingsFileKey = "settings",
+	CommandLineParser::numberOfRunsKey = "numberOfRuns";
 
 const std::vector<std::string> CommandLineParser::allKeys = {
 	CommandLineParser::pedigreeFileKey,
 	CommandLineParser::genotypeFileKey,
 	CommandLineParser::lociFileKey,
-	CommandLineParser::settingsFileKey
+	CommandLineParser::settingsFileKey,
+	CommandLineParser::numberOfRunsKey
 };
 
 CommandLineParser::CommandLineParser(int argc, char *argv[])
@@ -32,15 +35,45 @@ bool CommandLineParser::parse(int argc, char *argv[])
 	bool success = true;
 
 	// First see if we've specified the traditional input files
-	Maybe<std::string> pedigreeFile, lociFile, genotypeFile;
 	
 	if ((pedigreeFile = getValueForKey(pedigreeFileKey, argc, argv))
 		&& (lociFile = getValueForKey(lociFileKey, argc, argv))
 		&& (genotypeFile = getValueForKey(genotypeFileKey, argc, argv))
+		&& (numberOfRuns = getValueForKey(numberOfRunsKey, argc, argv))
 		)
 	{
-		// TODO: Verify that these files exist
-		// TODO: Parse the files
+		// Check we can open all files
+		std::vector<std::string> fileNames = { pedigreeFile.value(), lociFile.value(), genotypeFile.value() };
+
+		for (auto fileName : fileNames)
+		{
+			std::ifstream testStream(fileName);
+
+			if (!testStream)
+			{
+				testStream.close();
+				throw std::runtime_error("Failed to open file " + fileName);
+			}
+
+			testStream.close();
+		}
+
+		// Check that the number of runs is an integer > 0
+		try
+		{
+			int test = std::stoi(numberOfRuns.value());
+
+			if (test <= 0)
+			{
+				throw std::runtime_error("NULL");
+			}
+		}
+		catch (std::exception)
+		{
+			throw std::runtime_error("Number of runs specified was not an integer > 0.");
+		}
+
+		// TODO: Verify the structure of the files
 	}	// Otherwise have a look for a settings XML file
 	else if (auto settingsFile = getValueForKey(settingsFileKey, argc, argv))
 	{
@@ -60,6 +93,7 @@ bool CommandLineParser::parse(int argc, char *argv[])
 		addCommandLineOptSpec(pedigreeFileKey, "The path to the pedigree file to use.");
 		addCommandLineOptSpec(genotypeFileKey, "The path to the founder genotypes file to use.");
 		addCommandLineOptSpec(lociFileKey, "The path to the loci file to use.");
+		addCommandLineOptSpec(numberOfRunsKey, "The number of simulations to carry out for this dataset.");
 
 		throw std::runtime_error(errorMessage);
 	}
@@ -139,7 +173,5 @@ SimulationManager CommandLineParser::createSimulationManagerFromInput()
 {
 	SimulationManagerFactory factory;
 
-	// TODO: PRovide actual strings
-
-	return factory.createFromSimpleInput("", "", "");
+	return factory.createFromSimpleInput(pedigreeFile.value(), genotypeFile.value(), lociFile.value(), std::stoi(numberOfRuns.value()));
 }

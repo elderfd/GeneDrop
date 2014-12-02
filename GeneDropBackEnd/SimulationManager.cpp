@@ -2,7 +2,7 @@
 #include <thread>
 #include <atomic>
 
-SimulationManager::SimulationManager()
+SimulationManager::SimulationManager() : breeder(&rng)
 {
 }
 
@@ -56,5 +56,16 @@ void SimulationManager::run()
 			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted]));
 			numberOfThreadsCurrentlyRunning++;
 		}
+	}
+}
+
+
+void SimulationManager::generateSimulations(int numberOfSimulations)
+{
+	simulations.clear();
+
+	for (int i = 0; i < numberOfSimulations; i++)
+	{
+		simulations.emplace_back(prototypePedigree.cloneStructureAndInitialState(), &breeder);
 	}
 }

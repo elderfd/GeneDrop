@@ -8,6 +8,7 @@
 #include "Breeder.h"
 #include <cassert>
 #include <list>
+#include <deque>
 
 //! One node in the pedigree network, representing one breeding event between two (possibly identical) genomes
 /*!
@@ -197,15 +198,11 @@ protected:
 
 	Organism& _organism()
 	{
-		assert(_evaluated);
-
 		return result;
 	}
 
 	const Organism& _organism() const
 	{
-		assert(_evaluated);
-
 		return result;
 	}
 };
@@ -221,7 +218,7 @@ public:
 
 	//! Copies the structure of the pedigree - but not anything that's been evaluated
 	// Useful because construction of these is relatively expensive
-	Pedigree cloneStructureAndInitialState();
+	Pedigree cloneStructureAndInitialState() const;
 
 	//! Tests whether this pedigree structure is well-formed and usable
 	Maybe<std::string> isNotUsable() const;
@@ -243,12 +240,12 @@ protected:
 	Maybe<PedigreeNode*> findNodeByName(std::string name);
 
 	// The founders of the pedigree
-	std::vector<FounderNode> roots;
+	std::deque<FounderNode> roots;
 
 	// The final products of breeding - will never point to founders
-	std::vector<BreedEventNode*> leaves;
+	std::deque<BreedEventNode*> leaves;
 
 	// Flat vector of all nodes in pedigree that have been produced
-	std::vector<PedigreeNode*> nodes;
+	std::deque<PedigreeNode*> nodes;
 };
 
