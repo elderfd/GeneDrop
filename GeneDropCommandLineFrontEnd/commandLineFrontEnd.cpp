@@ -41,9 +41,6 @@ int main(int argc, char *argv[])
 		// TODO: Get some output
 	}
 
-	//For debug
-	getchar();
-
 	// Exit cleanly
 	return returnVal;
 }

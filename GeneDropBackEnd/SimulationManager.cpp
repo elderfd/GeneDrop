@@ -66,6 +66,6 @@ void SimulationManager::generateSimulations(int numberOfSimulations)
 
 	for (int i = 0; i < numberOfSimulations; i++)
 	{
-		simulations.emplace_back(prototypePedigree.cloneStructureAndInitialState(), &breeder);
+		simulations.emplace_back(prototypePedigree, &breeder);
 	}
 }

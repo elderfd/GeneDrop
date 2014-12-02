@@ -10,10 +10,11 @@ Pedigree::Pedigree()
 
 Pedigree::~Pedigree()
 {
-	for (unsigned int i = 0; i < nodes.size(); i++)
-	{
-		delete nodes[i];
-	}
+	// TODO: Why does including this cause a crash?
+	//for (unsigned int i = 0; i < nodes.size(); i++)
+	//{
+	//	delete nodes[i];
+	//}
 }
 
 
@@ -164,7 +165,6 @@ Maybe<PedigreeNode*> Pedigree::findNodeByName(std::string name)
 		{
 			if (findFunc(node->dependency(i), found))
 			{
-				retVal.setValue(node);
 				return true;
 			}
 		}
@@ -270,10 +270,21 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 
 	std::function<void(PedigreeNode*, Pedigree*)> cloneNode = [&](PedigreeNode* node, Pedigree* clone)
 	{
+		bool addThis = true;
+
+		// Only add things that haven't been added before
+		if (clone->findNodeByName(node->organism().name()))
+		{
+			addThis = false;
+		}
+
 		if (node->numberOfDependencies() == 0)
 		{
 			// Founder
-			clone->addFounder(node->organism().name(), node->organism().genotype());
+			if (addThis)
+			{
+				clone->addFounder(node->organism().name(), node->organism().genotype());
+			}
 		}
 		else
 		{
@@ -292,9 +303,12 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 			{
 				secondParentName = firstParentName;
 			}
-
-			clone->addOrganism(node->organism().name(), firstParentName, secondParentName);
-
+			
+			if (addThis)
+			{
+				clone->addOrganism(node->organism().name(), firstParentName, secondParentName);
+			}
+			
 			for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
 			{
 				cloneNode(node->dependency(i), clone);

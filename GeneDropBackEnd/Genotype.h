@@ -7,6 +7,7 @@
 class Homology
 {
 public:
+
 	unsigned int ploidy() const
 	{
 		return chromosomes.size();
