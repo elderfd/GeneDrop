@@ -10,6 +10,7 @@ Pedigree::Pedigree()
 
 Pedigree::~Pedigree()
 {
+	// TODO: Delete everything
 }
 
 
@@ -113,7 +114,7 @@ std::vector<std::string> Pedigree::getNamesOfAllIndividuals()
 
 	for (auto it = leaves.begin(); it != leaves.end(); it++)
 	{
-		addNode(&(*it));
+		addNode((*it));
 	}
 
 	return returnVec;
@@ -138,7 +139,7 @@ void Pedigree::evaluate(const Breeder* breeder)
 
 	for (auto it = leaves.begin(); it != leaves.end(); it++)
 	{
-		recursiveEvaluate(&(*it), breeder);
+		recursiveEvaluate(*it, breeder);
 	}
 }
 
@@ -177,4 +178,69 @@ Maybe<PedigreeNode*> Pedigree::findNodeByName(std::string name)
 	}
 
 	return retVal;
+}
+
+
+void Pedigree::addOrganism(std::string name, std::string firstParentName, std::string secondParentName)
+{
+	// Get the parents
+	Maybe<PedigreeNode*> firstParent = findNodeByName(firstParentName);
+	Maybe<PedigreeNode*> secondParent = findNodeByName(secondParentName);
+
+	// TODO: Remove repetition here
+
+	// If parents don't exist then make them
+	if (!firstParent)
+	{
+		nodes.push_back(new BreedEventNode);
+		nodes.back()->organism().setName(firstParentName);
+		firstParent.setValue(nodes.back());
+	}
+	else
+	{
+		// Check whether this parent is currently a leaf (and remove it if so)
+		for (auto it = leaves.begin(); it != leaves.end(); it++)
+		{
+			if (*it == firstParent.value())
+			{
+				leaves.erase(it);
+				break;
+			}
+		}
+	}
+
+	if (!secondParent)
+	{
+		nodes.push_back(new BreedEventNode);
+		nodes.back()->organism().setName(secondParentName);
+		secondParent.setValue(nodes.back());
+	}
+	else
+	{
+		// Check whether this parent is currently a leaf (and remove it if so)
+		for (auto it = leaves.begin(); it != leaves.end(); it++)
+		{
+			if (*it == secondParent.value())
+			{
+				leaves.erase(it);
+				break;
+			}
+		}
+	}
+
+	// Make the child
+	BreedEventNode* childNode = new BreedEventNode(firstParent.value(), secondParent.value());
+	childNode->organism().setName(name);
+	
+	// Add to our list o things
+	nodes.push_back(childNode);
+}
+
+
+void Pedigree::addFounder(std::string name, const Genotype& genotype)
+{
+	roots.emplace_back(name, genotype);
+
+	// Add to the list of things we've added
+	nodes.push_back(&roots.back());
 }

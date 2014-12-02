@@ -157,17 +157,15 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 			{
 				// Parse normal line
 
-				FounderNode newFounder;
-
-				// Give a blank genotype to set alleles on
-				newFounder.organism().setGenotype(prototypeGenotype);
+				Genotype newFounderGenotype = prototypeGenotype;
+				std::string founderName;
 				
 				while (std::getline(lineStream, token, ','))
 				{
 					if (columnNumber == 0)
 					{
 						// Is the founder name
-						newFounder.organism().setName(token);
+						founderName = token;
 					}
 					else
 					{
@@ -209,14 +207,14 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 							firstAllele = secondAllele = token;
 						}
 
-						newFounder.organism().genotype().setAllele(chromosomeAndLocusIndex.first, chromosomeAndLocusIndex.second, 0, firstAllele);
-						newFounder.organism().genotype().setAllele(chromosomeAndLocusIndex.first, chromosomeAndLocusIndex.second, 1, secondAllele);
+						newFounderGenotype.setAllele(chromosomeAndLocusIndex.first, chromosomeAndLocusIndex.second, 0, firstAllele);
+						newFounderGenotype.setAllele(chromosomeAndLocusIndex.first, chromosomeAndLocusIndex.second, 1, secondAllele);
 					}
 
 					columnNumber++;
 				}
 
-				newManager.prototypePedigree.roots.push_back(newFounder);
+				newManager.prototypePedigree.addFounder(founderName, newFounderGenotype);
 			}
 		}
 
@@ -257,6 +255,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				case 0:
 					// Generation
 					generationName = token;
+					// TODO: Do something with the generation name
 					break;
 				case 1:
 					// ID
@@ -276,43 +275,9 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 				counter++;
 			}
-
-			// See if this node already exists
-			Maybe<PedigreeNode*> child = newManager.prototypePedigree.findNodeByName(ID);
-			PedigreeNode* childNode;
-
-			if (child)
-			{
-				// If it already exists then add the parents to it
-				childNode = child.value();
-			}
-			else
-			{
-				// Otherwise make a new node that matches it
-				newManager.prototypePedigree.population.emplace_back();
 			
-				childNode = &newManager.prototypePedigree.population.back();
-			}
-
-			// See if the parents are in the founder list, otherwise 
-
-			// Get the parents
-			Maybe<PedigreeNode*> firstParent = newManager.prototypePedigree.findNodeByName(firstParentName);
-			Maybe<PedigreeNode*> secondParent = newManager.prototypePedigree.findNodeByName(secondParentName);
-
-			auto makeNewParentlessNode = [&] (Maybe<PedigreeNode*> nonExistantNode)
-			{
-
-			};
-
-			// If parents don't exist then make a node for them
-			if (!firstParent)
-			{
-
-			}
-	
-
-			
+			// Add a new node to account for the child
+			newManager.prototypePedigree.addOrganism(ID, firstParentName, secondParentName);
 		}
 
 		pedigreeFile.close();

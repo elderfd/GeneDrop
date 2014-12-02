@@ -20,13 +20,17 @@ public:
 	virtual PedigreeNode* dependency(unsigned int index) = 0;
 	virtual const PedigreeNode* dependency(unsigned int index) const = 0;
 
-	virtual Organism& organism() = 0;
-	virtual const Organism& organism() const = 0;
+	Organism& organism()
+	{
+		return _organism();
+	}
+	const Organism& organism() const
+	{
+		return _organism();
+	}
 
 	virtual bool evaluated() const = 0;
 	virtual void breed(const Breeder *breeder) = 0;
-
-	virtual std::pair<const Organism*, const Organism*> parents() = 0;
 
 	//! Whether or not this node is complete (i.e. has any parents if it needs them)
 	virtual bool complete() const = 0;
@@ -35,6 +39,9 @@ protected:
 	// Which round of breeding this breeding event is part of
 	// Not important for calculation but useful for human-readable IO
 	std::string roundID;
+
+	virtual Organism& _organism() = 0;
+	virtual const Organism& _organism() const = 0;
 };
 
 
@@ -44,6 +51,12 @@ class FounderNode : public PedigreeNode
 public:
 	FounderNode()
 	{}
+
+	FounderNode(std::string name, const Genotype& genotype)
+	{
+		founder.setName(name);
+		founder.setGenotype(genotype);
+	}
 
 	unsigned int numberOfDependencies() const
 	{
@@ -56,25 +69,10 @@ public:
 		return nullptr;
 	}
 
-	std::pair<const Organism*, const Organism*> parents()
-	{
-		return std::pair<const Organism*, const Organism*>(nullptr, nullptr);
-	}
-
 	const PedigreeNode* dependency(unsigned int index) const
 	{
 		assert(false);
 		return nullptr;
-	}
-
-	Organism& organism()
-	{
-		return founder;
-	}
-
-	const Organism& organism() const
-	{
-		return founder;
 	}
 
 	bool evaluated() const
@@ -94,6 +92,16 @@ public:
 
 protected:
 	Organism founder;
+
+	Organism& _organism()
+	{
+		return founder;
+	}
+
+	const Organism& _organism() const
+	{
+		return founder;
+	}
 };
 
 
@@ -101,10 +109,10 @@ protected:
 class BreedEventNode : public PedigreeNode
 {
 public:
-	BreedEventNode(Organism *firstParent, Organism *secondParent)
+	BreedEventNode(PedigreeNode *firstParent, PedigreeNode *secondParent)
 	{
-		this->firstParent = firstParent;
-		this->secondParent = secondParent;
+		dependencies.push_back(firstParent);
+		dependencies.push_back(secondParent);
 		_evaluated = false;
 		_parentsSet = true;
 	}
@@ -120,21 +128,24 @@ public:
 		return _parentsSet;
 	}
 
-	//BreedEventNode(const Organism &organism)
-	//{
-	//	_result = organism;
-	//	_evaluated = true;
-	//}
-
-	std::pair<const Organism*, const Organism*> parents()
-	{
-		return std::pair<const Organism*, const Organism*>(firstParent, secondParent);
-	}
-
 	// Evaluates the breed event, using the supplied breeder
 	void breed(const Breeder *breeder)
 	{
-		breeder->breed(*firstParent, *secondParent, result);
+		// For now we should always have 1 or 2 parents
+		assert(dependencies.size() > 0);
+
+		const Organism& firstParent = dependencies[0]->organism();
+
+		if (dependencies.size() != 1)
+		{
+			const Organism& secondParent = dependencies[1]->organism();
+
+			breeder->breed(firstParent, secondParent, result);
+		}
+		else
+		{
+			breeder->breed(firstParent, firstParent, result);
+		}
 	}
 
 	bool operator==(const BreedEventNode& other) const
@@ -152,20 +163,6 @@ public:
 		return _evaluated;
 	}
 
-	Organism& organism()
-	{
-		assert(_evaluated);
-
-		return result;
-	}
-
-	const Organism& organism() const
-	{
-		assert(_evaluated);
-
-		return result;
-	}
-
 	unsigned int numberOfDependencies() const
 	{
 		return dependencies.size();
@@ -181,11 +178,12 @@ public:
 		return dependencies[index];
 	}
 
-protected:
-	// Parents involved in this breeding event
-	const Organism* firstParent;
-	const Organism* secondParent;
+	void setDependencies(std::vector<PedigreeNode*> dependences)
+	{
+		this->dependencies = dependences;
+	}
 
+protected:
 	// Whether or not this event has been evaluated yet
 	bool _evaluated;
 
@@ -195,7 +193,21 @@ protected:
 	bool _parentsSet;
 
 	// Breeding events that need to happen before this one
-	std::vector<BreedEventNode*> dependencies;
+	std::vector<PedigreeNode*> dependencies;
+
+	Organism& _organism()
+	{
+		assert(_evaluated);
+
+		return result;
+	}
+
+	const Organism& _organism() const
+	{
+		assert(_evaluated);
+
+		return result;
+	}
 };
 
 //! Network representation of a pedigree
@@ -209,7 +221,7 @@ public:
 
 	//! Copies the structure of the pedigree - but not anything that's been evaluated
 	// Useful because construction of these is relatively expensive
-	Pedigree clone();
+	Pedigree cloneStructureAndInitialState();
 
 	//! Tests whether this pedigree structure is well-formed and usable
 	Maybe<std::string> isNotUsable() const;
@@ -217,20 +229,26 @@ public:
 	//! Returns the names of every individual mentioned
 	std::vector<std::string> getNamesOfAllIndividuals();
 
-	//! Evaluates all of the breed events
+	//! Evaluates all of the breed events using the supplied breeder
 	void evaluate(const Breeder* breeder);
 
+	//! Adds a new organism to the pedigree
+	void addOrganism(std::string name, std::string firstParentName, std::string secondParentName);
+
+	//! Adds a new founder organism to the pedigree
+	void addFounder(std::string name, const Genotype& genotype);
+
+protected:
 	//! Returns the node with the specified name, or a false if not found
 	Maybe<PedigreeNode*> findNodeByName(std::string name);
 
-protected:
-	// The final products of breeding
-	std::list<BreedEventNode> leaves;
-
 	// The founders of the pedigree
-	std::list<FounderNode> roots;
+	std::vector<FounderNode> roots;
 
-	// A flat vector of all of the organisms present
-	std::vector<Organism> population;
+	// The final products of breeding - will never point to founders
+	std::vector<BreedEventNode*> leaves;
+
+	// Flat vector of all nodes in pedigree that have been produced
+	std::vector<PedigreeNode*> nodes;
 };
 
