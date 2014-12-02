@@ -14,14 +14,15 @@ class CommandLineParser
 {
 public:
 	CommandLineParser(int argc, char *argv[]);
+	CommandLineParser(){};
 	~CommandLineParser();
 
 	SimulationManager createSimulationManagerFromInput();
 
-protected:
 	// Parses the input and returns true if successful
 	bool parse(int argc, char *argv[]);
 
+protected:
 	// Finds the value matching a key from the input
 	Maybe<std::string> getValueForKey(std::string key, int argc, char *argv[]);
 

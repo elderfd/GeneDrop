@@ -8,7 +8,16 @@ int main(int argc, char *argv[])
 {
 	int returnVal = 0;
 
-	CommandLineParser cLineParser(argc, argv);
+	CommandLineParser cLineParser;
+
+	try
+	{
+		cLineParser.parse(argc, argv);
+	}
+	catch (std::exception& e)
+	{
+		std::cout << "Error in parsing input: " << e.what() << std::endl;
+	}
 
 	// Then set up an appropriate simulation state
 	SimulationManager simManager = cLineParser.createSimulationManagerFromInput();

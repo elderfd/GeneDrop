@@ -17,8 +17,6 @@ SimulationManagerFactory::~SimulationManagerFactory()
 
 SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName)
 {
-	// TODO: Implement
-
 	SimulationManager newManager;
 
 	// Parse the loci information file

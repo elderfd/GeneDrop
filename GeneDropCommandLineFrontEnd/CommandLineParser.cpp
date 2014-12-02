@@ -47,7 +47,22 @@ bool CommandLineParser::parse(int argc, char *argv[])
 		// If we found a settings file we need to parse it to extract the needed data
 		// TODO: Implement this new input file
 	}
-	else success = false;
+	else
+	{
+		success = false;
+		std::string errorMessage = "Invalid input syntax. Should provide following options, \n";
+
+		auto addCommandLineOptSpec = [&] (std::string option, std::string meaning)
+		{
+			errorMessage += "\t-" + option + "  =  " + meaning + "\n";
+		};
+
+		addCommandLineOptSpec(pedigreeFileKey, "The path to the pedigree file to use.");
+		addCommandLineOptSpec(genotypeFileKey, "The path to the founder genotypes file to use.");
+		addCommandLineOptSpec(lociFileKey, "The path to the loci file to use.");
+
+		throw std::runtime_error(errorMessage);
+	}
 
 	return success;
 }
@@ -60,14 +75,21 @@ Maybe<std::string> CommandLineParser::getValueForKey(std::string key, int argc, 
 	for (int i = 0; i < argc; i++)
 	{
 		// TODO: This whole thing could certainly be improved
-		if (argv[i][0] == '-' && unambigiousKeyMatch(std::string(argv[i]), key))
+		if (argv[i][0] == '-')
 		{
-			if (++i < argc)
-			{
-				retVal.setValue(std::string(argv[i]));
-			}
+			// Strip the dash
+			std::string toCheck = std::string(argv[i]);
+			toCheck.erase(0, 1);
 
-			break;
+			if (unambigiousKeyMatch(toCheck, key))
+			{
+				if (++i < argc)
+				{
+					retVal.setValue(std::string(argv[i]));
+				}
+
+				break;
+			}
 		}
 	}
 
