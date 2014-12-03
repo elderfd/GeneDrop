@@ -28,5 +28,8 @@ bool Simulation::finished() const
 
 void Simulation::run()
 {
+	// Evaluate all breeding events in pedigree
+	pedigree.evaluate(breeder);
 
+	_finished = true;
 }

@@ -290,5 +290,8 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	// Add the right number of simulations
 	newManager.generateSimulations(numberOfRuns);
 
+	// TODO: Soft-code this from user-input
+	newManager.numberOfThreads = 1;
+
 	return newManager;
 }

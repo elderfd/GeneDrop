@@ -1,6 +1,7 @@
 #pragma once
 
 #include <boost/random.hpp>
+#include <mutex>
 
 //! This handles all of the random number generation needed for a simulation
 class RNGController
@@ -8,13 +9,15 @@ class RNGController
 	typedef boost::random::mt19937 RNG_ENGINE;
 	typedef boost::random::uniform_01<> UNIFORM_DISTRIBUTION;
 	typedef boost::random::normal_distribution<> NORMAL_DISTRIBUTION;
-	typedef boost::random::variate_generator<RNG_ENGINE &, UNIFORM_DISTRIBUTION> UNIFORM_GENERATOR;
-	typedef boost::random::variate_generator<RNG_ENGINE &, NORMAL_DISTRIBUTION> NORMAL_GENERATOR;
+	typedef boost::random::variate_generator<RNG_ENGINE *, UNIFORM_DISTRIBUTION> UNIFORM_GENERATOR;
+	typedef boost::random::variate_generator<RNG_ENGINE *, NORMAL_DISTRIBUTION> NORMAL_GENERATOR;
 
 public:
 	RNGController();
 	RNGController(unsigned long long seed);
 	~RNGController();
+
+	//RNGController& operator=(const RNGController& other) = default;
 
 	//! Returns a double uniformly distributed in [0, 1)
 	double getUniformlyDistributed();
@@ -34,6 +37,8 @@ protected:
 	RNG_ENGINE engine;
 	UNIFORM_DISTRIBUTION uniformDistribution;
 	UNIFORM_GENERATOR uniformGenerator;
+
+	// TODO: Think about how to handle this in a multithreaded context
 
 	unsigned long long produceSeed();
 	unsigned long long _seed;

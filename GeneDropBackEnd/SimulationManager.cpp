@@ -42,12 +42,14 @@ void SimulationManager::run()
 	auto threadFunc = [&numberOfThreadsCurrentlyRunning] (Simulation& sim)
 	{
 		sim.run();
+	
+		std::cout << "Simulation finished";
 
 		// Notify that we've finished a simulation
 		numberOfThreadsCurrentlyRunning--;
 	};
 
-	while (numberOfThreadsCurrentlyRunning == 0 && indexOfLastSimulationStarted >= (int)simulations.size())
+	while (!(numberOfThreadsCurrentlyRunning == 0 && indexOfLastSimulationStarted >= (int)simulations.size()) || indexOfLastSimulationStarted == -1)
 	{
 		// See if we should spawn a new thread
 		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size())
