@@ -115,6 +115,8 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	// Parse the founder line genotypes
 	std::ifstream genotypeFile;
 
+	std::map<std::string, PedigreeNode*> namesAddedSoFar;
+
 	try
 	{
 		genotypeFile.open(genotypeFileName);
@@ -212,7 +214,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 					columnNumber++;
 				}
 
-				newManager.prototypePedigree.addFounder(founderName, newFounderGenotype);
+				namesAddedSoFar[founderName] = newManager.prototypePedigree.addFounder(founderName, newFounderGenotype);
 			}
 		}
 
@@ -274,8 +276,33 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				counter++;
 			}
 			
-			// Add a new node to account for the child
-			newManager.prototypePedigree.addOrganism(ID, firstParentName, secondParentName);
+			// TODO: Perhaps think about closely integrated the factory and the pedigree should be
+
+			auto getParentNode = [&namesAddedSoFar, &newManager] (std::string parentName)
+			{
+				auto found = namesAddedSoFar.find(parentName);
+
+				if (found != namesAddedSoFar.end())
+				{
+					// Have already added
+					return found->second;
+				}
+				else
+				{
+					// Need to add
+					namesAddedSoFar[parentName] = newManager.prototypePedigree.addOrganism(parentName);
+					return namesAddedSoFar[parentName];
+				}
+			};
+
+			auto firstParent = getParentNode(firstParentName);
+			auto secondParent = getParentNode(secondParentName);
+
+			// Add a new node for the child
+			auto childNode = newManager.prototypePedigree.addOrganism(ID);
+
+			// Set the dependencies properly
+			childNode->setDependencies({ firstParent, secondParent });
 		}
 
 		pedigreeFile.close();
@@ -291,6 +318,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	newManager.generateSimulations(numberOfRuns);
 
 	// TODO: Soft-code this from user-input
+	// TODO: Work out how to make the PRNG play nicely with multiple threads
 	newManager.numberOfThreads = 1;
 
 	return newManager;

@@ -34,6 +34,11 @@ public:
 		return homologousChromosomes.size();
 	}
 
+	void clear()
+	{
+		homologousChromosomes.clear();
+	}
+
 	//! Returns the allele value at a given chromosome and locus.
 	/*!
 		set controls which of the homologous chromosomes is inspected.

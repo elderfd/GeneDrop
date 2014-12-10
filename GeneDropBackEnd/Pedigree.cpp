@@ -92,39 +92,6 @@ Maybe<std::string> Pedigree::isNotUsable() const
 }
 
 
-std::vector<std::string> Pedigree::getNamesOfAllIndividuals()
-{
-	std::vector<std::string> returnVec;
-	std::map<std::string, bool> foundSoFar;
-
-	std::function<void (PedigreeNode*)> addNode = [&] (PedigreeNode* node)
-	{
-		try
-		{
-			foundSoFar.at(node->organism().name());
-		}
-		catch (std::out_of_range)
-		{
-			// If not found then add it
-			returnVec.push_back(node->organism().name());
-			foundSoFar[node->organism().name()] = true;
-		}
-
-		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
-		{
-			addNode(node->dependency(i));
-		}
-	};
-
-	for (auto it = leaves.begin(); it != leaves.end(); it++)
-	{
-		addNode((*it));
-	}
-
-	return returnVec;
-}
-
-
 void Pedigree::evaluate(const Breeder* breeder)
 {
 	std::function<void (PedigreeNode*, const Breeder*)> recursiveEvaluate = [&](PedigreeNode *node, const Breeder* breeder)
@@ -141,185 +108,82 @@ void Pedigree::evaluate(const Breeder* breeder)
 		}
 	};
 
-	for (auto it = leaves.begin(); it != leaves.end(); it++)
+	for (unsigned int i = 0; i < breedEvents.size(); i++)
 	{
-		recursiveEvaluate(*it, breeder);
+		recursiveEvaluate(&breedEvents[i], breeder);
 	}
 }
 
 
-Maybe<PedigreeNode*> Pedigree::findNodeByName(std::string name)
+BreedEventNode* Pedigree::addOrganism(std::string name)
 {
-	Maybe<PedigreeNode*> retVal;
-
-	std::function<bool(PedigreeNode*, Maybe<PedigreeNode*>&)> findFunc = [&](PedigreeNode* node, Maybe<PedigreeNode*> &found)
-	{
-		if (node->organism().name() == name)
-		{
-			retVal.setValue(node);
-			return true;
-		};
-
-		// Check all dependencies
-		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
-		{
-			if (findFunc(node->dependency(i), found))
-			{
-				return true;
-			}
-		}
-
-		return false;
-	};
-
-	for (auto it = leaves.begin(); it != leaves.end(); it++)
-	{
-		if (findFunc(*it, retVal))
-		{
-			break;
-		}
-	}
-
-	// Also check the founders
-	if (!retVal)
-	{
-		for (auto it = roots.begin(); it != roots.end(); it++)
-		{
-			if (it->organism().name() == name)
-			{
-				retVal.setValue(&(*it));
-			}
-		}
-	}
-
-	return retVal;
+	breedEvents.emplace_back();
+	breedEvents.back().organism().setName(name);
+	return &breedEvents.back();
 }
 
 
-void Pedigree::addOrganism(std::string name, std::string firstParentName, std::string secondParentName)
+FounderNode* Pedigree::addFounder(std::string name, const Genotype& genotype)
 {
-	// Get the parents
-	Maybe<PedigreeNode*> firstParent = findNodeByName(firstParentName);
-	Maybe<PedigreeNode*> secondParent = findNodeByName(secondParentName);
-
-	// TODO: Remove repetition here
-
-	// If parents don't exist then make them
-	if (!firstParent)
-	{
-		nodes.push_back(new BreedEventNode);
-		nodes.back()->organism().setName(firstParentName);
-		firstParent.setValue(nodes.back());
-	}
-	else
-	{
-		// Check whether this parent is currently a leaf (and remove it if so)
-		for (auto it = leaves.begin(); it != leaves.end(); it++)
-		{
-			if (*it == firstParent.value())
-			{
-				leaves.erase(it);
-				break;
-			}
-		}
-	}
-
-	if (!secondParent)
-	{
-		nodes.push_back(new BreedEventNode);
-		nodes.back()->organism().setName(secondParentName);
-		secondParent.setValue(nodes.back());
-	}
-	else
-	{
-		// Check whether this parent is currently a leaf (and remove it if so)
-		for (auto it = leaves.begin(); it != leaves.end(); it++)
-		{
-			if (*it == secondParent.value())
-			{
-				leaves.erase(it);
-				break;
-			}
-		}
-	}
-
-	// Make the child
-	BreedEventNode* childNode = new BreedEventNode(firstParent.value(), secondParent.value());
-	childNode->organism().setName(name);
-	
-	// Add to our list o things
-	nodes.push_back(childNode);
-	leaves.push_back(childNode);
-}
-
-
-void Pedigree::addFounder(std::string name, const Genotype& genotype)
-{
-	roots.emplace_back(name, genotype);
-
-	// Add to the list of things we've added
-	nodes.push_back(&roots.back());
+	founders.emplace_back();
+	founders.back().organism().setName(name);
+	founders.back().organism().setGenotype(genotype);
+	return &founders.back();
 }
 
 
 Pedigree Pedigree::cloneStructureAndInitialState() const
 {
-	Pedigree clone;
+	// Copy first
+	Pedigree clone(*this);
 
-	// Traverse the tree and add organisms to new clone
-
-	std::function<void(PedigreeNode*, Pedigree*)> cloneNode = [&](PedigreeNode* node, Pedigree* clone)
+	// Then remove the evaluated bits
+	for (auto& breedEvent : clone.breedEvents)
 	{
-		bool addThis = true;
-
-		// Only add things that haven't been added before
-		if (clone->findNodeByName(node->organism().name()))
-		{
-			addThis = false;
-		}
-
-		if (node->numberOfDependencies() == 0)
-		{
-			// Founder
-			if (addThis)
-			{
-				clone->addFounder(node->organism().name(), node->organism().genotype());
-			}
-		}
-		else
-		{
-			// Not founder
-
-			// TODO: Could probably do this much better
-
-			std::string firstParentName = node->dependency(0)->organism().name();
-			std::string secondParentName;
-			
-			if (node->numberOfDependencies() > 1)
-			{
-				secondParentName = node->dependency(1)->organism().name();
-			}
-			else
-			{
-				secondParentName = firstParentName;
-			}
-			
-			if (addThis)
-			{
-				clone->addOrganism(node->organism().name(), firstParentName, secondParentName);
-			}
-			
-			for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
-			{
-				cloneNode(node->dependency(i), clone);
-			}
-		}
-	};
-
-	for (auto it = leaves.begin(); it != leaves.end(); it++)
-	{
-		cloneNode(*it, &clone);
+		breedEvent.reset();
 	}
 
 	return clone;
+}
+
+
+Pedigree::Pedigree(const Pedigree& other)
+{
+	this->founders = other.founders;
+	this->breedEvents = other.breedEvents;
+
+	// Now need to update all the dependency pointers to actually point to the right thing
+	for (unsigned int i = 0; i < other.breedEvents.size(); i++)
+	{
+		this->breedEvents[i].dependencies().clear();
+
+		for (auto dependency : other.breedEvents[i].dependencies())
+		{
+			// TODO: Could store all of this in a better way I'm sure
+			bool found = false;
+
+			for (unsigned int j = 0; j < other.breedEvents.size(); j++)
+			{
+				if (&other.breedEvents[j] == dependency)
+				{
+					this->breedEvents[i].dependencies().push_back(&this->breedEvents[j]);
+					found = true;
+					break;
+				}
+			}
+
+			for (unsigned int j = 0; j < other.founders.size() && !found; j++)
+			{
+				if (&other.founders[j] == dependency)
+				{
+					this->breedEvents[i].dependencies().push_back(&this->founders[j]);
+					found = true;
+					break;
+				}
+			}
+
+			// Check that the pedigree is well-formed, i.e. if dependencies are missing or not
+			assert(found);
+		}
+	}
 }

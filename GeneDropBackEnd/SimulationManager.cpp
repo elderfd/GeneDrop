@@ -39,14 +39,14 @@ void SimulationManager::run()
 	bool keepRunning = true;
 
 	// For passing to the thread
-	auto threadFunc = [&numberOfThreadsCurrentlyRunning] (Simulation& sim)
+	auto threadFunc = [](Simulation& sim, std::atomic<int>* numberOfThreadsCurrentlyRunning)
 	{
 		sim.run();
 	
 		std::cout << "Simulation finished";
 
 		// Notify that we've finished a simulation
-		numberOfThreadsCurrentlyRunning--;
+		(*numberOfThreadsCurrentlyRunning)--;
 	};
 
 	while (!(numberOfThreadsCurrentlyRunning == 0 && indexOfLastSimulationStarted >= (int)simulations.size()) || indexOfLastSimulationStarted == -1)
@@ -55,7 +55,7 @@ void SimulationManager::run()
 		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size())
 		{
 			indexOfLastSimulationStarted++;
-			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted]));
+			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted], &numberOfThreadsCurrentlyRunning));
 			numberOfThreadsCurrentlyRunning++;
 		}
 	}
@@ -70,4 +70,15 @@ void SimulationManager::generateSimulations(int numberOfSimulations)
 	{
 		simulations.emplace_back(prototypePedigree, &breeder);
 	}
+}
+
+
+SimulationManager::SimulationManager(const SimulationManager& other)
+	: breeder(other.breeder)
+{
+	// Do simple copying
+	this->rng = other.rng;
+	this->simulations = other.simulations;
+	this->numberOfThreads = other.numberOfThreads;
+	this->prototypePedigree = other.prototypePedigree;
 }
