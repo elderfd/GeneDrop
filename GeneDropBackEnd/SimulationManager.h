@@ -27,6 +27,9 @@ public:
 	//! Builds the specified number of simulations
 	void generateSimulations(int numberOfSimulations);
 
+	void outputResultsToFile(std::string fileName);
+
+	static std::string makeTimeStamp();
 protected:
 	//! Handles all of the random number generation
 	RNGController rng;

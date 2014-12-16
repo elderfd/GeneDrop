@@ -235,6 +235,7 @@ protected:
 class Pedigree
 {
 	friend class SimulationManagerFactory;
+	friend class SimulationManager;
 
 public:
 	Pedigree();

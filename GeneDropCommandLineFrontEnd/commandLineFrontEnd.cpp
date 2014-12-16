@@ -38,8 +38,10 @@ int main(int argc, char *argv[])
 		// Do some sims
 		simManager.run();
 
+		// Get some output
+		std::string outputFileName = "Output(" + SimulationManager::makeTimeStamp() + ").csv";
 
-		// TODO: Get some output
+		simManager.outputResultsToFile(outputFileName);
 	}
 
 	// Exit cleanly
