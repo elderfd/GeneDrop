@@ -13,6 +13,12 @@ Breeder::~Breeder()
 }
 
 
+Breeder::Breeder(const Breeder& other)
+{
+	this->rng = other.rng;
+}
+
+
 void Breeder::breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const
 {
 	breed(firstParent.genotype(), secondParent.genotype(), child.genotype());

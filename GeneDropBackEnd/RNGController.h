@@ -17,7 +17,9 @@ public:
 	RNGController(unsigned long long seed);
 	~RNGController();
 
-	//RNGController& operator=(const RNGController& other) = default;
+	RNGController(const RNGController& other);
+
+	//RNGController& operator=(const RNGController& other);
 
 	//! Returns a double uniformly distributed in [0, 1)
 	double getUniformlyDistributed();

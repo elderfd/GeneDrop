@@ -1,11 +1,12 @@
 #pragma once
 #include "Pedigree.h"
 #include "Breeder.h"
-#include <memory>
 
 //! A single run of the simulation model
 class Simulation
 {
+	friend class SimulationManager;
+
 public:
 	Simulation();
 	Simulation(const Pedigree& pedigree, const Breeder* breeder);

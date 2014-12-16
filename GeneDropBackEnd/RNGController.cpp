@@ -15,6 +15,10 @@ RNGController::~RNGController()
 {
 }
 
+RNGController::RNGController(const RNGController& other) : engine(other._seed), uniformGenerator(&engine, uniformDistribution)
+{
+	_seed = other._seed;
+}
 
 unsigned long long RNGController::produceSeed()
 {

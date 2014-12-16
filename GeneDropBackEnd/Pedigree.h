@@ -202,9 +202,10 @@ public:
 		return _dependencies[index];
 	}
 
-	void setDependencies(std::vector<PedigreeNode*> dependences)
+	void setDependencies(std::vector<PedigreeNode*> dependencies)
 	{
-		this->_dependencies = _dependencies;
+		this->_dependencies = dependencies;
+		_parentsSet = true;
 	}
 
 protected:
@@ -260,9 +261,9 @@ public:
 protected:
 
 	// The founders of the pedigree
-	std::vector<FounderNode> founders;
+	std::vector<FounderNode*> founders;
 
 	// Everything that must be bred
-	std::vector<BreedEventNode> breedEvents;
+	std::vector<BreedEventNode*> breedEvents;
 };
 

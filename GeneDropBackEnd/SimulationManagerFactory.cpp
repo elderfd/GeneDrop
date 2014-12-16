@@ -276,7 +276,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				counter++;
 			}
 			
-			// TODO: Perhaps think about closely integrated the factory and the pedigree should be
+			// TODO: Perhaps think about how closely integrated the factory and the pedigree should be
 
 			auto getParentNode = [&namesAddedSoFar, &newManager] (std::string parentName)
 			{
@@ -285,11 +285,13 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				if (found != namesAddedSoFar.end())
 				{
 					// Have already added
+					std::cout << "Found " << parentName << std::endl;
 					return found->second;
 				}
 				else
 				{
 					// Need to add
+					std::cout << "Adding " << parentName << std::endl;
 					namesAddedSoFar[parentName] = newManager.prototypePedigree.addOrganism(parentName);
 					return namesAddedSoFar[parentName];
 				}
@@ -300,6 +302,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 			// Add a new node for the child
 			auto childNode = newManager.prototypePedigree.addOrganism(ID);
+			namesAddedSoFar[ID] = childNode;
 
 			// Set the dependencies properly
 			childNode->setDependencies({ firstParent, secondParent });

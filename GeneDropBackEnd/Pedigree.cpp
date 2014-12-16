@@ -10,11 +10,15 @@ Pedigree::Pedigree()
 
 Pedigree::~Pedigree()
 {
-	// TODO: Why does including this cause a crash?
-	//for (unsigned int i = 0; i < nodes.size(); i++)
-	//{
-	//	delete nodes[i];
-	//}
+	for (auto ptr : founders)
+	{
+		delete ptr;
+	}
+
+	for (auto ptr : breedEvents)
+	{
+		delete ptr;
+	}
 }
 
 
@@ -110,25 +114,27 @@ void Pedigree::evaluate(const Breeder* breeder)
 
 	for (unsigned int i = 0; i < breedEvents.size(); i++)
 	{
-		recursiveEvaluate(&breedEvents[i], breeder);
+		recursiveEvaluate(breedEvents[i], breeder);
 	}
 }
 
 
 BreedEventNode* Pedigree::addOrganism(std::string name)
 {
-	breedEvents.emplace_back();
-	breedEvents.back().organism().setName(name);
-	return &breedEvents.back();
+	auto newNode = new BreedEventNode();
+	breedEvents.push_back(newNode);
+	breedEvents.back()->organism().setName(name);
+	return breedEvents.back();
 }
 
 
 FounderNode* Pedigree::addFounder(std::string name, const Genotype& genotype)
 {
-	founders.emplace_back();
-	founders.back().organism().setName(name);
-	founders.back().organism().setGenotype(genotype);
-	return &founders.back();
+	auto newNode = new FounderNode();
+	founders.push_back(newNode);
+	founders.back()->organism().setName(name);
+	founders.back()->organism().setGenotype(genotype);
+	return founders.back();
 }
 
 
@@ -140,7 +146,7 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 	// Then remove the evaluated bits
 	for (auto& breedEvent : clone.breedEvents)
 	{
-		breedEvent.reset();
+		breedEvent->reset();
 	}
 
 	return clone;
@@ -149,24 +155,32 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 
 Pedigree::Pedigree(const Pedigree& other)
 {
-	this->founders = other.founders;
-	this->breedEvents = other.breedEvents;
+	// Copy across the nodes
+	for (auto founder : other.founders)
+	{
+		this->founders.push_back(new FounderNode(*founder));
+	}
+
+	for (auto breedEvent : other.breedEvents)
+	{
+		this->breedEvents.push_back(new BreedEventNode(*breedEvent));
+	}
 
 	// Now need to update all the dependency pointers to actually point to the right thing
 	for (unsigned int i = 0; i < other.breedEvents.size(); i++)
 	{
-		this->breedEvents[i].dependencies().clear();
+		this->breedEvents[i]->dependencies().clear();
 
-		for (auto dependency : other.breedEvents[i].dependencies())
+		for (auto dependency : other.breedEvents[i]->dependencies())
 		{
 			// TODO: Could store all of this in a better way I'm sure
 			bool found = false;
 
 			for (unsigned int j = 0; j < other.breedEvents.size(); j++)
 			{
-				if (&other.breedEvents[j] == dependency)
+				if (other.breedEvents[j] == dependency)
 				{
-					this->breedEvents[i].dependencies().push_back(&this->breedEvents[j]);
+					this->breedEvents[i]->dependencies().push_back(new BreedEventNode(*this->breedEvents[j]));
 					found = true;
 					break;
 				}
@@ -174,9 +188,9 @@ Pedigree::Pedigree(const Pedigree& other)
 
 			for (unsigned int j = 0; j < other.founders.size() && !found; j++)
 			{
-				if (&other.founders[j] == dependency)
+				if (other.founders[j] == dependency)
 				{
-					this->breedEvents[i].dependencies().push_back(&this->founders[j]);
+					this->breedEvents[i]->dependencies().push_back(new FounderNode(*this->founders[j]));
 					found = true;
 					break;
 				}

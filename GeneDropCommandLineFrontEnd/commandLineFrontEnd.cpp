@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
 	}
 
 	// Then set up an appropriate simulation state
-	SimulationManager simManager = cLineParser.createSimulationManagerFromInput();
+	SimulationManager simManager(cLineParser.createSimulationManagerFromInput());
 
 	// Verify the input
 	Maybe<std::string> error = simManager.verifySimulationPrototype();

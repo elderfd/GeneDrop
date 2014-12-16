@@ -81,4 +81,9 @@ SimulationManager::SimulationManager(const SimulationManager& other)
 	this->simulations = other.simulations;
 	this->numberOfThreads = other.numberOfThreads;
 	this->prototypePedigree = other.prototypePedigree;
+
+	for (auto simulation : simulations)
+	{
+		simulation.breeder = &breeder;
+	}
 }
