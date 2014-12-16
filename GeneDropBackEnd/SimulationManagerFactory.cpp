@@ -90,6 +90,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 			{
 				chromosomes.emplace_back();
 				chromosomes.back().addLocus(newLocus);
+				chromosomes.back().setID(chromosome);
 			}
 		}
 
