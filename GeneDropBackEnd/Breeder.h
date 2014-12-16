@@ -13,6 +13,8 @@ public:
 
 	Breeder(const Breeder& other);
 
+	void setRNG(RNGController* rng);
+
 	//! Breeds and sets the child genotype 
 	void breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const;
 

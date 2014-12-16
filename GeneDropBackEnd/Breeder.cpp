@@ -19,6 +19,12 @@ Breeder::Breeder(const Breeder& other)
 }
 
 
+void Breeder::setRNG(RNGController* rng)
+{
+	this->rng = rng;
+}
+
+
 void Breeder::breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const
 {
 	breed(firstParent.genotype(), secondParent.genotype(), child.genotype());

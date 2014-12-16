@@ -18,6 +18,7 @@ public:
 	~RNGController();
 
 	RNGController(const RNGController& other);
+	RNGController& operator=(RNGController other) const;
 
 	//RNGController& operator=(const RNGController& other);
 

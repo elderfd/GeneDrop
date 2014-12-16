@@ -285,13 +285,11 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				if (found != namesAddedSoFar.end())
 				{
 					// Have already added
-					std::cout << "Found " << parentName << std::endl;
 					return found->second;
 				}
 				else
 				{
 					// Need to add
-					std::cout << "Adding " << parentName << std::endl;
 					namesAddedSoFar[parentName] = newManager.prototypePedigree.addOrganism(parentName);
 					return namesAddedSoFar[parentName];
 				}

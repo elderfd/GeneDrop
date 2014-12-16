@@ -78,6 +78,7 @@ SimulationManager::SimulationManager(const SimulationManager& other)
 {
 	// Do simple copying
 	this->rng = other.rng;
+	breeder.setRNG(&this->rng);
 	this->simulations = other.simulations;
 	this->numberOfThreads = other.numberOfThreads;
 	this->prototypePedigree = other.prototypePedigree;

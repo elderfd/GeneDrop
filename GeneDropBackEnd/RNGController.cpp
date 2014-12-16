@@ -11,6 +11,12 @@ RNGController::RNGController(unsigned long long seed) : engine((const uint32_t)s
 }
 
 
+RNGController& RNGController::operator=(RNGController other) const
+{
+	return other;
+}
+
+
 RNGController::~RNGController()
 {
 }
