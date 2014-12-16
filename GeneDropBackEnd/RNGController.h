@@ -1,7 +1,6 @@
 #pragma once
 
 #include <boost/random.hpp>
-#include <mutex>
 
 //! This handles all of the random number generation needed for a simulation
 class RNGController

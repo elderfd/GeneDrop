@@ -43,21 +43,33 @@ void SimulationManager::run()
 	{
 		sim.run();
 	
-		std::cout << "Simulation finished";
+		std::cout << "Sim finished" << std::endl;
 
 		// Notify that we've finished a simulation
 		(*numberOfThreadsCurrentlyRunning)--;
 	};
 
-	while (!(numberOfThreadsCurrentlyRunning == 0 && indexOfLastSimulationStarted >= (int)simulations.size()) || indexOfLastSimulationStarted == -1)
+	while (keepRunning)
 	{
 		// See if we should spawn a new thread
-		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size())
+		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size() - 1)
 		{
 			indexOfLastSimulationStarted++;
 			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted], &numberOfThreadsCurrentlyRunning));
 			numberOfThreadsCurrentlyRunning++;
 		}
+
+		// Check if all done
+		if (indexOfLastSimulationStarted == (int)simulations.size() - 1 && numberOfThreadsCurrentlyRunning == 0)
+		{
+			keepRunning = false;
+		}
+	}
+
+	// Have to join all threads to appease standards
+	for (auto& thread : threads)
+	{
+		thread.join();
 	}
 }
 

@@ -38,6 +38,7 @@ int main(int argc, char *argv[])
 		// Do some sims
 		simManager.run();
 
+
 		// TODO: Get some output
 	}
 
