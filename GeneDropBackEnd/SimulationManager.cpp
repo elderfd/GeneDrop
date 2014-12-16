@@ -78,13 +78,19 @@ SimulationManager::SimulationManager(const SimulationManager& other)
 {
 	// Do simple copying
 	this->rng = other.rng;
-	breeder.setRNG(&this->rng);
+	this->breeder.setRNG(&this->rng);
 	this->simulations = other.simulations;
 	this->numberOfThreads = other.numberOfThreads;
 	this->prototypePedigree = other.prototypePedigree;
 
-	for (auto simulation : simulations)
+	for (auto& simulation : simulations)
 	{
-		simulation.breeder = &breeder;
+		simulation.breeder = &this->breeder;
 	}
+}
+
+
+SimulationManager& SimulationManager::operator=(SimulationManager other)
+{
+	return other;
 }

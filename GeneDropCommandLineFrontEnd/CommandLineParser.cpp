@@ -173,5 +173,7 @@ SimulationManager CommandLineParser::createSimulationManagerFromInput()
 {
 	SimulationManagerFactory factory;
 
-	return factory.createFromSimpleInput(pedigreeFile.value(), genotypeFile.value(), lociFile.value(), std::stoi(numberOfRuns.value()));
+	auto manager = factory.createFromSimpleInput(pedigreeFile.value(), genotypeFile.value(), lociFile.value(), std::stoi(numberOfRuns.value()));
+
+	return manager;
 }
