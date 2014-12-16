@@ -22,6 +22,63 @@ Pedigree::~Pedigree()
 }
 
 
+Pedigree& Pedigree::operator=(Pedigree other)
+{
+	other.copy(*this);
+	return *this;
+}
+
+
+void Pedigree::copy(Pedigree& other) const
+{
+	// Copy across the nodes
+	for (auto founder : this->founders)
+	{
+		other.founders.push_back(new FounderNode(*founder));
+	}
+
+	for (auto breedEvent : this->breedEvents)
+	{
+		other.breedEvents.push_back(new BreedEventNode(*breedEvent));
+	}
+
+	// Now need to update all the dependency pointers to actually point to the right thing
+	for (unsigned int i = 0; i < this->breedEvents.size(); i++)
+	{
+		other.breedEvents[i]->dependencies().clear();
+
+		for (auto dependency : this->breedEvents[i]->dependencies())
+		{
+			// TODO: Could store all of this in a better way I'm sure
+			bool found = false;
+
+			for (unsigned int j = 0; j < this->breedEvents.size(); j++)
+			{
+				if (this->breedEvents[j] == dependency)
+				{
+					other.breedEvents[i]->dependencies().push_back(other.breedEvents[j]);
+					found = true;
+					break;
+				}
+			}
+
+			for (unsigned int j = 0; j < this->founders.size() && !found; j++)
+			{
+				if (this->founders[j] == dependency)
+				{
+					other.breedEvents[i]->dependencies().push_back(other.founders[j]);
+					found = true;
+					break;
+				}
+			}
+
+			// Check that the pedigree is well-formed, i.e. if dependencies are missing or not
+			assert(found);
+		}
+	}
+}
+
+
 Maybe<std::string> Pedigree::isNotUsable() const
 {
 	// Depth-first recursion and make sure that all dependencies can be resolved
@@ -155,49 +212,5 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 
 Pedigree::Pedigree(const Pedigree& other)
 {
-	// Copy across the nodes
-	for (auto founder : other.founders)
-	{
-		this->founders.push_back(new FounderNode(*founder));
-	}
-
-	for (auto breedEvent : other.breedEvents)
-	{
-		this->breedEvents.push_back(new BreedEventNode(*breedEvent));
-	}
-
-	// Now need to update all the dependency pointers to actually point to the right thing
-	for (unsigned int i = 0; i < other.breedEvents.size(); i++)
-	{
-		this->breedEvents[i]->dependencies().clear();
-
-		for (auto dependency : other.breedEvents[i]->dependencies())
-		{
-			// TODO: Could store all of this in a better way I'm sure
-			bool found = false;
-
-			for (unsigned int j = 0; j < other.breedEvents.size(); j++)
-			{
-				if (other.breedEvents[j] == dependency)
-				{
-					this->breedEvents[i]->dependencies().push_back(new BreedEventNode(*this->breedEvents[j]));
-					found = true;
-					break;
-				}
-			}
-
-			for (unsigned int j = 0; j < other.founders.size() && !found; j++)
-			{
-				if (other.founders[j] == dependency)
-				{
-					this->breedEvents[i]->dependencies().push_back(new FounderNode(*this->founders[j]));
-					found = true;
-					break;
-				}
-			}
-
-			// Check that the pedigree is well-formed, i.e. if dependencies are missing or not
-			assert(found);
-		}
-	}
+	other.copy(*this);
 }

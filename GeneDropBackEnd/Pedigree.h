@@ -242,6 +242,8 @@ public:
 
 	Pedigree(const Pedigree& other);
 
+	Pedigree& operator=(Pedigree other);
+
 	//! Copies the structure of the pedigree - but not anything that's been evaluated
 	// Useful because construction of these is relatively expensive
 	Pedigree cloneStructureAndInitialState() const;
@@ -259,6 +261,8 @@ public:
 	FounderNode* addFounder(std::string name, const Genotype& genotype);
 
 protected:
+	// Used for all copy operations
+	void copy(Pedigree& other) const;
 
 	// The founders of the pedigree
 	std::vector<FounderNode*> founders;
