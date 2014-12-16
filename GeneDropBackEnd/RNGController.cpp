@@ -53,13 +53,13 @@ int RNGController::getUniformlyDistributed(int min, int max)
 	// In [0, 1)
 	double rawRandom = uniformGenerator();
 
-	// Scale to [0, 2 + max - min]
-	rawRandom *= 2 + max - min;
+	// Scale to [0, max - min)
+	rawRandom *= 1 + max - min;
 
 	// Scale to [min, max + 1)
 	rawRandom += min;
 
-	// Convert to int in [min, max]
+	// Convert to int in [min, max)
 	return (int)floor(rawRandom);
 }
 

@@ -59,8 +59,8 @@ Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& seco
 				Chromosome hybridChromosome;
 
 				// Select a random chromosome from each parent
-				int firstParentChromosomeIndex = rng->getUniformlyDistributed(0, firstParent.ploidy());
-				int secondParentChromosomeIndex = rng->getUniformlyDistributed(0, secondParent.ploidy());
+				int firstParentChromosomeIndex = rng->getUniformlyDistributed(0, firstParent.ploidy() - 1);
+				int secondParentChromosomeIndex = rng->getUniformlyDistributed(0, secondParent.ploidy() - 1);
 
 				// Randomly choose one of the chromosomes to start drawing from
 				ParentalChromosomeSwitcher chromosomeSwitcher(&firstParent.chromosome(j, firstParentChromosomeIndex), &secondParent.chromosome(j, secondParentChromosomeIndex), *rng);
