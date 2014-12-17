@@ -160,6 +160,8 @@ public:
 		{
 			breeder->breed(firstParent, firstParent, result);
 		}
+
+		_evaluated = true;
 	}
 
 	bool operator==(const BreedEventNode& other) const

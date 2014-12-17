@@ -43,9 +43,9 @@ void SimulationManager::run()
 	bool keepRunning = true;
 
 	// For passing to the thread
-	auto threadFunc = [](Simulation& sim, std::atomic<int>* numberOfThreadsCurrentlyRunning)
+	auto threadFunc = [](Simulation* sim, std::atomic<int>* numberOfThreadsCurrentlyRunning)
 	{
-		sim.run();
+		sim->run();
 	
 		std::cout << "Sim finished" << std::endl;
 
@@ -59,7 +59,7 @@ void SimulationManager::run()
 		if (numberOfThreadsCurrentlyRunning < numberOfThreads && indexOfLastSimulationStarted < (int)simulations.size() - 1)
 		{
 			indexOfLastSimulationStarted++;
-			threads.push_back(std::thread(threadFunc, simulations[indexOfLastSimulationStarted], &numberOfThreadsCurrentlyRunning));
+			threads.push_back(std::thread(threadFunc, &simulations[indexOfLastSimulationStarted], &numberOfThreadsCurrentlyRunning));
 			numberOfThreadsCurrentlyRunning++;
 		}
 
@@ -170,7 +170,7 @@ void SimulationManager::outputResultsToFile(std::string fileName)
 					{
 						for (unsigned int copy = 0; copy < prototypeGenotype.ploidy(); copy++)
 						{
-							outFile << "," << prototypeGenotype.chromosome(chromosome, 0).locus(locus).getAllele();
+							outFile << "," << organism.genotype().chromosome(chromosome, copy).locus(locus).getAllele();
 						}
 					}
 				}
