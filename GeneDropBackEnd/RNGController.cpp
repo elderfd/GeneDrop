@@ -32,7 +32,6 @@ RNGController::SEED_TYPE RNGController::produceSeed()
 
 #ifdef _WIN32
 	seed = (SEED_TYPE)__rdtsc();
-	std::cout << seed << std::endl;
 #else
 	unsigned int lo, hi;
 	__asm__ __volatile__("rdtsc" : "=a" (lo), "=d" (hi));

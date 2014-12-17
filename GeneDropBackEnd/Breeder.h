@@ -23,9 +23,6 @@ public:
 
 	virtual Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const = 0;
 
-protected:
-	RNGController *rng;
-
 	class ParentalChromosomeSwitcher
 	{
 	public:
@@ -64,6 +61,9 @@ protected:
 		RNGController &rng;
 		bool drawingFromFirstParent;
 	};
+
+protected:
+	RNGController *rng;
 };
 
 //! Uses the Haldane mapping function for producing offspring

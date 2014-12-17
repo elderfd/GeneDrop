@@ -26,9 +26,6 @@ public:
 	double distanceBetweenLoci(int firstLocus, int secondLocus) const;
 	double distanceBetweenLoci(std::string firstLocus, std::string secondLocus) const;
 
-	//double getRecombinationProbability(int firstLocusIndex, int secondLocusIndex) const;
-	//double getRecombinationProbability(std::string firstLocusID, std::string secondLocusID) const;
-
 	Locus getLocusCopy(int locusIndex) const;
 	const Locus& locus(int index) const;
 

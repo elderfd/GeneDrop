@@ -26,13 +26,6 @@ std::string Chromosome::getAllele(int locus) const
 	return loci[locus].getAllele();
 }
 
-//double Chromosome::getRecombinationProbability(int firstLocusIndex, int secondLocusIndex) const
-//{
-//	double distance = abs(loci[firstLocusIndex].getGeneticDistance() - loci[secondLocusIndex].getGeneticDistance());
-//
-//	return Chromosome::convertGeneticDistanceToRecombinationRate(distance);
-//}
-
 void Chromosome::setGeneticDistance(int locusIndex, double value)
 {
 	loci[locusIndex].setGeneticDistance(value);
@@ -95,11 +88,6 @@ bool Chromosome::operator!=(const Chromosome& otherChromosome) const
 	return true;
 }
 
-//double Chromosome::convertGeneticDistanceToRecombinationRate(double geneticDistance)
-//{
-//	return (1 - exp(-2 * (geneticDistance / 100))) / 2;
-//}
-
 void Chromosome::setGeneticDistance(std::string locusID, double value)
 {
 	int locusIndex = getLocusIndexFromID(locusID);
@@ -133,13 +121,6 @@ double Chromosome::getGeneticDistance(std::string locusID) const
 	return loci[index].getGeneticDistance();
 }
 
-//double Chromosome::getRecombinationProbability(std::string firstLocusID, std::string secondLocusID) const
-//{
-//	int firstIndex = getLocusIndexFromID(firstLocusID);
-//	int secondIndex = getLocusIndexFromID(secondLocusID);
-//
-//	return getRecombinationProbability(firstIndex, secondIndex);
-//}
 
 std::string Chromosome::getID() const
 {

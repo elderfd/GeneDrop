@@ -16,7 +16,7 @@ public:
 	~SimulationManager();
 
 	SimulationManager(const SimulationManager& other);
-	SimulationManager& operator=(SimulationManager other);
+	SimulationManager operator=(SimulationManager other);
 
 	//! Runs the simulations
 	void run();

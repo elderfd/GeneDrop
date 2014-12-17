@@ -3,25 +3,25 @@
 #include <vector>
 #include "Chromosome.h"
 
-//! Homologous set of chromosomes
-class Homology
-{
-public:
-
-	unsigned int ploidy() const
-	{
-		return chromosomes.size();
-	}
-
-	std::vector<Chromosome> chromosomes;
-};
-
 //! Stores an organism genotype
 class Genotype
 {
 public:
 	Genotype();
 	~Genotype();
+
+	//! Homologous set of chromosomes
+	class Homology
+	{
+	public:
+
+		unsigned int ploidy() const
+		{
+			return chromosomes.size();
+		}
+
+		std::vector<Chromosome> chromosomes;
+	};
 
 	unsigned int ploidy() const
 	{
@@ -57,6 +57,8 @@ public:
 	void addHomologousChromosomes(const Homology& homology);
 
 	const Chromosome& chromosome(unsigned int setIndex, unsigned int chromosomeIndex) const;
+
+	unsigned int numberOfLoci(int chromosomeIndex) const;
 
 protected:
 	// Sets of homologous chromosomes

@@ -106,7 +106,7 @@ SimulationManager::SimulationManager(const SimulationManager& other)
 }
 
 
-SimulationManager& SimulationManager::operator=(SimulationManager other)
+SimulationManager SimulationManager::operator=(SimulationManager other)
 {
 	return other;
 }
