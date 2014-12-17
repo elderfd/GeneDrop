@@ -5,19 +5,20 @@
 //! This handles all of the random number generation needed for a simulation
 class RNGController
 {
+public:
 	typedef boost::random::mt19937 RNG_ENGINE;
 	typedef boost::random::uniform_01<> UNIFORM_DISTRIBUTION;
 	typedef boost::random::normal_distribution<> NORMAL_DISTRIBUTION;
 	typedef boost::random::variate_generator<RNG_ENGINE *, UNIFORM_DISTRIBUTION> UNIFORM_GENERATOR;
 	typedef boost::random::variate_generator<RNG_ENGINE *, NORMAL_DISTRIBUTION> NORMAL_GENERATOR;
+	typedef uint32_t SEED_TYPE;
 
-public:
 	RNGController();
-	RNGController(unsigned long long seed);
+	RNGController(SEED_TYPE seed);
 	~RNGController();
 
 	RNGController(const RNGController& other);
-	RNGController& operator=(RNGController other) const;
+	RNGController operator=(RNGController other) const;
 
 	//RNGController& operator=(const RNGController& other);
 
@@ -28,12 +29,12 @@ public:
 	int getUniformlyDistributed(int min, int max);
 
 	//! Used for resetting the random number generator with a new seed
-	void reseed(unsigned long long seed);
+	void reseed(SEED_TYPE seed);
 
 	// TODO: Implement other distributions
 
 	//! Returns the seed that was used
-	unsigned long long seed() const;
+	SEED_TYPE seed() const;
 
 protected:
 	RNG_ENGINE engine;
@@ -42,6 +43,6 @@ protected:
 
 	// TODO: Think about how to handle this in a multithreaded context
 
-	unsigned long long produceSeed();
-	unsigned long long _seed;
+	SEED_TYPE produceSeed();
+	SEED_TYPE _seed;
 };

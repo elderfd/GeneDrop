@@ -1,17 +1,17 @@
 #include "RNGController.h"
 
-RNGController::RNGController() : engine((const uint32_t)produceSeed()), uniformGenerator(&engine, uniformDistribution)
+RNGController::RNGController() : engine(_seed = produceSeed()), uniformGenerator(&engine, uniformDistribution)
 {
 }
 
 
-RNGController::RNGController(unsigned long long seed) : engine((const uint32_t)seed), uniformGenerator(&engine, uniformDistribution)
+RNGController::RNGController(SEED_TYPE seed) : engine(seed), uniformGenerator(&engine, uniformDistribution)
 {
 	_seed = seed;
 }
 
 
-RNGController& RNGController::operator=(RNGController other) const
+RNGController RNGController::operator=(RNGController other) const
 {
 	return other;
 }
@@ -26,12 +26,13 @@ RNGController::RNGController(const RNGController& other) : engine(other._seed), 
 	_seed = other._seed;
 }
 
-unsigned long long RNGController::produceSeed()
+RNGController::SEED_TYPE RNGController::produceSeed()
 {
-	unsigned long long seed;
+	SEED_TYPE seed;
 
 #ifdef _WIN32
-	seed = __rdtsc();
+	seed = (SEED_TYPE)__rdtsc();
+	std::cout << seed << std::endl;
 #else
 	unsigned int lo, hi;
 	__asm__ __volatile__("rdtsc" : "=a" (lo), "=d" (hi));
@@ -64,13 +65,13 @@ int RNGController::getUniformlyDistributed(int min, int max)
 }
 
 
-unsigned long long RNGController::seed() const
+RNGController::SEED_TYPE RNGController::seed() const
 {
 	return _seed;
 }
 
 
-void RNGController::reseed(unsigned long long newSeed)
+void RNGController::reseed(SEED_TYPE newSeed)
 {
 	// Change the internal seed
 	_seed = newSeed;
