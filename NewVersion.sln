@@ -13,6 +13,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneDropTests", "GeneDropTe
 		{D3FCA2AC-B6DC-41F9-926D-010A9D5BE05F} = {D3FCA2AC-B6DC-41F9-926D-010A9D5BE05F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneDropGraphicalFrontEnd", "GeneDropGraphicalFrontEnd\GeneDropGraphicalFrontEnd.vcxproj", "{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -30,6 +32,10 @@ Global
 		{554F59F8-48C7-47CE-9C8F-4B064AF70539}.Debug|Win32.Build.0 = Debug|Win32
 		{554F59F8-48C7-47CE-9C8F-4B064AF70539}.Release|Win32.ActiveCfg = Release|Win32
 		{554F59F8-48C7-47CE-9C8F-4B064AF70539}.Release|Win32.Build.0 = Release|Win32
+		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Debug|Win32.Build.0 = Debug|Win32
+		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Release|Win32.ActiveCfg = Release|Win32
+		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
