@@ -71,7 +71,6 @@
   <ItemGroup>
     <ClCompile Include="application_win.cc" />
     <ClCompile Include="graphicalFrontEnd.cpp" />
-    <ClCompile Include="main.cc" />
     <ClCompile Include="view_win.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -84,6 +83,12 @@
     <ClInclude Include="js_delegate.h" />
     <ClInclude Include="method_dispatcher.h" />
     <ClInclude Include="view.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mainView.css" />
+    <None Include="mainView.htm">
+      <DeploymentContent>true</DeploymentContent>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

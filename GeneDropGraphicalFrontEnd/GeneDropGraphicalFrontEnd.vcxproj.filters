@@ -21,9 +21,6 @@
     <ClCompile Include="application_win.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="main.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="view_win.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -41,5 +38,9 @@
     <ClInclude Include="view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="mainView.htm" />
+    <None Include="mainView.css" />
   </ItemGroup>
 </Project>

@@ -1,14 +1,61 @@
+#include "application.h"
+#include "view.h"
 #include <Awesomium/WebCore.h>
 #include <Awesomium/STLHelpers.h>
+#ifdef _WIN32
+#include <Windows.h>
+#endif
 
-int main(int argc, char *argv[])
-{
-	// Initialise the web core
-	Awesomium::WebConfig coreConfig;
-	Awesomium::WebCore* core = Awesomium::WebCore::Initialize(coreConfig);
+using namespace Awesomium;
 
-	// Clean up the webcore
-	Awesomium::WebCore::Shutdown();
+class TutorialApp : public Application::Listener {
+	Application* app_;
+	View* view_;
+public:
+	TutorialApp()
+		: app_(Application::Create()),
+		view_(0) {
+		app_->set_listener(this);
+	}
+
+	virtual ~TutorialApp() {
+		if (view_)
+			app_->DestroyView(view_);
+		if (app_)
+			delete app_;
+	}
+
+	void Run() {
+		app_->Run();
+	}
+
+	// Inherited from Application::Listener
+	virtual void OnLoaded() {
+		view_ = View::Create(500, 300);
+		
+		// TODO: Work out where to store views
+		WebURL url(WSLit("file:///E:/Work/GeneDrop/NewVersion/GeneDropGraphicalFrontEnd/mainView.htm"));
+		view_->web_view()->LoadURL(url);
+	}
+
+	// Inherited from Application::Listener
+	virtual void OnUpdate() {
+	}
+
+	// Inherited from Application::Listener
+	virtual void OnShutdown() {
+	}
+};
+
+#ifdef _WIN32
+int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, wchar_t*,
+	int nCmdShow) {
+#else
+int main() {
+#endif
+
+	TutorialApp app;
+	app.Run();
 
 	return 0;
 }
