@@ -9,10 +9,29 @@
     </div>
     <div id="inputArea">
         <textarea id="outputBox" readonly></textarea>
-        <div id="buttonBox">
-            <button id="goButton" onclick="runSimulations()">Run Simulations</button>
-            Number of Simulations<input type="number" required min="1" value="1" />
-        </div>
+        <button id="goButton" onclick="runSimulations()">Run Simulations</button>
+        <form id="inputForm">
+            <fieldset id="inputFieldSet">
+                <ol id="inputList">
+                    <li>
+                        <label class="inputLabel" for="numberOfSimulations">Number of Simulations</label>
+                        <input type="number" class="inputWidget" name="numberOfSimulations" required min="1" value="1" />
+                    </li>
+                    <li>
+                        <label class="inputLabel" for="pedigree">Pedigree File</label>
+                        <input type="file" class="inputWidget" name="pedigree" required />
+                    </li>
+                    <li>
+                        <label class="inputLabel" for="loci">Loci File</label>
+                        <input type="file" class="inputWidget" name="loci" required />
+                    </li>
+                    <li>
+                        <label class="inputLabel" for="founders">Founder Genotype File</label>
+                        <input type="file" class="inputWidget" name="founders" required />
+                    </li>
+                </ol>
+            </fieldset>
+        </form>
     </div>
 </body>
 </html>

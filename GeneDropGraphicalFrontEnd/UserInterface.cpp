@@ -44,6 +44,7 @@ void UserInterface::go()
 	SimulationManagerFactory managerFactory;
 
 	// TODO: Get input data
+
 	std::string pedigreeFileName = "pedigree.csv", genotypeFileName = "founders.csv", lociFileName = "loci.csv";
 	int numberOfRuns = 1;
 

@@ -24,7 +24,7 @@ public:
 
 		bindMethods(view_->web_view());
 
-		// TODO: Work out where to store views
+		// TODO: Clean up data paths
 		Awesomium::WebURL url(Awesomium::WSLit("file:///E:/Work/GeneDrop/NewVersion/GeneDropGraphicalFrontEnd/mainView.html"));
 		view_->web_view()->LoadURL(url);
 	}
