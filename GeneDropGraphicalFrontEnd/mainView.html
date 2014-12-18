@@ -1,8 +1,20 @@
 <html>
+<head>
+    <title>GeneDrop</title>
+    <link rel="stylesheet" type="text/css" href="mainView.css" />
+</head>
 <body>
-    <h1>Hello World</h1>
-    <script type="text/javascript">
-        document.write("You are running Awesomium " + awesomium.version);
-    </script>
+    <div id="titleArea">
+        <h1>GeneDrop</h1>
+    </div>
+    <div id="inputArea">
+        <textarea id="outputBox" readonly></textarea>
+        <div id="buttonBox">
+            <button id="goButton" onclick="runSimulations()">Run Simulations</button>
+            Number of Simulations<input type="number" required min="1" value="1" />
+        </div>
+    </div>
 </body>
 </html>
+
+<script src="scripts.js"></script>

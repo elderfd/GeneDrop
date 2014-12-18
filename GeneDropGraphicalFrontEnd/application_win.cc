@@ -22,7 +22,7 @@ class ApplicationWin : public Application {
       web_core_->Shutdown();
   }
 
-  virtual void Run() {
+  virtual void run() {
     Load();
 
     // Main message loop:

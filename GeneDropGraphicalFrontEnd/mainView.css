@@ -1,3 +1,20 @@
-BODY
-{
+#titleArea{
+    margin-left: auto;
+    margin-right:auto;
+    width: 100%;
+    background-color: black;
+    color: white;
+    text-align: center;
+}
+
+#outputBox{
+    width: 100%;
+    overflow: auto;
+}
+
+#buttonBox{
+    margin-left: auto;
+    margin-right: auto;
+    width: 100%;
+    text-align: center;
 }

@@ -24,6 +24,12 @@
     <ClCompile Include="view_win.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UserInterface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="MethodDispatcher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="application.h">
@@ -32,15 +38,19 @@
     <ClInclude Include="js_delegate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="method_dispatcher.h">
+    <ClInclude Include="view.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="view.h">
+    <ClInclude Include="UserInterface.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MethodDispatcher.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="mainView.htm" />
     <None Include="mainView.css" />
+    <None Include="mainView.html" />
+    <None Include="scripts.js" />
   </ItemGroup>
 </Project>

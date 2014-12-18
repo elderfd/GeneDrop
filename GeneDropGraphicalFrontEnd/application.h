@@ -1,5 +1,4 @@
-#ifndef TUTORIAL_APPLICATION_H_
-#define TUTORIAL_APPLICATION_H_
+#pragma once
 
 class View;
 
@@ -32,7 +31,7 @@ class Application {
   static Application* Create();
 
   // Begin the Run loop.
-  virtual void Run() = 0;
+  virtual void run() = 0;
 
   // Ends the Run loop.
   virtual void Quit() = 0;
@@ -63,5 +62,3 @@ class Application {
   Listener* listener_;
   Awesomium::WebCore* web_core_;
 };
-
-#endif  // TUTORIAL_APPLICATION_H_

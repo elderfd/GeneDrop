@@ -39,7 +39,7 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <IncludePath>$(AWE_DIR)include;../GeneDropBackEnd;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Boost\include\boost-1_55;$(AWE_DIR)include;../GeneDropBackEnd;$(IncludePath)</IncludePath>
     <LibraryPath>$(AWE_DIR)build\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -71,6 +71,8 @@
   <ItemGroup>
     <ClCompile Include="application_win.cc" />
     <ClCompile Include="graphicalFrontEnd.cpp" />
+    <ClCompile Include="MethodDispatcher.cpp" />
+    <ClCompile Include="UserInterface.cpp" />
     <ClCompile Include="view_win.cc" />
   </ItemGroup>
   <ItemGroup>
@@ -81,14 +83,16 @@
   <ItemGroup>
     <ClInclude Include="application.h" />
     <ClInclude Include="js_delegate.h" />
-    <ClInclude Include="method_dispatcher.h" />
+    <ClInclude Include="MethodDispatcher.h" />
+    <ClInclude Include="UserInterface.h" />
     <ClInclude Include="view.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="mainView.css" />
-    <None Include="mainView.htm">
+    <None Include="mainView.html">
       <DeploymentContent>true</DeploymentContent>
     </None>
+    <None Include="scripts.js" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
