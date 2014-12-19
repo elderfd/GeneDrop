@@ -19,6 +19,12 @@ Breeder::Breeder(const Breeder& other)
 }
 
 
+Breeder* HaldaneBreeder::makeCopy() const
+{
+	return new HaldaneBreeder(*this);
+}
+
+
 void Breeder::setRNG(RNGController* rng)
 {
 	this->rng = rng;

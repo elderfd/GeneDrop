@@ -15,6 +15,8 @@ public:
 
 	void setRNG(RNGController* rng);
 
+	virtual Breeder* makeCopy() const = 0;
+
 	//! Breeds and sets the child genotype 
 	void breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const;
 
@@ -72,6 +74,10 @@ class HaldaneBreeder : public Breeder
 public:
 	HaldaneBreeder(RNGController* rng) : Breeder(rng)
 	{};
+
+	Breeder* makeCopy() const;
+
+	HaldaneBreeder(const HaldaneBreeder& other) : Breeder(other){};
 
 	Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const;
 

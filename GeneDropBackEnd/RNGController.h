@@ -6,12 +6,14 @@
 class RNGController
 {
 public:
+	typedef uint32_t SEED_TYPE;
 	typedef boost::random::mt19937 RNG_ENGINE;
 	typedef boost::random::uniform_01<> UNIFORM_DISTRIBUTION;
 	typedef boost::random::normal_distribution<> NORMAL_DISTRIBUTION;
+	typedef boost::random::uniform_int_distribution<SEED_TYPE> SEED_DISTRIBUTION;
 	typedef boost::random::variate_generator<RNG_ENGINE *, UNIFORM_DISTRIBUTION> UNIFORM_GENERATOR;
 	typedef boost::random::variate_generator<RNG_ENGINE *, NORMAL_DISTRIBUTION> NORMAL_GENERATOR;
-	typedef uint32_t SEED_TYPE;
+	typedef boost::random::variate_generator<RNG_ENGINE *, SEED_DISTRIBUTION> SEED_GENERATOR;
 
 	RNGController();
 	RNGController(SEED_TYPE seed);
@@ -31,18 +33,22 @@ public:
 	//! Used for resetting the random number generator with a new seed
 	void reseed(SEED_TYPE seed);
 
-	// TODO: Implement other distributions
+	//! Generates a new seed using the random number generator
+	SEED_TYPE produceRandomisedSeed();
 
 	//! Returns the seed that was used
 	SEED_TYPE seed() const;
 
 protected:
 	RNG_ENGINE engine;
+	
 	UNIFORM_DISTRIBUTION uniformDistribution;
+	SEED_DISTRIBUTION seedDistribution;
+
 	UNIFORM_GENERATOR uniformGenerator;
+	SEED_GENERATOR seedGenerator;
 
-	// TODO: Think about how to handle this in a multithreaded context
+	SEED_TYPE produceSeedFromProcessor();
 
-	SEED_TYPE produceSeed();
 	SEED_TYPE _seed;
 };

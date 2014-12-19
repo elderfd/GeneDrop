@@ -4,19 +4,25 @@
 Simulation::Simulation()
 {
 	_finished = false;
+
+	// Default to Haldane
+	this->breeder = new HaldaneBreeder(&rng);
 }
 
 
-Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder)
+Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder, const RNGController &rng)
 {
 	_finished = false;
 	this->pedigree = pedigree.cloneStructureAndInitialState();
-	this->breeder = breeder;
+	this->breeder = breeder->makeCopy();
+	this->rng = rng;
+	this->breeder->setRNG(&this->rng);
 }
 
 
 Simulation::~Simulation()
 {
+	delete breeder;
 }
 
 

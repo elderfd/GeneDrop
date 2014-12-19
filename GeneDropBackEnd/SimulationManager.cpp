@@ -84,7 +84,11 @@ void SimulationManager::generateSimulations(int numberOfSimulations)
 
 	for (int i = 0; i < numberOfSimulations; i++)
 	{
-		simulations.emplace_back(prototypePedigree, &breeder);
+		// Seed a new RNG from the master one
+		RNGController rng;
+		rng.reseed(this->rng.produceRandomisedSeed());
+
+		simulations.emplace_back(prototypePedigree, &breeder, rng);
 	}
 }
 
@@ -130,14 +134,13 @@ void SimulationManager::outputResultsToFile(std::string fileName)
 		outFile << "Number of loci," << prototypePedigree.founders[0]->organism().genotype().chromosome(0, 0).getNumberOfLoci() << std::endl;
 		outFile << "Number of founders," << prototypePedigree.founders.size() << std::endl;
 		outFile << "Number of generations," << "-" << std::endl;	//TODO: Reimplement this
-		outFile << "Seed," << rng.seed() << std::endl;
 		outFile << "Number of runs," << simulations.size() << std::endl;
 
 		// Some spacer lines
 		outFile << std::endl << std::endl;
 
 		// Now header for the data
-		outFile << "Run Number,ID";
+		outFile << "Run Number,Seed,ID";
 
 		// Name all loci
 		auto& prototypeGenotype = prototypePedigree.founders[0]->organism().genotype();
@@ -162,7 +165,7 @@ void SimulationManager::outputResultsToFile(std::string fileName)
 			{
 				auto& organism = breedEvent->organism();
 
-				outFile << simulationNumber << "," << organism.name();
+				outFile << simulationNumber << "," << simulations[simulationNumber].rng.seed() << "," <<organism.name();
 
 				for (unsigned int chromosome = 0; chromosome < prototypeGenotype.numberOfChromosomes(); chromosome++)
 				{

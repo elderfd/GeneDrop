@@ -1,13 +1,29 @@
 #include "RNGController.h"
+#include <limits.h>
 
-RNGController::RNGController() : engine(_seed = produceSeed()), uniformGenerator(&engine, uniformDistribution)
+RNGController::RNGController() :
+	engine(_seed = produceSeedFromProcessor()),
+	uniformGenerator(&engine, uniformDistribution),
+	seedGenerator(&engine, seedDistribution)
 {
 }
 
 
-RNGController::RNGController(SEED_TYPE seed) : engine(seed), uniformGenerator(&engine, uniformDistribution)
+RNGController::RNGController(SEED_TYPE seed) :
+	engine(seed),
+	uniformGenerator(&engine, uniformDistribution),
+	seedGenerator(&engine, seedDistribution)
 {
 	_seed = seed;
+}
+
+
+RNGController::RNGController(const RNGController& other) :
+	engine(other._seed),
+	uniformGenerator(&engine, uniformDistribution),
+	seedGenerator(&engine, seedDistribution)
+{
+	_seed = other._seed;
 }
 
 
@@ -21,12 +37,8 @@ RNGController::~RNGController()
 {
 }
 
-RNGController::RNGController(const RNGController& other) : engine(other._seed), uniformGenerator(&engine, uniformDistribution)
-{
-	_seed = other._seed;
-}
 
-RNGController::SEED_TYPE RNGController::produceSeed()
+RNGController::SEED_TYPE RNGController::produceSeedFromProcessor()
 {
 	SEED_TYPE seed;
 
@@ -39,6 +51,12 @@ RNGController::SEED_TYPE RNGController::produceSeed()
 #endif
 
 	return seed;
+}
+
+
+RNGController::SEED_TYPE RNGController::produceRandomisedSeed()
+{
+	return seedGenerator();
 }
 
 
@@ -78,4 +96,5 @@ void RNGController::reseed(SEED_TYPE newSeed)
 
 	// Now update all of the generators
 	uniformGenerator.distribution().reset();
+	seedGenerator.distribution().reset();
 }
