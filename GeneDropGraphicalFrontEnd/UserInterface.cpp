@@ -47,9 +47,10 @@ void UserInterface::go()
 
 	std::string pedigreeFileName = "pedigree.csv", genotypeFileName = "founders.csv", lociFileName = "loci.csv";
 	int numberOfRuns = 1;
+	int numberOfThreads = 1;
 
 	// Set up an appropriate simulation state
-	SimulationManager simManager = managerFactory.createFromSimpleInput(pedigreeFileName, genotypeFileName, lociFileName, numberOfRuns);
+	SimulationManager simManager = managerFactory.createFromSimpleInput(pedigreeFileName, genotypeFileName, lociFileName, numberOfRuns, numberOfThreads);
 
 	// Verify the input
 	Maybe<std::string> error = simManager.verifySimulationPrototype();

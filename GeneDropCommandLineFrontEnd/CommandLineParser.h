@@ -34,9 +34,10 @@ protected:
 		genotypeFileKey,
 		lociFileKey,
 		settingsFileKey,
-		numberOfRunsKey;
+		numberOfRunsKey,
+		numberOfThreadsKey;
 
-	Maybe<std::string> pedigreeFile, lociFile, genotypeFile, numberOfRuns;
+	Maybe<std::string> pedigreeFile, lociFile, genotypeFile, numberOfRuns, numberOfThreads;
 
 	static const std::vector<std::string> allKeys;
 };

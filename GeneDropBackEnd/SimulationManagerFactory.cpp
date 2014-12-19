@@ -15,7 +15,7 @@ SimulationManagerFactory::~SimulationManagerFactory()
 }
 
 
-SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns)
+SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns, int numberOfThreads)
 {
 	SimulationManager newManager;
 
@@ -319,9 +319,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	// Add the right number of simulations
 	newManager.generateSimulations(numberOfRuns);
 
-	// TODO: Soft-code this from user-input
-	// TODO: Work out how to make the PRNG play nicely with multiple threads
-	newManager.numberOfThreads = 1;
+	newManager.numberOfThreads = numberOfThreads;
 
 	return newManager;
 }

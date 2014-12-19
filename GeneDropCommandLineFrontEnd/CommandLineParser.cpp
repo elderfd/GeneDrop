@@ -9,14 +9,16 @@ const std::string
 	CommandLineParser::genotypeFileKey = "genotype",
 	CommandLineParser::lociFileKey = "loci",
 	CommandLineParser::settingsFileKey = "settings",
-	CommandLineParser::numberOfRunsKey = "numberOfRuns";
+	CommandLineParser::numberOfRunsKey = "numberOfRuns",
+	CommandLineParser::numberOfThreadsKey = "numberOfThreads";
 
 const std::vector<std::string> CommandLineParser::allKeys = {
 	CommandLineParser::pedigreeFileKey,
 	CommandLineParser::genotypeFileKey,
 	CommandLineParser::lociFileKey,
 	CommandLineParser::settingsFileKey,
-	CommandLineParser::numberOfRunsKey
+	CommandLineParser::numberOfRunsKey,
+	CommandLineParser::numberOfThreadsKey
 };
 
 CommandLineParser::CommandLineParser(int argc, char *argv[])
@@ -34,12 +36,15 @@ bool CommandLineParser::parse(int argc, char *argv[])
 {
 	bool success = true;
 
+	// TODO: Implement some default values
+
 	// First see if we've specified the traditional input files
 	
 	if ((pedigreeFile = getValueForKey(pedigreeFileKey, argc, argv))
 		&& (lociFile = getValueForKey(lociFileKey, argc, argv))
 		&& (genotypeFile = getValueForKey(genotypeFileKey, argc, argv))
 		&& (numberOfRuns = getValueForKey(numberOfRunsKey, argc, argv))
+		&& (numberOfThreads = getValueForKey(numberOfThreadsKey, argc, argv))
 		)
 	{
 		// Check we can open all files
@@ -94,6 +99,7 @@ bool CommandLineParser::parse(int argc, char *argv[])
 		addCommandLineOptSpec(genotypeFileKey, "The path to the founder genotypes file to use.");
 		addCommandLineOptSpec(lociFileKey, "The path to the loci file to use.");
 		addCommandLineOptSpec(numberOfRunsKey, "The number of simulations to carry out for this dataset.");
+		addCommandLineOptSpec(numberOfThreadsKey, "The number of threads to use for simulations.");
 
 		throw std::runtime_error(errorMessage);
 	}
@@ -173,7 +179,13 @@ SimulationManager CommandLineParser::createSimulationManagerFromInput()
 {
 	SimulationManagerFactory factory;
 
-	auto manager = factory.createFromSimpleInput(pedigreeFile.value(), genotypeFile.value(), lociFile.value(), std::stoi(numberOfRuns.value()));
+	auto manager = factory.createFromSimpleInput(
+		pedigreeFile.value(),
+		genotypeFile.value(),
+		lociFile.value(),
+		std::stoi(numberOfRuns.value()),
+		std::stoi(numberOfThreads.value())
+	);
 
 	return manager;
 }
