@@ -21,9 +21,15 @@
     <ClCompile Include="CommandLineParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="CommandLineArg.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CommandLineParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CommandLineArg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

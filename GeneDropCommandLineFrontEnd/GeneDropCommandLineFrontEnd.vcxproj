@@ -71,10 +71,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CommandLineArg.cpp" />
     <ClCompile Include="commandLineFrontEnd.cpp" />
     <ClCompile Include="CommandLineParser.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CommandLineArg.h" />
     <ClInclude Include="CommandLineParser.h" />
   </ItemGroup>
   <ItemGroup>
