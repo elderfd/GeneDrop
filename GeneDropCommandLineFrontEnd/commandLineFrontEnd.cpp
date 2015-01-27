@@ -80,6 +80,8 @@ int main(int argc, char *argv[])
 		return 1;
 	}
 
+	cLineParser.setAllValues();
+
 	// Then set up an appropriate simulation state
 	SimulationManager simManager = SimulationManagerFactory::createFromSimpleInput(
 		pedigreeFileName,

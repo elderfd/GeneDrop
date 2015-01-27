@@ -15,7 +15,7 @@ CommandLineParser::~CommandLineParser()
 {
 	while (expectedArgs.size() > 0)
 	{
-		delete expectedArgs[expectedArgs.size()];
+		delete expectedArgs[expectedArgs.size() - 1];
 		expectedArgs.pop_back();
 	}
 }
@@ -29,15 +29,28 @@ void CommandLineParser::parse(int argc, char *argv[])
 		// See if it's a key
 		if (argv[argIndex][0] == '-')
 		{
+			// Strip off the dash
+			std::string trimmed = std::string(argv[argIndex]);
+			trimmed.erase(trimmed.begin());
+
 			// Then check if it matches anything (checking we're not at the end of the input first)
 			if (argIndex != argc - 1)
 			{
-				if (auto argMatch = getUnambiguousKeyMatch(argv[argIndex]))
+				if (auto argMatch = getUnambiguousKeyMatch(trimmed))
 				{
 					argIndex++;
 					argMatch.value()->setValue(argv[argIndex]);
 				}
 			}
+		}
+	}
+
+	// Check that everything is ok
+	for (auto arg : expectedArgs)
+	{
+		if (auto errorMessage = arg->hasError())
+		{
+			errorStack.push_back(errorMessage.value());
 		}
 	}
 }
@@ -59,7 +72,7 @@ Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::s
 	// If too many found or none found make an error
 	if (foundArgs.size() > 1 || foundArgs.size() == 0)
 	{
-		std::string errorMessage = "No unambigious matches for key -" + key + "found; ";
+		std::string errorMessage = "No unambigious matches for key -" + key + " found; ";
 
 		if (foundArgs.size() > 1)
 		{
@@ -121,4 +134,13 @@ Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered()
 	}
 
 	return retVal;
+}
+
+
+void CommandLineParser::setAllValues()
+{
+	for (auto arg : expectedArgs)
+	{
+		arg->setValueOfParameter();
+	}
 }

@@ -81,7 +81,7 @@ template<class T> T CommandLineArg<T>::value() const
 
 	if (!set())
 	{
-		assert(!_optional);
+		assert(_optional);
 
 		value = defaultValue;
 	}
@@ -100,7 +100,7 @@ template<class T> Maybe<std::string> CommandLineArg<T>::hasError() const
 
 	if (!(set() || _optional))
 	{
-		errorMessage.setValue("Required parameter not given value.");
+		errorMessage.setValue("Required key " + _key + " not given value.");
 	}
 
 	return errorMessage;

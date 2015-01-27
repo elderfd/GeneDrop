@@ -29,6 +29,9 @@ public:
 	//! Return any warning messages
 	Maybe<std::vector<std::string>> warningsEncountered();
 
+	//! Sets all supplied parameters to the correct value
+	void setAllValues();
+
 protected:	
 	Maybe<CommandLineArgInterface*> getUnambiguousKeyMatch(std::string key);
 
