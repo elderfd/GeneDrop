@@ -16,6 +16,12 @@ public:
 		setValue(value);
 	}
 
+	Maybe(const Maybe<T> &other)
+	{
+		this->_set = other._set;
+		this->_value = other._value;
+	}
+
 	bool set() const
 	{
 		return _set;
@@ -34,7 +40,8 @@ public:
 		_set = true;
 	}
 
-	explicit operator bool() const {
+	explicit operator bool() const
+	{
 		return set();
 	}
 protected:

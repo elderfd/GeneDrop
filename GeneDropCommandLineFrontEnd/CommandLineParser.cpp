@@ -4,22 +4,6 @@
 #include "SimulationManagerFactory.h"
 #include <fstream>
 
-const std::string
-	CommandLineParser::pedigreeFileKey = "pedigree",
-	CommandLineParser::genotypeFileKey = "genotype",
-	CommandLineParser::lociFileKey = "loci",
-	CommandLineParser::settingsFileKey = "settings",
-	CommandLineParser::numberOfRunsKey = "numberOfRuns",
-	CommandLineParser::numberOfThreadsKey = "numberOfThreads";
-
-const std::vector<std::string> CommandLineParser::allKeys = {
-	CommandLineParser::pedigreeFileKey,
-	CommandLineParser::genotypeFileKey,
-	CommandLineParser::lociFileKey,
-	CommandLineParser::settingsFileKey,
-	CommandLineParser::numberOfRunsKey,
-	CommandLineParser::numberOfThreadsKey
-};
 
 CommandLineParser::CommandLineParser(int argc, char *argv[])
 {
@@ -29,163 +13,112 @@ CommandLineParser::CommandLineParser(int argc, char *argv[])
 
 CommandLineParser::~CommandLineParser()
 {
+	while (expectedArgs.size() > 0)
+	{
+		delete expectedArgs[expectedArgs.size()];
+		expectedArgs.pop_back();
+	}
 }
 
 
-bool CommandLineParser::parse(int argc, char *argv[])
+void CommandLineParser::parse(int argc, char *argv[])
 {
-	bool success = true;
-
-	// TODO: Implement some default values
-
-	// First see if we've specified the traditional input files
-	
-	if ((pedigreeFile = getValueForKey(pedigreeFileKey, argc, argv))
-		&& (lociFile = getValueForKey(lociFileKey, argc, argv))
-		&& (genotypeFile = getValueForKey(genotypeFileKey, argc, argv))
-		&& (numberOfRuns = getValueForKey(numberOfRunsKey, argc, argv))
-		&& (numberOfThreads = getValueForKey(numberOfThreadsKey, argc, argv))
-		)
+	// Try to match all keys to something
+	for (int argIndex = 0; argIndex < argc; argIndex++)
 	{
-		// Check we can open all files
-		std::vector<std::string> fileNames = { pedigreeFile.value(), lociFile.value(), genotypeFile.value() };
-
-		for (auto fileName : fileNames)
+		// See if it's a key
+		if (argv[argIndex][0] == '-')
 		{
-			std::ifstream testStream(fileName);
-
-			if (!testStream)
+			// Then check if it matches anything (checking we're not at the end of the input first)
+			if (argIndex != argc - 1)
 			{
-				testStream.close();
-				throw std::runtime_error("Failed to open file " + fileName);
-			}
-
-			testStream.close();
-		}
-
-		// Check that the number of runs is an integer > 0
-		try
-		{
-			int test = std::stoi(numberOfRuns.value());
-
-			if (test <= 0)
-			{
-				throw std::runtime_error("NULL");
-			}
-		}
-		catch (std::exception)
-		{
-			throw std::runtime_error("Number of runs specified was not an integer > 0.");
-		}
-
-		// TODO: Verify the structure of the files
-	}	// Otherwise have a look for a settings XML file
-	else if (auto settingsFile = getValueForKey(settingsFileKey, argc, argv))
-	{
-		// If we found a settings file we need to parse it to extract the needed data
-		// TODO: Implement this new input file
-	}
-	else
-	{
-		success = false;
-		std::string errorMessage = "Invalid input syntax. Should provide following options, \n";
-
-		auto addCommandLineOptSpec = [&] (std::string option, std::string meaning)
-		{
-			errorMessage += "\t-" + option + "  =  " + meaning + "\n";
-		};
-
-		addCommandLineOptSpec(pedigreeFileKey, "The path to the pedigree file to use.");
-		addCommandLineOptSpec(genotypeFileKey, "The path to the founder genotypes file to use.");
-		addCommandLineOptSpec(lociFileKey, "The path to the loci file to use.");
-		addCommandLineOptSpec(numberOfRunsKey, "The number of simulations to carry out for this dataset.");
-		addCommandLineOptSpec(numberOfThreadsKey, "The number of threads to use for simulations.");
-
-		throw std::runtime_error(errorMessage);
-	}
-
-	return success;
-}
-
-
-Maybe<std::string> CommandLineParser::getValueForKey(std::string key, int argc, char *argv[])
-{
-	Maybe<std::string> retVal;
-
-	for (int i = 0; i < argc; i++)
-	{
-		// TODO: This whole thing could certainly be improved
-		if (argv[i][0] == '-')
-		{
-			// Strip the dash
-			std::string toCheck = std::string(argv[i]);
-			toCheck.erase(0, 1);
-
-			if (unambigiousKeyMatch(toCheck, key))
-			{
-				if (++i < argc)
+				if (auto argMatch = getUnambiguousKeyMatch(argv[argIndex]))
 				{
-					retVal.setValue(std::string(argv[i]));
+					argIndex++;
+					argMatch.value()->setValue(argv[argIndex]);
 				}
-
-				break;
 			}
 		}
+	}
+}
+
+
+Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::string key)
+{
+	std::vector<CommandLineArgInterface*> foundArgs;
+	Maybe<CommandLineArgInterface*> returnObj;
+
+	for (auto arg : expectedArgs)
+	{
+		if (arg->matchesKey(key))
+		{
+			foundArgs.push_back(arg);
+		}
+	}
+
+	// If too many found or none found make an error
+	if (foundArgs.size() > 1 || foundArgs.size() == 0)
+	{
+		std::string errorMessage = "No unambigious matches for key -" + key + "found; ";
+
+		if (foundArgs.size() > 1)
+		{
+			errorMessage += "possible matches are: ";
+			bool firstDone = false;
+
+			for (auto arg : foundArgs)
+			{
+				if (!firstDone)
+				{
+					firstDone = true;
+				}
+				else
+				{
+					errorMessage += ",";
+				}
+				errorMessage += arg->getKey();
+			}
+
+			errorMessage += ".";
+		}
+		else
+		{
+			errorMessage += "no matches found.";
+		}
+
+		warningStack.push_back(errorMessage);
+
+		return returnObj;
+	}
+
+	// Unambiguous match found so return it
+	returnObj.setValue(foundArgs[0]);
+
+	return returnObj;
+}
+
+
+Maybe<std::vector<std::string>> CommandLineParser::errorsEncountered()
+{
+	Maybe<std::vector<std::string>> retVal;
+
+	if (errorStack.size() > 0)
+	{
+		retVal.setValue(errorStack);
 	}
 
 	return retVal;
 }
 
 
-bool CommandLineParser::unambigiousKeyMatch(std::string toCheck, std::string key)
+Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered()
 {
-	bool matchedRightKey = false;
-	bool matchedOtherKey = false;
+	Maybe<std::vector<std::string>> retVal;
 
-	for (unsigned int i = 0; i < allKeys.size(); i++)
+	if (warningStack.size() > 0)
 	{
-		bool matched = true;
-
-		for (unsigned int j = 0; j < toCheck.size(); j++)
-		{
-			if (toupper(toCheck[j]) != toupper(allKeys[i][j]))
-			{
-				matched = false;
-				break;
-			}
-		}
-
-		if (allKeys[i] == key &&  matched)
-		{
-			matchedRightKey = true;
-		}
-		else if (matched)
-		{
-			matchedOtherKey = true;
-		}
+		retVal.setValue(warningStack);
 	}
 
-	if (matchedRightKey && !matchedOtherKey)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-}
-
-SimulationManager CommandLineParser::createSimulationManagerFromInput()
-{
-	SimulationManagerFactory factory;
-
-	auto manager = factory.createFromSimpleInput(
-		pedigreeFile.value(),
-		genotypeFile.value(),
-		lociFile.value(),
-		std::stoi(numberOfRuns.value()),
-		std::stoi(numberOfThreads.value())
-	);
-
-	return manager;
+	return retVal;
 }

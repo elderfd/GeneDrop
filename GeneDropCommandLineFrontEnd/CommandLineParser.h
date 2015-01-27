@@ -3,8 +3,8 @@
 #include <string>
 #include <vector>
 #include <assert.h>
-#include "SimulationManager.h"
 #include "Maybe.h"
+#include "CommandLineArg.h"
 
 //! Used to extract options from the args supplied to the program
 /*!
@@ -17,17 +17,20 @@ public:
 	CommandLineParser(){};
 	~CommandLineParser();
 
-	SimulationManager createSimulationManagerFromInput();
+	template<class T> void addArg(std::string key, T* parameterToSet);
+	template<class T> void addArg(std::string key, T* parameterToSet, T defaultValue);
 
-	// Parses the input and returns true if successful
-	bool parse(int argc, char *argv[]);
+	//! Parses the supplied input
+	void parse(int argc, char *argv[]);
 
-protected:
-	// Finds the value matching a key from the input
-	Maybe<std::string> getValueForKey(std::string key, int argc, char *argv[]);
+	//! Return any error message encountered while parsing
+	Maybe<std::vector<std::string>> errorsEncountered();
 
-	// Returns if toCheck unambiguously matches key or not
-	bool unambigiousKeyMatch(std::string toCheck, std::string key);
+	//! Return any warning messages
+	Maybe<std::vector<std::string>> warningsEncountered();
+
+protected:	
+	Maybe<CommandLineArgInterface*> getUnambiguousKeyMatch(std::string key);
 
 	static const std::string
 		pedigreeFileKey,
@@ -40,5 +43,22 @@ protected:
 	Maybe<std::string> pedigreeFile, lociFile, genotypeFile, numberOfRuns, numberOfThreads;
 
 	static const std::vector<std::string> allKeys;
+
+	// All error messages found while parsing pushed onto here
+	std::vector<std::string> errorStack;
+	std::vector<std::string> warningStack;
+
+	std::vector<CommandLineArgInterface*> expectedArgs;
 };
 
+
+template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet)
+{
+	expectedArgs.push_back(new CommandLineArg<T>(key, parameterToSet));
+}
+
+
+template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet, T defaultValue)
+{
+	expectedArgs.push_back(new CommandLineArg<T>(key, parameterToSet, defaultValue));
+}
