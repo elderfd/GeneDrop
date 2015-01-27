@@ -32,6 +32,9 @@ public:
 	//! Sets all supplied parameters to the correct value
 	void setAllValues();
 
+	//! Sets the value for a single parameter
+	void setSingleValue(std::string key);
+
 protected:	
 	Maybe<CommandLineArgInterface*> getUnambiguousKeyMatch(std::string key);
 

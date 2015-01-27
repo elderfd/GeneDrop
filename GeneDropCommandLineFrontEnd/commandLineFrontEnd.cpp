@@ -26,6 +26,8 @@ int main(int argc, char *argv[])
 	// Now parse the input
 	cLineParser.parse(argc, argv);
 
+	cLineParser.setSingleValue("help");
+
 	// First check if we asked for help printing
 	if (printHelp)
 	{

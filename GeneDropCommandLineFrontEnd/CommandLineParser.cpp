@@ -144,3 +144,15 @@ void CommandLineParser::setAllValues()
 		arg->setValueOfParameter();
 	}
 }
+
+
+void CommandLineParser::setSingleValue(std::string key)
+{
+	for (auto arg : expectedArgs)
+	{
+		if (key == arg->getKey())
+		{
+			arg->setValueOfParameter();
+		}
+	}
+}
