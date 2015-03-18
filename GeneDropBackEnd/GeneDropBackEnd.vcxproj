@@ -12,8 +12,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Breeder.h" />
+    <ClInclude Include="BreedEventNode.h" />
     <ClInclude Include="Chromosome.h" />
+    <ClInclude Include="FounderNode.h" />
     <ClInclude Include="Genotype.h" />
+    <ClInclude Include="PedigreeNode.h" />
     <ClInclude Include="Locus.h" />
     <ClInclude Include="Maybe.h" />
     <ClInclude Include="Organism.h" />

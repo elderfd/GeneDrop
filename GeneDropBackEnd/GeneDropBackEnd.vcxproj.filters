@@ -11,6 +11,15 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{8c97994c-18f6-4840-bc63-4659bdc4f269}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Pedigree Network">
+      <UniqueIdentifier>{927172e5-bcf6-4ff7-9bb8-2d85dac1b6b7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pedigree Network\Header Files">
+      <UniqueIdentifier>{75109359-4939-40bd-94eb-4795cfde3ed1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pedigree Network\Source Files">
+      <UniqueIdentifier>{84829d7d-e778-4c7a-acfd-165d222ab098}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RNGController.h">
@@ -23,9 +32,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="SimulationManagerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Pedigree.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Maybe.h">
@@ -46,6 +52,18 @@
     <ClInclude Include="Locus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BreedEventNode.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FounderNode.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PedigreeNode.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pedigree.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNGController.cpp">
@@ -58,9 +76,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="SimulationManagerFactory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Pedigree.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Organism.cpp">
@@ -77,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="Locus.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pedigree.cpp">
+      <Filter>Pedigree Network\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
