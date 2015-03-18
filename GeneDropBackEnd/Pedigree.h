@@ -9,8 +9,7 @@
 
 
 //! A pedigree that can simulate the breeding of the system
-class Pedigree
-{
+class Pedigree {
 	friend class SimulationManagerFactory;
 	friend class SimulationManager;
 

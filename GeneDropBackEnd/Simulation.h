@@ -4,8 +4,7 @@
 #include "RNGController.h"
 
 //! A single run of the simulation model
-class Simulation
-{
+class Simulation {
 	friend class SimulationManager;
 
 public:

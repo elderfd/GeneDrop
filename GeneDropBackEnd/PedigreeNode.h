@@ -5,24 +5,20 @@
 
 //! One node in the pedigree network, representing one breeding event between two (possibly identical) genomes
 /*!
-Abstract class.
-*/
-class PedigreeNode
-{
+	Abstract class.
+	*/
+class PedigreeNode {
 public:
-	PedigreeNode()
-	{}
+	PedigreeNode() {}
 
 	virtual unsigned int numberOfDependencies() const = 0;
 	virtual PedigreeNode* dependency(unsigned int index) = 0;
 	virtual const PedigreeNode* dependency(unsigned int index) const = 0;
 
-	Organism& organism()
-	{
+	Organism& organism() {
 		return _organism();
 	}
-	const Organism& organism() const
-	{
+	const Organism& organism() const {
 		return _organism();
 	}
 

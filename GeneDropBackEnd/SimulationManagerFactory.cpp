@@ -5,18 +5,13 @@
 #include <initializer_list>
 
 
-SimulationManagerFactory::SimulationManagerFactory()
-{
-}
+SimulationManagerFactory::SimulationManagerFactory() {}
 
 
-SimulationManagerFactory::~SimulationManagerFactory()
-{
-}
+SimulationManagerFactory::~SimulationManagerFactory() {}
 
 
-SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns, int numberOfThreads)
-{
+SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns, int numberOfThreads) {
 	SimulationManager newManager;
 
 	// Parse the loci information file
@@ -24,8 +19,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 	Genotype prototypeGenotype;
 
-	try
-	{
+	try {
 		lociFile.open(lociFileName);
 
 		std::vector<Chromosome> chromosomes;
@@ -35,8 +29,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		// Skip header
 		std::getline(lociFile, line);
 
-		while (std::getline(lociFile, line))
-		{
+		while (std::getline(lociFile, line)) {
 			int counter = 0;
 
 			std::stringstream lineStream(line);
@@ -45,10 +38,8 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 			std::string chromosome, ID;
 			std::string token;
 
-			while (std::getline(lineStream, token, ','))
-			{
-				switch (counter)
-				{
+			while (std::getline(lineStream, token, ',')) {
+				switch (counter) {
 				case 0:
 					// Locus ID
 					ID = token;
@@ -75,19 +66,16 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 			// See if right chromosome already exists
 			bool found = false;
-			
-			for (unsigned int i = 0; i < chromosomes.size(); i++)
-			{
-				if (chromosomes[i].getID() == chromosome)
-				{
+
+			for (unsigned int i = 0; i < chromosomes.size(); i++) {
+				if (chromosomes[i].getID() == chromosome) {
 					found = true;
 					chromosomes[i].addLocus(newLocus);
 				}
 			}
 
 			// If chromosome didn't exist already then add it
-			if (!found)
-			{
+			if (!found) {
 				chromosomes.emplace_back();
 				chromosomes.back().addLocus(newLocus);
 				chromosomes.back().setID(chromosome);
@@ -95,8 +83,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		}
 
 		// TODO: Account for varying ploidy
-		for (unsigned int i = 0; i < chromosomes.size(); i++)
-		{
+		for (unsigned int i = 0; i < chromosomes.size(); i++) {
 			// Assume all diploid for the moment
 			std::vector<Chromosome> chromosomePair;
 			chromosomePair.push_back(chromosomes[i]);
@@ -106,9 +93,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		}
 
 		lociFile.close();
-	}
-	catch (std::exception &e)
-	{
+	} catch (std::exception &e) {
 		lociFile.close();
 		throw e;
 	}
@@ -118,8 +103,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 	std::map<std::string, PedigreeNode*> namesAddedSoFar;
 
-	try
-	{
+	try {
 		genotypeFile.open(genotypeFileName);
 
 		// Parse the header first
@@ -130,22 +114,18 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		// Maps the column number to the right chromosome and locus number
 		std::map<int, std::pair<int, int>> columnToChromosomeAndLocusMap;
 
-		while (std::getline(genotypeFile, line))
-		{
+		while (std::getline(genotypeFile, line)) {
 			std::stringstream lineStream(line);
 			std::string token;
 			int columnNumber = 0;
 
-			if (isHeader)
-			{
+			if (isHeader) {
 				// Parse header
-				
+
 				// TODO: Should generalise the delimiters used somewhere
-				while (std::getline(lineStream, token, ','))
-				{
+				while (std::getline(lineStream, token, ',')) {
 					// Don't need to look at first column as is the founder name
-					if (columnNumber != 0)
-					{
+					if (columnNumber != 0) {
 						columnToChromosomeAndLocusMap[columnNumber] = prototypeGenotype.getChromosomeAndLocusIndexForLocus(token);
 					}
 
@@ -153,31 +133,24 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 				}
 
 				isHeader = false;
-			}
-			else
-			{
+			} else {
 				// Parse normal line
 
 				Genotype newFounderGenotype = prototypeGenotype;
 				std::string founderName;
-				
-				while (std::getline(lineStream, token, ','))
-				{
-					if (columnNumber == 0)
-					{
+
+				while (std::getline(lineStream, token, ',')) {
+					if (columnNumber == 0) {
 						// Is the founder name
 						founderName = token;
-					}
-					else
-					{
+					} else {
 						// Otherwise is an allele
 						std::pair<int, int> chromosomeAndLocusIndex = columnToChromosomeAndLocusMap[columnNumber];
 
 						std::string firstAllele, secondAllele;
 
 						// Check for heterozygosity
-						if (token.find("/") != std::string::npos)
-						{
+						if (token.find("/") != std::string::npos) {
 							// Split on the "/"
 							std::string subToken;
 							std::stringstream tokenStream(token);
@@ -185,26 +158,18 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 							int counter = 0;
 
 							// TODO: Generalise for different ploidies
-							while (std::getline(tokenStream, subToken, '/'))
-							{
-								if (counter == 0)
-								{
+							while (std::getline(tokenStream, subToken, '/')) {
+								if (counter == 0) {
 									firstAllele = subToken;
-								}
-								else if (counter == 1)
-								{
+								} else if (counter == 1) {
 									secondAllele = subToken;
-								}
-								else
-								{
+								} else {
 									break;
 								}
 
 								counter++;
 							}
-						}
-						else
-						{
+						} else {
 							firstAllele = secondAllele = token;
 						}
 
@@ -220,9 +185,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		}
 
 		genotypeFile.close();
-	}
-	catch (std::exception &e)
-	{
+	} catch (std::exception &e) {
 		genotypeFile.close();
 		throw e;
 	}
@@ -230,8 +193,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	// Parse the pedigree file
 	std::ifstream pedigreeFile;
 
-	try
-	{
+	try {
 		pedigreeFile.open(pedigreeFileName);
 
 		std::string line;
@@ -239,8 +201,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		// Skip header
 		std::getline(pedigreeFile, line);
 
-		while (std::getline(pedigreeFile, line))
-		{
+		while (std::getline(pedigreeFile, line)) {
 			// Tokenise the line
 			std::string token;
 			int counter = 0;
@@ -249,10 +210,8 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 			std::string generationName, ID, firstParentName, secondParentName;
 
-			while (std::getline(lineStream, token, ','))
-			{
-				switch (counter)
-				{
+			while (std::getline(lineStream, token, ',')) {
+				switch (counter) {
 				case 0:
 					// Generation
 					generationName = token;
@@ -276,20 +235,16 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 
 				counter++;
 			}
-			
+
 			// TODO: Perhaps think about how closely integrated the factory and the pedigree should be
 
-			auto getParentNode = [&namesAddedSoFar, &newManager] (std::string parentName)
-			{
+			auto getParentNode = [&namesAddedSoFar, &newManager](std::string parentName) {
 				auto found = namesAddedSoFar.find(parentName);
 
-				if (found != namesAddedSoFar.end())
-				{
+				if (found != namesAddedSoFar.end()) {
 					// Have already added
 					return found->second;
-				}
-				else
-				{
+				} else {
 					// Need to add
 					namesAddedSoFar[parentName] = newManager.prototypePedigree.addOrganism(parentName);
 					return namesAddedSoFar[parentName];
@@ -308,9 +263,7 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		}
 
 		pedigreeFile.close();
-	}
-	catch (std::exception &e)
-	{
+	} catch (std::exception &e) {
 		pedigreeFile.close();
 
 		throw e;

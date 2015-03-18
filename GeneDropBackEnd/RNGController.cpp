@@ -2,44 +2,36 @@
 #include <limits.h>
 
 RNGController::RNGController() :
-	engine(_seed = produceSeedFromProcessor()),
-	uniformGenerator(&engine, uniformDistribution),
-	seedGenerator(&engine, seedDistribution)
-{
-}
+engine(_seed = produceSeedFromProcessor()),
+uniformGenerator(&engine, uniformDistribution),
+seedGenerator(&engine, seedDistribution) {}
 
 
 RNGController::RNGController(SEED_TYPE seed) :
-	engine(seed),
-	uniformGenerator(&engine, uniformDistribution),
-	seedGenerator(&engine, seedDistribution)
-{
+engine(seed),
+uniformGenerator(&engine, uniformDistribution),
+seedGenerator(&engine, seedDistribution) {
 	_seed = seed;
 }
 
 
 RNGController::RNGController(const RNGController& other) :
-	engine(other._seed),
-	uniformGenerator(&engine, uniformDistribution),
-	seedGenerator(&engine, seedDistribution)
-{
+engine(other._seed),
+uniformGenerator(&engine, uniformDistribution),
+seedGenerator(&engine, seedDistribution) {
 	_seed = other._seed;
 }
 
 
-RNGController RNGController::operator=(RNGController other) const
-{
+RNGController RNGController::operator=(RNGController other) const {
 	return other;
 }
 
 
-RNGController::~RNGController()
-{
-}
+RNGController::~RNGController() {}
 
 
-RNGController::SEED_TYPE RNGController::produceSeedFromProcessor()
-{
+RNGController::SEED_TYPE RNGController::produceSeedFromProcessor() {
 	SEED_TYPE seed;
 
 #ifdef _WIN32
@@ -54,20 +46,17 @@ RNGController::SEED_TYPE RNGController::produceSeedFromProcessor()
 }
 
 
-RNGController::SEED_TYPE RNGController::produceRandomisedSeed()
-{
+RNGController::SEED_TYPE RNGController::produceRandomisedSeed() {
 	return seedGenerator();
 }
 
 
-double RNGController::getUniformlyDistributed()
-{
+double RNGController::getUniformlyDistributed() {
 	return uniformGenerator();
 }
 
 
-int RNGController::getUniformlyDistributed(int min, int max)
-{
+int RNGController::getUniformlyDistributed(int min, int max) {
 	// In [0, 1)
 	double rawRandom = uniformGenerator();
 
@@ -82,14 +71,12 @@ int RNGController::getUniformlyDistributed(int min, int max)
 }
 
 
-RNGController::SEED_TYPE RNGController::seed() const
-{
+RNGController::SEED_TYPE RNGController::seed() const {
 	return _seed;
 }
 
 
-void RNGController::reseed(SEED_TYPE newSeed)
-{
+void RNGController::reseed(SEED_TYPE newSeed) {
 	// Change the internal seed
 	_seed = newSeed;
 	engine.seed(_seed);

@@ -2,8 +2,7 @@
 
 #include <string>
 
-class Locus
-{
+class Locus {
 public:
 	Locus(std::string ID, double geneticDistance, std::string allele);
 	Locus();

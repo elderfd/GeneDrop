@@ -4,8 +4,7 @@
 #include <string>
 
 //! Produces an appropriate SimulationManager from input data
-class SimulationManagerFactory
-{
+class SimulationManagerFactory {
 public:
 	SimulationManagerFactory();
 	~SimulationManagerFactory();

@@ -5,8 +5,7 @@
 #include "RNGController.h"
 
 //! Handles the breeding of two individuals
-class Breeder
-{
+class Breeder {
 public:
 	Breeder(RNGController* rng);
 	~Breeder();
@@ -25,11 +24,9 @@ public:
 
 	virtual Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const = 0;
 
-	class ParentalChromosomeSwitcher
-	{
+	class ParentalChromosomeSwitcher {
 	public:
-		ParentalChromosomeSwitcher(const Chromosome* firstParentChromosome, const Chromosome* secondParentChromosome, RNGController &rng) : rng(rng)
-		{
+		ParentalChromosomeSwitcher(const Chromosome* firstParentChromosome, const Chromosome* secondParentChromosome, RNGController &rng) : rng(rng) {
 			this->firstParentChromosome = firstParentChromosome;
 			this->secondParentChromosome = secondParentChromosome;
 
@@ -37,22 +34,16 @@ public:
 			switchWithProbability(0.5);
 		}
 
-		void switchWithProbability(double probability)
-		{
-			if (rng.getUniformlyDistributed() < probability)
-			{
+		void switchWithProbability(double probability) {
+			if (rng.getUniformlyDistributed() < probability) {
 				drawingFromFirstParent = !drawingFromFirstParent;
 			}
 		}
 
-		const Chromosome* chromosome()
-		{
-			if (drawingFromFirstParent)
-			{
+		const Chromosome* chromosome() {
+			if (drawingFromFirstParent) {
 				return firstParentChromosome;
-			}
-			else
-			{
+			} else {
 				return secondParentChromosome;
 			}
 		}
@@ -69,15 +60,13 @@ protected:
 };
 
 //! Uses the Haldane mapping function for producing offspring
-class HaldaneBreeder : public Breeder
-{
+class HaldaneBreeder : public Breeder {
 public:
-	HaldaneBreeder(RNGController* rng) : Breeder(rng)
-	{};
+	HaldaneBreeder(RNGController* rng) : Breeder(rng) {};
 
 	Breeder* makeCopy() const;
 
-	HaldaneBreeder(const HaldaneBreeder& other) : Breeder(other){};
+	HaldaneBreeder(const HaldaneBreeder& other) : Breeder(other) {};
 
 	Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const;
 

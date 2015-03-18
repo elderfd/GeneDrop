@@ -7,8 +7,7 @@
 #include "Maybe.h"
 
 //! This is the main class that sets up, runs and looks after the simulations
-class SimulationManager
-{
+class SimulationManager {
 	friend class SimulationManagerFactory;
 
 public:

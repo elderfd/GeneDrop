@@ -7,39 +7,32 @@
 /*!
 	Would be able to use just genomes as individuals but might be interested in phenotypes as well later.
 */
-class Organism
-{
+class Organism {
 public:
 	Organism();
 	~Organism();
 
-	std::string name() const
-	{
+	std::string name() const {
 		return _name;
 	}
 
-	void setName(std::string name)
-	{
+	void setName(std::string name) {
 		_name = name;
 	}
 
-	unsigned int numberOfChromosomes() const
-	{
+	unsigned int numberOfChromosomes() const {
 		return _genotype.numberOfChromosomes();
 	}
 
-	const Genotype& genotype() const
-	{
+	const Genotype& genotype() const {
 		return _genotype;
 	}
 
-	Genotype& genotype()
-	{
+	Genotype& genotype() {
 		return _genotype;
 	}
 
-	void setGenotype(const Genotype& genotype)
-	{
+	void setGenotype(const Genotype& genotype) {
 		this->_genotype = genotype;
 	}
 

@@ -4,8 +4,7 @@
 #include <vector>
 #include "Locus.h"
 
-class Chromosome
-{
+class Chromosome {
 public:
 	Chromosome();
 	Chromosome(int numberOfLociIn);

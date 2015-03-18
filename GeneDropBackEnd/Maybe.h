@@ -3,45 +3,37 @@
 #include <cassert>
 
 //! Class emulating Haskell's Maybe type
-template<class T> class Maybe
-{
+template<class T> class Maybe {
 public:
-	Maybe()
-	{
+	Maybe() {
 		_set = false;
 	}
 
-	Maybe(T value)
-	{
+	Maybe(T value) {
 		setValue(value);
 	}
 
-	Maybe(const Maybe<T> &other)
-	{
+	Maybe(const Maybe<T> &other) {
 		this->_set = other._set;
 		this->_value = other._value;
 	}
 
-	bool set() const
-	{
+	bool set() const {
 		return _set;
 	}
 
-	T value() const
-	{
+	T value() const {
 		// Only allow access if the value has been set
 		assert(_set);
 		return _value;
 	}
 
-	void setValue(T value)
-	{
+	void setValue(T value) {
 		_value = value;
 		_set = true;
 	}
 
-	explicit operator bool() const
-	{
+	explicit operator bool() const {
 		return set();
 	}
 protected:

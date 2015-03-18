@@ -1,8 +1,7 @@
 #include "Simulation.h"
 
 
-Simulation::Simulation()
-{
+Simulation::Simulation() {
 	_finished = false;
 
 	// Default to Haldane
@@ -10,8 +9,7 @@ Simulation::Simulation()
 }
 
 
-Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder, const RNGController &rng)
-{
+Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder, const RNGController &rng) {
 	_finished = false;
 	this->pedigree = pedigree.cloneStructureAndInitialState();
 	this->breeder = breeder->makeCopy();
@@ -20,20 +18,17 @@ Simulation::Simulation(const Pedigree& pedigree, const Breeder* breeder, const R
 }
 
 
-Simulation::~Simulation()
-{
+Simulation::~Simulation() {
 	delete breeder;
 }
 
 
-bool Simulation::finished() const
-{
+bool Simulation::finished() const {
 	return _finished;
 }
 
 
-void Simulation::run()
-{
+void Simulation::run() {
 	// Evaluate all breeding events in pedigree
 	pedigree.evaluate(breeder);
 

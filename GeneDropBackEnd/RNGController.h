@@ -3,8 +3,7 @@
 #include <boost/random.hpp>
 
 //! This handles all of the random number generation needed for a simulation
-class RNGController
-{
+class RNGController {
 public:
 	typedef uint32_t SEED_TYPE;
 	typedef boost::random::mt19937 RNG_ENGINE;
@@ -41,7 +40,7 @@ public:
 
 protected:
 	RNG_ENGINE engine;
-	
+
 	UNIFORM_DISTRIBUTION uniformDistribution;
 	SEED_DISTRIBUTION seedDistribution;
 

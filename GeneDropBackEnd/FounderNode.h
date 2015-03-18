@@ -4,60 +4,49 @@
 
 
 //! A pedigree node that has no parents and cannot be evaluated. Is always at the root of the tree.
-class FounderNode : public PedigreeNode
-{
+class FounderNode : public PedigreeNode {
 public:
-	FounderNode()
-	{}
+	FounderNode() {}
 
-	FounderNode(std::string name, const Genotype& genotype)
-	{
+	FounderNode(std::string name, const Genotype& genotype) {
 		founder.setName(name);
 		founder.setGenotype(genotype);
 	}
 
-	unsigned int numberOfDependencies() const
-	{
+	unsigned int numberOfDependencies() const {
 		return 0;
 	}
 
-	PedigreeNode* dependency(unsigned int index)
-	{
+	PedigreeNode* dependency(unsigned int index) {
 		assert(false);
 		return nullptr;
 	}
 
-	const PedigreeNode* dependency(unsigned int index) const
-	{
+	const PedigreeNode* dependency(unsigned int index) const {
 		assert(false);
 		return nullptr;
 	}
 
-	bool evaluated() const
-	{
+	bool evaluated() const {
 		return true;
 	}
 
-	void breed(const Breeder *breeder)
-	{
+	void breed(const Breeder *breeder) {
 		assert(false);
 	}
 
-	bool complete() const
-	{
+	bool complete() const {
 		return true;
 	}
 
 protected:
 	Organism founder;
 
-	Organism& _organism()
-	{
+	Organism& _organism() {
 		return founder;
 	}
 
-	const Organism& _organism() const
-	{
+	const Organism& _organism() const {
 		return founder;
 	}
 };

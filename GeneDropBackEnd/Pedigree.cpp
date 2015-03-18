@@ -3,69 +3,54 @@
 #include "Maybe.h"
 #include <map>
 
-Pedigree::Pedigree()
-{
-}
+Pedigree::Pedigree() {}
 
 
-Pedigree::~Pedigree()
-{
-	for (auto ptr : founders)
-	{
+Pedigree::~Pedigree() {
+	for (auto ptr : founders) {
 		delete ptr;
 	}
 
-	for (auto ptr : breedEvents)
-	{
+	for (auto ptr : breedEvents) {
 		delete ptr;
 	}
 }
 
 
-Pedigree& Pedigree::operator=(Pedigree other)
-{
+Pedigree& Pedigree::operator=(Pedigree other) {
 	other.copy(*this);
 	return *this;
 }
 
 
-void Pedigree::copy(Pedigree& other) const
-{
+void Pedigree::copy(Pedigree& other) const {
 	// Copy across the nodes
-	for (auto founder : this->founders)
-	{
+	for (auto founder : this->founders) {
 		other.founders.push_back(new FounderNode(*founder));
 	}
 
-	for (auto breedEvent : this->breedEvents)
-	{
+	for (auto breedEvent : this->breedEvents) {
 		other.breedEvents.push_back(new BreedEventNode(*breedEvent));
 	}
 
 	// Now need to update all the dependency pointers to actually point to the right thing
-	for (unsigned int i = 0; i < this->breedEvents.size(); i++)
-	{
+	for (unsigned int i = 0; i < this->breedEvents.size(); i++) {
 		other.breedEvents[i]->dependencies().clear();
 
-		for (auto dependency : this->breedEvents[i]->dependencies())
-		{
+		for (auto dependency : this->breedEvents[i]->dependencies()) {
 			// TODO: Could store all of this in a better way I'm sure
 			bool found = false;
 
-			for (unsigned int j = 0; j < this->breedEvents.size(); j++)
-			{
-				if (this->breedEvents[j] == dependency)
-				{
+			for (unsigned int j = 0; j < this->breedEvents.size(); j++) {
+				if (this->breedEvents[j] == dependency) {
 					other.breedEvents[i]->dependencies().push_back(other.breedEvents[j]);
 					found = true;
 					break;
 				}
 			}
 
-			for (unsigned int j = 0; j < this->founders.size() && !found; j++)
-			{
-				if (this->founders[j] == dependency)
-				{
+			for (unsigned int j = 0; j < this->founders.size() && !found; j++) {
+				if (this->founders[j] == dependency) {
 					other.breedEvents[i]->dependencies().push_back(other.founders[j]);
 					found = true;
 					break;
@@ -79,8 +64,7 @@ void Pedigree::copy(Pedigree& other) const
 }
 
 
-Maybe<std::string> Pedigree::isNotUsable() const
-{
+Maybe<std::string> Pedigree::isNotUsable() const {
 	// Depth-first recursion and make sure that all dependencies can be resolved
 	//	Cycles in pedigree are unsolvable
 	//	No breed event should have the same name
@@ -153,31 +137,25 @@ Maybe<std::string> Pedigree::isNotUsable() const
 }
 
 
-void Pedigree::evaluate(const Breeder* breeder)
-{
-	std::function<void (PedigreeNode*, const Breeder*)> recursiveEvaluate = [&](PedigreeNode *node, const Breeder* breeder)
-	{
+void Pedigree::evaluate(const Breeder* breeder) {
+	std::function<void(PedigreeNode*, const Breeder*)> recursiveEvaluate = [&](PedigreeNode *node, const Breeder* breeder) {
 		// Evaluate all dependencies, then evaluate yourself
-		for (unsigned int i = 0; i < node->numberOfDependencies(); i++)
-		{
+		for (unsigned int i = 0; i < node->numberOfDependencies(); i++) {
 			recursiveEvaluate(node->dependency(i), breeder);
 		}
 
-		if (!node->evaluated())
-		{
+		if (!node->evaluated()) {
 			node->breed(breeder);
 		}
 	};
 
-	for (unsigned int i = 0; i < breedEvents.size(); i++)
-	{
+	for (unsigned int i = 0; i < breedEvents.size(); i++) {
 		recursiveEvaluate(breedEvents[i], breeder);
 	}
 }
 
 
-BreedEventNode* Pedigree::addOrganism(std::string name)
-{
+BreedEventNode* Pedigree::addOrganism(std::string name) {
 	auto newNode = new BreedEventNode();
 	breedEvents.push_back(newNode);
 	breedEvents.back()->organism().setName(name);
@@ -185,8 +163,7 @@ BreedEventNode* Pedigree::addOrganism(std::string name)
 }
 
 
-FounderNode* Pedigree::addFounder(std::string name, const Genotype& genotype)
-{
+FounderNode* Pedigree::addFounder(std::string name, const Genotype& genotype) {
 	auto newNode = new FounderNode();
 	founders.push_back(newNode);
 	founders.back()->organism().setName(name);
@@ -195,14 +172,12 @@ FounderNode* Pedigree::addFounder(std::string name, const Genotype& genotype)
 }
 
 
-Pedigree Pedigree::cloneStructureAndInitialState() const
-{
+Pedigree Pedigree::cloneStructureAndInitialState() const {
 	// Copy first
 	Pedigree clone(*this);
 
 	// Then remove the evaluated bits
-	for (auto& breedEvent : clone.breedEvents)
-	{
+	for (auto& breedEvent : clone.breedEvents) {
 		breedEvent->reset();
 	}
 
@@ -210,7 +185,6 @@ Pedigree Pedigree::cloneStructureAndInitialState() const
 }
 
 
-Pedigree::Pedigree(const Pedigree& other)
-{
+Pedigree::Pedigree(const Pedigree& other) {
 	other.copy(*this);
 }
