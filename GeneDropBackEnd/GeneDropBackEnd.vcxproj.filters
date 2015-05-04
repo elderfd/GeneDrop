@@ -64,6 +64,13 @@
     <ClInclude Include="Pedigree.h">
       <Filter>Pedigree Network\Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RandomisedBreedEventNode.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrganismChoicePool.h" />
+    <ClInclude Include="ParentSupplier.h">
+      <Filter>Pedigree Network\Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNGController.cpp">
@@ -94,6 +101,13 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Pedigree.cpp">
+      <Filter>Pedigree Network\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="RandomisedBreedEventNode.cpp">
+      <Filter>Pedigree Network\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrganismChoicePool.cpp" />
+    <ClCompile Include="ParentSupplier.cpp">
       <Filter>Pedigree Network\Source Files</Filter>
     </ClCompile>
   </ItemGroup>

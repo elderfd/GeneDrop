@@ -6,6 +6,7 @@
 #include "Maybe.h"
 #include "BreedEventNode.h"
 #include "FounderNode.h"
+#include "OrganismChoicePool.h"
 
 
 //! A pedigree that can simulate the breeding of the system
@@ -46,5 +47,8 @@ protected:
 
 	// Everything that must be bred
 	std::vector<BreedEventNode*> breedEvents;
+
+	// Pools that can be used to select from other organisms
+	std::vector<OrganismChoicePool*> organismChoicePools;
 };
 

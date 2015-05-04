@@ -16,11 +16,14 @@
     <ClInclude Include="Chromosome.h" />
     <ClInclude Include="FounderNode.h" />
     <ClInclude Include="Genotype.h" />
+    <ClInclude Include="OrganismChoicePool.h" />
+    <ClInclude Include="ParentSupplier.h" />
     <ClInclude Include="PedigreeNode.h" />
     <ClInclude Include="Locus.h" />
     <ClInclude Include="Maybe.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="Pedigree.h" />
+    <ClInclude Include="RandomisedBreedEventNode.h" />
     <ClInclude Include="RNGController.h" />
     <ClInclude Include="Simulation.h" />
     <ClInclude Include="SimulationManager.h" />
@@ -32,7 +35,10 @@
     <ClCompile Include="Genotype.cpp" />
     <ClCompile Include="Locus.cpp" />
     <ClCompile Include="Organism.cpp" />
+    <ClCompile Include="OrganismChoicePool.cpp" />
+    <ClCompile Include="ParentSupplier.cpp" />
     <ClCompile Include="Pedigree.cpp" />
+    <ClCompile Include="RandomisedBreedEventNode.cpp" />
     <ClCompile Include="RNGController.cpp" />
     <ClCompile Include="Simulation.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
