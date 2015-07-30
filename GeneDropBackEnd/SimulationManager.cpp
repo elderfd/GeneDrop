@@ -1,19 +1,19 @@
 #include <chrono>
 #include <fstream>
-#include "NewSimulationManager.h"
+#include "SimulationManager.h"
 #include <sstream>
 
 
-NewSimulationManager::NewSimulationManager() {
+SimulationManager::SimulationManager() {
 	// Default to the Haldane breeder for now
 	breeder = std::make_unique<HaldaneBreeder>(&rng);
 }
 
 
-NewSimulationManager::~NewSimulationManager() {}
+SimulationManager::~SimulationManager() {}
 
 
-void NewSimulationManager::buildPedigreeFromFile(std::string fileName) {
+void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 	// Parse the pedigree file
 	std::ifstream pedigreeFile;
 
@@ -72,7 +72,7 @@ void NewSimulationManager::buildPedigreeFromFile(std::string fileName) {
 }
 
 
-void NewSimulationManager::buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName) {
+void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName) {
 	std::ifstream lociFile;
 
 	Genotype prototypeGenotype;
@@ -253,7 +253,7 @@ void NewSimulationManager::buildStartingStateFromFiles(std::string lociFileName,
 }
 
 
-State NewSimulationManager::getRealisation() {
+State SimulationManager::getRealisation() {
 	State newState = startingState;
 
 	// Reseed and record the seed
@@ -287,7 +287,7 @@ State NewSimulationManager::getRealisation() {
 // Disables unsafe warning for localtime
 #pragma warning(disable: 4996)
 
-std::string NewSimulationManager::makeTimeStamp() {
+std::string SimulationManager::makeTimeStamp() {
 	auto timeNow = std::chrono::system_clock::now();
 	std::time_t convertedTime = std::chrono::system_clock::to_time_t(timeNow);
 

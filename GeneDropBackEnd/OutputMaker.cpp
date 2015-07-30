@@ -1,4 +1,4 @@
-#include "NewSimulationManager.h"
+#include "SimulationManager.h"
 #include "OutputMaker.h"
 #include "State.h"
 
@@ -66,7 +66,7 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 void OutputMaker::writeHeader(const State& state) {
 	if (out && out.is_open()) {
 		// First timestamp
-		std::string timeStamp = NewSimulationManager::makeTimeStamp();
+		std::string timeStamp = SimulationManager::makeTimeStamp();
 		out << timeStamp << std::endl;
 
 		// Then some simulation information

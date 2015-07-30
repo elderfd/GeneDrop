@@ -1,14 +1,14 @@
 #pragma once
 #include "Breeder.h"
 #include <memory>
-#include "NewPedigree.h"
+#include "Pedigree.h"
 #include "State.h"
 
 
-class NewSimulationManager {
+class SimulationManager {
 public:
-	NewSimulationManager();
-	~NewSimulationManager();
+	SimulationManager();
+	~SimulationManager();
 
 	void buildPedigreeFromFile(std::string fileName);
 	void buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName);
@@ -20,7 +20,7 @@ public:
 private:
 	RNGController rng;
 	std::unique_ptr<Breeder> breeder;
-	NewPedigree pedigree;
+	Pedigree pedigree;
 	State startingState;
 };
 

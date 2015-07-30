@@ -3,7 +3,7 @@
 #include <fstream>
 #include <iostream>
 #include "CommandLineParser.h"
-#include "NewSimulationManager.h"
+#include "SimulationManager.h"
 #include "OutputMaker.h"
 
 int main(int argc, char *argv[]) {
@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
 	cLineParser.setAllValues();
 
 	// Then set up an appropriate simulation state
-	NewSimulationManager simManager;
+	SimulationManager simManager;
 
 	try {
 		simManager.buildPedigreeFromFile(pedigreeFileName);
@@ -102,7 +102,7 @@ int main(int argc, char *argv[]) {
 	//}
 
 	// TODO: This should be done elsewhere
-	std::string outputFileName = outDirectory + "/Output(" + NewSimulationManager::makeTimeStamp() + ").csv";
+	std::string outputFileName = outDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
 	OutputMaker out;
 	int reportEvery = 50;
 

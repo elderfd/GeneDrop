@@ -43,17 +43,17 @@
     <ClInclude Include="State.h">
       <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewPedigree.h">
-      <Filter>Pedigree\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Cross.h">
       <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NewSimulationManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="OutputMaker.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="SimulationManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pedigree.h">
+      <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -78,17 +78,17 @@
     <ClCompile Include="State.cpp">
       <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NewPedigree.cpp">
-      <Filter>Pedigree\Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Cross.cpp">
       <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NewSimulationManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="OutputMaker.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="SimulationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pedigree.cpp">
+      <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

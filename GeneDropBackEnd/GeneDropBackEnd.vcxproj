@@ -15,8 +15,8 @@
     <ClInclude Include="Chromosome.h" />
     <ClInclude Include="Cross.h" />
     <ClInclude Include="Genotype.h" />
-    <ClInclude Include="NewPedigree.h" />
-    <ClInclude Include="NewSimulationManager.h" />
+    <ClInclude Include="Pedigree.h" />
+    <ClInclude Include="SimulationManager.h" />
     <ClInclude Include="Locus.h" />
     <ClInclude Include="Organism.h" />
     <ClInclude Include="OutputMaker.h" />
@@ -29,8 +29,8 @@
     <ClCompile Include="Cross.cpp" />
     <ClCompile Include="Genotype.cpp" />
     <ClCompile Include="Locus.cpp" />
-    <ClCompile Include="NewPedigree.cpp" />
-    <ClCompile Include="NewSimulationManager.cpp" />
+    <ClCompile Include="Pedigree.cpp" />
+    <ClCompile Include="SimulationManager.cpp" />
     <ClCompile Include="Organism.cpp" />
     <ClCompile Include="OutputMaker.cpp" />
     <ClCompile Include="RNGController.cpp" />

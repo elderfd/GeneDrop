@@ -1,7 +1,7 @@
 #define CATCH_CONFIG_MAIN
 #include "Breeder.h"
 #include "catch.hpp"
-#include "NewSimulationManager.h"
+#include "SimulationManager.h"
 #include "RNGController.h"
 
 
@@ -207,7 +207,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 	int numberOfRuns = 2000;
 
 	SECTION("Biallelic locus segregation in F1 and F2") {
-		NewSimulationManager simManager;
+		SimulationManager simManager;
 		simManager.buildPedigreeFromFile(testFileFolder + "singleBiallelicPedigree.csv");
 		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
@@ -263,7 +263,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 	}
 
 	SECTION("Biallelic segregation in backcross") {
-		NewSimulationManager simManager;
+		SimulationManager simManager;
 		simManager.buildPedigreeFromFile(testFileFolder + "backcrossPedigree.csv");
 		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
