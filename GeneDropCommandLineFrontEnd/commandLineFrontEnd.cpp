@@ -81,8 +81,15 @@ int main(int argc, char *argv[]) {
 
 	// Then set up an appropriate simulation state
 	NewSimulationManager simManager;
-	simManager.buildPedigreeFromFile(pedigreeFileName);
-	simManager.buildStartingStateFromFiles(lociFileName, genotypeFileName);
+
+	try {
+		simManager.buildPedigreeFromFile(pedigreeFileName);
+		simManager.buildStartingStateFromFiles(lociFileName, genotypeFileName);
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		return 1;
+	}
+	
 
 	// TODO: Verify the input
 	//Maybe<std::string> error = simManager.verifySimulationPrototype();
