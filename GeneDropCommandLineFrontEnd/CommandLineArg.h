@@ -100,7 +100,7 @@ template<class T> Maybe<std::string> CommandLineArg<T>::hasError() const
 
 	if (!(set() || _optional))
 	{
-		errorMessage.setValue("Required key " + _key + " not given value.");
+		errorMessage.setValue("Required key \"" + _key + "\" not given value.");
 	}
 
 	return errorMessage;

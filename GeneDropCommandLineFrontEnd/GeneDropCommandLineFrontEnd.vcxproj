@@ -39,12 +39,14 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Users\James\Documents\gitRepos\GeneDrop\GeneDropBackEnd;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Boost\include\boost-1_55;..\GeneDropBackEnd;$(IncludePath)</IncludePath>
+    <TargetName>GeneDrop</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>..\GeneDropBackEnd;C:\Boost\include\boost-1_55;$(IncludePath)</IncludePath>
     <SourcePath>$(SourcePath)</SourcePath>
     <LibraryPath>$(LibraryPath)</LibraryPath>
+    <TargetName>GeneDrop</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -54,6 +56,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -68,6 +71,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -78,6 +82,7 @@
   <ItemGroup>
     <ClInclude Include="CommandLineArg.h" />
     <ClInclude Include="CommandLineParser.h" />
+    <ClInclude Include="Maybe.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\GeneDropBackEnd\GeneDropBackEnd.vcxproj">

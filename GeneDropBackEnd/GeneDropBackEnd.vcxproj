@@ -12,37 +12,29 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Breeder.h" />
-    <ClInclude Include="BreedEventNode.h" />
     <ClInclude Include="Chromosome.h" />
-    <ClInclude Include="FounderNode.h" />
+    <ClInclude Include="Cross.h" />
     <ClInclude Include="Genotype.h" />
-    <ClInclude Include="OrganismChoicePool.h" />
-    <ClInclude Include="ParentSupplier.h" />
-    <ClInclude Include="PedigreeNode.h" />
+    <ClInclude Include="NewPedigree.h" />
+    <ClInclude Include="NewSimulationManager.h" />
     <ClInclude Include="Locus.h" />
-    <ClInclude Include="Maybe.h" />
     <ClInclude Include="Organism.h" />
-    <ClInclude Include="Pedigree.h" />
-    <ClInclude Include="RandomisedBreedEventNode.h" />
+    <ClInclude Include="OutputMaker.h" />
     <ClInclude Include="RNGController.h" />
-    <ClInclude Include="Simulation.h" />
-    <ClInclude Include="SimulationManager.h" />
-    <ClInclude Include="SimulationManagerFactory.h" />
+    <ClInclude Include="State.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Breeder.cpp" />
     <ClCompile Include="Chromosome.cpp" />
+    <ClCompile Include="Cross.cpp" />
     <ClCompile Include="Genotype.cpp" />
     <ClCompile Include="Locus.cpp" />
+    <ClCompile Include="NewPedigree.cpp" />
+    <ClCompile Include="NewSimulationManager.cpp" />
     <ClCompile Include="Organism.cpp" />
-    <ClCompile Include="OrganismChoicePool.cpp" />
-    <ClCompile Include="ParentSupplier.cpp" />
-    <ClCompile Include="Pedigree.cpp" />
-    <ClCompile Include="RandomisedBreedEventNode.cpp" />
+    <ClCompile Include="OutputMaker.cpp" />
     <ClCompile Include="RNGController.cpp" />
-    <ClCompile Include="Simulation.cpp" />
-    <ClCompile Include="SimulationManager.cpp" />
-    <ClCompile Include="SimulationManagerFactory.cpp" />
+    <ClCompile Include="State.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}</ProjectGuid>
@@ -56,7 +48,7 @@
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -76,7 +68,8 @@
     <IncludePath>C:\Boost\include\boost-1_55;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <IncludePath>C:\Program Files\boost_1_57_0;$(IncludePath)</IncludePath>
+    <IncludePath>C:\Boost\include\boost-1_55;$(IncludePath)</IncludePath>
+    <TargetExt>.lib</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

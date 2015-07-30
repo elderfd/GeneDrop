@@ -42,42 +42,43 @@ Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& seco
 	assert(firstParent.numberOfChromosomes() == secondParent.numberOfChromosomes());
 	assert(firstParent.ploidy() == secondParent.ploidy());
 
+	// Generate a hybrid chromosome from each parent
+	auto makeHybrid = [](Chromosome& hybrid, const Genotype& parent, RNGController* rng, int chromosomeIndex) {
+		// Randomly choose one of the homologues to start drawing from
+		ParentalChromosomeSwitcher chromosomeSwitcher(&parent.chromosome(chromosomeIndex, 0), &parent.chromosome(chromosomeIndex, 1), *rng);
+
+		// Set the new chromosome's name
+		hybrid.setID(chromosomeSwitcher.chromosome()->getID());
+
+		// Draw first allele
+		hybrid.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(0));
+
+		// Keep drawing alleles til we can draw no more
+		for (int x = 1; x < chromosomeSwitcher.chromosome()->getNumberOfLoci(); x++) {
+			// See if we need to recombine
+			double distance = chromosomeSwitcher.chromosome()->distanceBetweenLoci(x - 1, x);
+			double recombinationProbability = distanceToRecombinationProbability(distance);
+
+			chromosomeSwitcher.switchWithProbability(recombinationProbability);
+
+			// Draw an allele
+			hybrid.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(x));
+		}
+	};
+
 	for (unsigned int j = 0; j < firstParent.numberOfChromosomes(); j++) {
 		// TODO: This bit could be neatened up
+		// TODO: Generalise away from diploid breeding
 
 		std::vector<Chromosome> homologousChromosomes;
 
-		// Must produce enough hybrid chromosomes
-		for (unsigned int k = 0; k < firstParent.ploidy(); k++) {
-			Chromosome hybridChromosome;
+		Chromosome firstHybrid, secondHybrid;
 
-			// Select a random chromosome from each parent
-			int firstParentChromosomeIndex = rng->getUniformlyDistributed(0, firstParent.ploidy() - 1);
-			int secondParentChromosomeIndex = rng->getUniformlyDistributed(0, secondParent.ploidy() - 1);
+		makeHybrid(firstHybrid, firstParent, rng, j);
+		makeHybrid(secondHybrid, secondParent, rng, j);
 
-			// Randomly choose one of the chromosomes to start drawing from
-			ParentalChromosomeSwitcher chromosomeSwitcher(&firstParent.chromosome(j, firstParentChromosomeIndex), &secondParent.chromosome(j, secondParentChromosomeIndex), *rng);
-
-			// Set the new chromosome's name
-			hybridChromosome.setID(chromosomeSwitcher.chromosome()->getID());
-
-			// Draw first allele
-			hybridChromosome.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(0));
-
-			// Keep drawing alleles til we can draw no more
-			for (int x = 1; x < chromosomeSwitcher.chromosome()->getNumberOfLoci(); x++) {
-				// See if we need to recombine
-				double distance = chromosomeSwitcher.chromosome()->distanceBetweenLoci(x - 1, x);
-				double recombinationProbability = distanceToRecombinationProbability(distance);
-
-				chromosomeSwitcher.switchWithProbability(recombinationProbability);
-
-				// Draw an allele
-				hybridChromosome.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(x));
-			}
-
-			homologousChromosomes.push_back(hybridChromosome);
-		}
+		homologousChromosomes.push_back(firstHybrid);
+		homologousChromosomes.push_back(secondHybrid);
 
 		child.addHomologousChromosomes(homologousChromosomes);
 	}

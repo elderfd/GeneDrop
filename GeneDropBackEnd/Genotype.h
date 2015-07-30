@@ -36,13 +36,13 @@ public:
 	//! Returns the allele value at a given chromosome and locus.
 	/*!
 		set controls which of the homologous chromosomes is inspected.
-		*/
+	*/
 	std::string allele(int chromosomeIndex, int locusIndex, int set) const;
 
 	//! Sets the allele value at a given chromosome and locus.
 	/*!
 		set controls which of the homologous chromosomes is affected.
-		*/
+	*/
 	void setAllele(int chromosomeIndex, int locusIndex, int set, std::string allele);
 
 	std::pair<int, int> getChromosomeAndLocusIndexForLocus(std::string locusID) const;

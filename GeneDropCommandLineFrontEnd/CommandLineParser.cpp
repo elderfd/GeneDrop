@@ -1,7 +1,6 @@
 #include "CommandLineParser.h"
 #include <initializer_list>
 #include "Maybe.h"
-#include "SimulationManagerFactory.h"
 #include <fstream>
 
 

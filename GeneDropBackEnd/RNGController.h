@@ -32,6 +32,9 @@ public:
 	//! Used for resetting the random number generator with a new seed
 	void reseed(SEED_TYPE seed);
 
+	//! Used for reseeding with new random seed
+	void reseed();
+
 	//! Generates a new seed using the random number generator
 	SEED_TYPE produceRandomisedSeed();
 

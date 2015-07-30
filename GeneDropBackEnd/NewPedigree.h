@@ -1,23 +1,72 @@
 #pragma once
+#include "Cross.h"
+#include <map>
+#include <memory>
 #include <vector>
-#include <istream>
-#include "PedigreeNode.h"
-#include "PedigreeOutput.h"
+
+class NewPedigree;
+
+class CrossIterator {
+public:
+	CrossIterator();
+	CrossIterator(const NewPedigree* pedigree);
+	CrossIterator& operator++();
+	CrossIterator operator++(int);
+	const Cross& operator*();
+	bool operator==(const CrossIterator& other);
+	bool operator!=(const CrossIterator& other);
+	const Cross* operator->();
+
+private:
+	const NewPedigree* pedigree = nullptr;
+	unsigned int index = 0;
+};
 
 
-//! Provides a mapping from a set of founders to future generations
+class NewPedigreeNode {
+public:
+	NewPedigreeNode() {};
+
+	Cross cross;
+
+	std::vector<std::shared_ptr<NewPedigreeNode>> dependencies;
+};
+
+// TODO: Move to better network representation for easier manipulation
+
+//! Describes a set of crosses to make
 class NewPedigree {
+	friend class CrossIterator;
+
 public:
 	NewPedigree();
 	~NewPedigree();
 
-	//! Does all the breeding and returns the output
-	std::shared_ptr<PedigreeOutput> getOutput(const FounderSet& founders);
+	CrossIterator begin();
+	CrossIterator end() const;
 
-	//! Builds the pedigree from the stream
-	friend std::istream& operator>> (std::istream& in, NewPedigree& pedigree);
+	void addCross(std::string fatherName, std::string motherName, std::string childName);
 
-protected:
-	// The leaves of the breeding tree - the breeding products with no children identified
-	std::vector<PedigreeNode*> leaves;
+	unsigned int size() const { return pedigreeSize;  }
+
+private:
+	// Leaves of the pedigree - no other crosses have dependencies on these
+	std::vector<std::shared_ptr<NewPedigreeNode>> leaves;
+
+	std::vector<std::shared_ptr<NewPedigreeNode>> depthFirstSearchManyNodes(bool(*predicate)(std::shared_ptr<NewPedigreeNode>));
+	std::shared_ptr<NewPedigreeNode> depthFirstSearchSingleNode(bool(*predicate)(std::shared_ptr<NewPedigreeNode>));
+
+	class NodeChecker {
+	public:
+		virtual bool operator()(std::shared_ptr<NewPedigreeNode> node) = 0;
+	};
+
+	std::vector<std::shared_ptr<NewPedigreeNode>> depthFirstSearchManyNodes(NodeChecker* predicate);
+	std::shared_ptr<NewPedigreeNode> depthFirstSearchSingleNode(NodeChecker* predicate);
+
+	int pedigreeSize = 0;
+
+	void updateCrossOrder();
+	bool mustUpdateCrossOrder = true;
+	std::vector<std::shared_ptr<NewPedigreeNode>> crossOrder;
 };

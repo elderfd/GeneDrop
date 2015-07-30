@@ -85,9 +85,11 @@ int Chromosome::getLocusIndexFromID(std::string locusID) const {
 	throw std::runtime_error("Error: Could not find locus with ID " + locusID);
 }
 
+
 void Chromosome::addLocus(const Locus &newLocus) {
 	loci.push_back(newLocus);
 }
+
 
 double Chromosome::getGeneticDistance(std::string locusID) const {
 	int index = getLocusIndexFromID(locusID);
@@ -100,13 +102,16 @@ std::string Chromosome::getID() const {
 	return ID;
 }
 
+
 void Chromosome::setID(std::string newID) {
 	ID = newID;
 }
 
+
 Locus Chromosome::getLocusCopy(int locusIndex) const {
 	return loci[locusIndex];
 }
+
 
 void Chromosome::setAllele(std::string locusID, std::string value) {
 	int locusIndex = getLocusIndexFromID(locusID);
@@ -114,7 +119,7 @@ void Chromosome::setAllele(std::string locusID, std::string value) {
 	loci[locusIndex].setAllele(value);
 }
 
-
+// TODO: Distance may not be additive?
 double Chromosome::distanceBetweenLoci(int firstLocus, int secondLocus) const {
 	return abs(loci[firstLocus].getGeneticDistance() - loci[secondLocus].getGeneticDistance());
 }

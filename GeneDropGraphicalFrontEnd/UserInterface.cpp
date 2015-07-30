@@ -1,5 +1,4 @@
 #include "UserInterface.h"
-#include "SimulationManagerFactory.h"
 
 const Awesomium::WebString UserInterface::interfaceName = Awesomium::WSLit("appInterface");
 

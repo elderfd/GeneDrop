@@ -11,30 +11,18 @@
     <Filter Include="Source Files">
       <UniqueIdentifier>{8c97994c-18f6-4840-bc63-4659bdc4f269}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pedigree Network">
-      <UniqueIdentifier>{927172e5-bcf6-4ff7-9bb8-2d85dac1b6b7}</UniqueIdentifier>
+    <Filter Include="Pedigree">
+      <UniqueIdentifier>{3441dd2a-4408-4460-b0e8-38f71e19b0d8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pedigree Network\Header Files">
-      <UniqueIdentifier>{75109359-4939-40bd-94eb-4795cfde3ed1}</UniqueIdentifier>
+    <Filter Include="Pedigree\Header Files">
+      <UniqueIdentifier>{9615d79f-1dec-477c-80d8-3d47a330fea4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Pedigree Network\Source Files">
-      <UniqueIdentifier>{84829d7d-e778-4c7a-acfd-165d222ab098}</UniqueIdentifier>
+    <Filter Include="Pedigree\Source Files">
+      <UniqueIdentifier>{1977f631-4d93-4d75-952f-5c9dccb15950}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="RNGController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Simulation.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SimulationManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="SimulationManagerFactory.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Maybe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Organism.h">
@@ -52,37 +40,24 @@
     <ClInclude Include="Locus.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BreedEventNode.h">
-      <Filter>Pedigree Network\Header Files</Filter>
+    <ClInclude Include="State.h">
+      <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FounderNode.h">
-      <Filter>Pedigree Network\Header Files</Filter>
+    <ClInclude Include="NewPedigree.h">
+      <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="PedigreeNode.h">
-      <Filter>Pedigree Network\Header Files</Filter>
+    <ClInclude Include="Cross.h">
+      <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Pedigree.h">
-      <Filter>Pedigree Network\Header Files</Filter>
+    <ClInclude Include="NewSimulationManager.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="RandomisedBreedEventNode.h">
-      <Filter>Pedigree Network\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="OrganismChoicePool.h" />
-    <ClInclude Include="ParentSupplier.h">
-      <Filter>Pedigree Network\Header Files</Filter>
+    <ClInclude Include="OutputMaker.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNGController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Simulation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SimulationManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SimulationManagerFactory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Organism.cpp">
@@ -100,15 +75,20 @@
     <ClCompile Include="Locus.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Pedigree.cpp">
-      <Filter>Pedigree Network\Source Files</Filter>
+    <ClCompile Include="State.cpp">
+      <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RandomisedBreedEventNode.cpp">
-      <Filter>Pedigree Network\Source Files</Filter>
+    <ClCompile Include="NewPedigree.cpp">
+      <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OrganismChoicePool.cpp" />
-    <ClCompile Include="ParentSupplier.cpp">
-      <Filter>Pedigree Network\Source Files</Filter>
+    <ClCompile Include="Cross.cpp">
+      <Filter>Pedigree\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NewSimulationManager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OutputMaker.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

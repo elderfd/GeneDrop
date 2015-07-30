@@ -1,18 +1,18 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <fstream>
 #include <iostream>
-#include "SimulationManagerFactory.h"
-#include "SimulationManager.h"
 #include "CommandLineParser.h"
+#include "NewSimulationManager.h"
+#include "OutputMaker.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
 	int returnVal = 0;
 
 	CommandLineParser cLineParser;
 
 	// Add all of the parameters we need
-	std::string pedigreeFileName, genotypeFileName, lociFileName;
+	std::string pedigreeFileName, genotypeFileName, lociFileName, outDirectory;
 	int numberOfRuns, numberOfThreads;
 	bool printHelp = false;
 
@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
 	cLineParser.addArg("numberOfRuns", &numberOfRuns);
 	cLineParser.addArg("numberOfThreads", &numberOfThreads, 1);
 	cLineParser.addArg("help", &printHelp, false);
+	cLineParser.addArg(std::string("out"), &outDirectory, std::string("."));
 
 	// Now parse the input
 	cLineParser.parse(argc, argv);
@@ -29,8 +30,7 @@ int main(int argc, char *argv[])
 	cLineParser.setSingleValue("help");
 
 	// First check if we asked for help printing
-	if (printHelp)
-	{
+	if (printHelp) {
 		std::string errorMessage = "Input syntax is options and values. Available options are, \n";
 
 		auto addCommandLineOptSpec = [&](std::string option, std::string meaning)
@@ -44,6 +44,7 @@ int main(int argc, char *argv[])
 		addCommandLineOptSpec("numberOfRuns", "The number of simulations to carry out for this dataset.");
 		addCommandLineOptSpec("numberOfThreads", "The number of threads to use for simulations.");
 		addCommandLineOptSpec("help", "Print help message for the program.");
+		addCommandLineOptSpec("out", "The directory to output the results to.");
 
 		std::cout << errorMessage << std::endl;
 
@@ -55,8 +56,7 @@ int main(int argc, char *argv[])
 	// Check for any errors
 	bool shouldExit = false;
 
-	if (auto errors = cLineParser.errorsEncountered())
-	{
+	if (auto errors = cLineParser.errorsEncountered()) {
 		std::cout << "Error in parsing input: " << std::endl;
 
 		for (auto message : errors.value())
@@ -77,40 +77,49 @@ int main(int argc, char *argv[])
 		}
 	}
 
-	if (shouldExit)
-	{
+	if (shouldExit) {
 		return 1;
 	}
 
 	cLineParser.setAllValues();
 
 	// Then set up an appropriate simulation state
-	SimulationManager simManager = SimulationManagerFactory::createFromSimpleInput(
-		pedigreeFileName,
-		genotypeFileName,
-		lociFileName,
-		numberOfRuns,
-		numberOfThreads
-	);
+	NewSimulationManager simManager;
+	simManager.buildPedigreeFromFile(pedigreeFileName);
+	simManager.buildStartingStateFromFiles(lociFileName, genotypeFileName);
 
-	// Verify the input
-	Maybe<std::string> error = simManager.verifySimulationPrototype();
+	// TODO: Verify the input
+	//Maybe<std::string> error = simManager.verifySimulationPrototype();
 
-	if (error)
-	{
-		// Push out any error message
-		std::cerr << error.value() << std::endl;
-		returnVal = 1;
-	}
-	else
-	{
-		// Do some sims
-		simManager.run();
+	//if (error)
+	//{
+	//	// Push out any error message
+	//	std::cerr << error.value() << std::endl;
+	//	returnVal = 1;
+	//}
+	//else
+	//{
+	//	// Do some sims
+	//	simManager.run();
 
-		// Get some output
-		std::string outputFileName = "Output(" + SimulationManager::makeTimeStamp() + ").csv";
+	//	// Get some output
+	//	std::string outputFileName = "Output(" + SimulationManager::makeTimeStamp() + ").csv";
 
-		simManager.outputResultsToFile(outputFileName);
+	//	simManager.outputResultsToFile(outputFileName);
+	//}
+
+	// TODO: This should be done elsewhere
+	std::string outputFileName = outDirectory + "/Output(" + NewSimulationManager::makeTimeStamp() + ").csv";
+	OutputMaker out;
+
+	if (out.open(outputFileName)) {
+		for (int i = 0; i < numberOfRuns; i++) {
+			auto result = simManager.getRealisation();
+
+			out << result;
+		}
+
+		out.close();
 	}
 
 	// Exit cleanly

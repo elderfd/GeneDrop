@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.21005.1
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GeneDropBackEnd", "GeneDropBackEnd\GeneDropBackEnd.vcxproj", "{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}"
 EndProject
@@ -24,6 +24,7 @@ Global
 		{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}.Debug|Win32.Build.0 = Debug|Win32
 		{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}.Release|Win32.ActiveCfg = Release|Win32
+		{4C53C43A-84BE-41A6-94C1-63CDBA5E89FC}.Release|Win32.Build.0 = Release|Win32
 		{D3FCA2AC-B6DC-41F9-926D-010A9D5BE05F}.Debug|Win32.ActiveCfg = Debug|Win32
 		{D3FCA2AC-B6DC-41F9-926D-010A9D5BE05F}.Debug|Win32.Build.0 = Debug|Win32
 		{D3FCA2AC-B6DC-41F9-926D-010A9D5BE05F}.Release|Win32.ActiveCfg = Release|Win32
@@ -33,9 +34,7 @@ Global
 		{554F59F8-48C7-47CE-9C8F-4B064AF70539}.Release|Win32.ActiveCfg = Release|Win32
 		{554F59F8-48C7-47CE-9C8F-4B064AF70539}.Release|Win32.Build.0 = Release|Win32
 		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Debug|Win32.ActiveCfg = Debug|Win32
-		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Debug|Win32.Build.0 = Debug|Win32
 		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Release|Win32.ActiveCfg = Release|Win32
-		{73554FBF-C668-40BE-8AA5-C9ECC31BCFF2}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

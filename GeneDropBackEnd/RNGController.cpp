@@ -85,3 +85,8 @@ void RNGController::reseed(SEED_TYPE newSeed) {
 	uniformGenerator.distribution().reset();
 	seedGenerator.distribution().reset();
 }
+
+
+void RNGController::reseed() {
+	reseed(produceRandomisedSeed());
+}

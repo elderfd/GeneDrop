@@ -1,20 +1,78 @@
-#include "SimulationManagerFactory.h"
+#include <chrono>
 #include <fstream>
-#include <map>
-#include <tuple>
-#include <initializer_list>
+#include "NewSimulationManager.h"
+#include <sstream>
 
 
-SimulationManagerFactory::SimulationManagerFactory() {}
+NewSimulationManager::NewSimulationManager() {
+	// Default to the Haldane breeder for now
+	breeder = std::make_unique<HaldaneBreeder>(&rng);
+}
 
 
-SimulationManagerFactory::~SimulationManagerFactory() {}
+NewSimulationManager::~NewSimulationManager() {}
 
 
-SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pedigreeFileName, std::string genotypeFileName, std::string lociFileName, int numberOfRuns, int numberOfThreads) {
-	SimulationManager newManager;
+void NewSimulationManager::buildPedigreeFromFile(std::string fileName) {
+	// Parse the pedigree file
+	std::ifstream pedigreeFile;
 
-	// Parse the loci information file
+	try {
+		pedigreeFile.open(fileName);
+
+		std::string line;
+
+		// Skip header
+		std::getline(pedigreeFile, line);
+
+		while (std::getline(pedigreeFile, line)) {
+			// Tokenise the line
+			std::string token;
+			int counter = 0;
+
+			std::stringstream lineStream(line);
+
+			std::string generationName, ID, firstParentName, secondParentName;
+
+			while (std::getline(lineStream, token, ',')) {
+				switch (counter) {
+				case 0:
+					// Generation
+					generationName = token;
+					// TODO: Do something with the generation name
+					break;
+				case 1:
+					// ID
+					ID = token;
+					break;
+				case 2:
+					// First parent
+					firstParentName = token;
+					break;
+				case 3:
+					secondParentName = token;
+					break;
+				default:
+					// Do nothing
+					break;
+				}
+
+				counter++;
+			}
+
+			pedigree.addCross(firstParentName, secondParentName, ID);
+		}
+
+		pedigreeFile.close();
+	} catch (std::exception &e) {
+		pedigreeFile.close();
+
+		throw e;
+	}
+}
+
+
+void NewSimulationManager::buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName) {
 	std::ifstream lociFile;
 
 	Genotype prototypeGenotype;
@@ -101,10 +159,8 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 	// Parse the founder line genotypes
 	std::ifstream genotypeFile;
 
-	std::map<std::string, PedigreeNode*> namesAddedSoFar;
-
 	try {
-		genotypeFile.open(genotypeFileName);
+		genotypeFile.open(founderFileName);
 
 		// Parse the header first
 		std::string line;
@@ -180,7 +236,12 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 					columnNumber++;
 				}
 
-				namesAddedSoFar[founderName] = newManager.prototypePedigree.addFounder(founderName, newFounderGenotype);
+				// Build the new individual
+				Organism newFounder;
+				newFounder.setName(founderName);
+				newFounder.setGenotype(newFounderGenotype);
+
+				startingState.addOrganism(newFounder);
 			}
 		}
 
@@ -189,90 +250,49 @@ SimulationManager SimulationManagerFactory::createFromSimpleInput(std::string pe
 		genotypeFile.close();
 		throw e;
 	}
+}
 
-	// Parse the pedigree file
-	std::ifstream pedigreeFile;
 
-	try {
-		pedigreeFile.open(pedigreeFileName);
+State NewSimulationManager::getRealisation() {
+	State newState = startingState;
 
-		std::string line;
+	// Reseed and record the seed
+	rng.reseed();
+	newState.seed(rng.seed());
 
-		// Skip header
-		std::getline(pedigreeFile, line);
+	for (auto crossIt = pedigree.begin(); crossIt != pedigree.end(); crossIt++) {
+		auto cross = *crossIt;
 
-		while (std::getline(pedigreeFile, line)) {
-			// Tokenise the line
-			std::string token;
-			int counter = 0;
+		auto mother = newState.getOrganism(crossIt->motherName);
+		auto father = newState.getOrganism(crossIt->fatherName);
 
-			std::stringstream lineStream(line);
+		if (!mother || !father) {
+			std::string errorMessage = "Could not find expected organism(s): ";
 
-			std::string generationName, ID, firstParentName, secondParentName;
+			errorMessage += mother ? "" : crossIt->motherName + " ";
+			errorMessage += father ? "" : crossIt->fatherName;
 
-			while (std::getline(lineStream, token, ',')) {
-				switch (counter) {
-				case 0:
-					// Generation
-					generationName = token;
-					// TODO: Do something with the generation name
-					break;
-				case 1:
-					// ID
-					ID = token;
-					break;
-				case 2:
-					// First parent
-					firstParentName = token;
-					break;
-				case 3:
-					secondParentName = token;
-					break;
-				default:
-					// Do nothing
-					break;
-				}
-
-				counter++;
-			}
-
-			// TODO: Perhaps think about how closely integrated the factory and the pedigree should be
-
-			auto getParentNode = [&namesAddedSoFar, &newManager](std::string parentName) {
-				auto found = namesAddedSoFar.find(parentName);
-
-				if (found != namesAddedSoFar.end()) {
-					// Have already added
-					return found->second;
-				} else {
-					// Need to add
-					namesAddedSoFar[parentName] = newManager.prototypePedigree.addOrganism(parentName);
-					return namesAddedSoFar[parentName];
-				}
-			};
-
-			auto firstParent = getParentNode(firstParentName);
-			auto secondParent = getParentNode(secondParentName);
-
-			// Add a new node for the child
-			auto childNode = newManager.prototypePedigree.addOrganism(ID);
-			namesAddedSoFar[ID] = childNode;
-
-			// Set the dependencies properly
-			childNode->setDependencies({ firstParent, secondParent });
+			throw std::runtime_error(errorMessage);
 		}
 
-		pedigreeFile.close();
-	} catch (std::exception &e) {
-		pedigreeFile.close();
+		auto child = breeder->breed(*mother, *father);
+		child.setName(crossIt->childName);
 
-		throw e;
+		newState.addOrganism(child);
 	}
 
-	// Add the right number of simulations
-	newManager.generateSimulations(numberOfRuns);
+	return newState;
+}
 
-	newManager.numberOfThreads = numberOfThreads;
+// Disables unsafe warning for localtime
+#pragma warning(disable: 4996)
 
-	return newManager;
+std::string NewSimulationManager::makeTimeStamp() {
+	auto timeNow = std::chrono::system_clock::now();
+	std::time_t convertedTime = std::chrono::system_clock::to_time_t(timeNow);
+
+	std::stringstream stampStream;
+	stampStream << std::put_time(std::localtime(&convertedTime), "%H-%M-%S@%d-%m-%Y");
+
+	return stampStream.str();
 }
