@@ -93,28 +93,27 @@ int main(int argc, char *argv[]) {
 	//	std::cerr << error.value() << std::endl;
 	//	returnVal = 1;
 	//}
-	//else
-	//{
-	//	// Do some sims
-	//	simManager.run();
-
-	//	// Get some output
-	//	std::string outputFileName = "Output(" + SimulationManager::makeTimeStamp() + ").csv";
-
-	//	simManager.outputResultsToFile(outputFileName);
-	//}
 
 	// TODO: This should be done elsewhere
 	std::string outputFileName = outDirectory + "/Output(" + NewSimulationManager::makeTimeStamp() + ").csv";
 	OutputMaker out;
+	int reportEvery = 50;
 
 	if (out.open(outputFileName)) {
-		for (int i = 0; i < numberOfRuns; i++) {
-			auto result = simManager.getRealisation();
+		try {
+			for (int i = 0; i < numberOfRuns; i++) {
+				auto result = simManager.getRealisation();
 
-			out << result;
+				out << result;
+
+				if (i % reportEvery == 0 || i == numberOfRuns - 1) {
+					std::cout << "Done " << i + 1 << " runs out of " << numberOfRuns;
+				}
+			}
+		} catch (std::exception& e) {
+			std::cout << e.what() << std::endl;
 		}
-
+		
 		out.close();
 	}
 

@@ -1,7 +1,6 @@
 #include <algorithm>
 #include "NewPedigree.h"
 #include <functional>
-#include "globals.h"
 #include <set>
 
 
