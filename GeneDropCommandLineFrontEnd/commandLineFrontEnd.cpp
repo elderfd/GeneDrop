@@ -33,8 +33,7 @@ int main(int argc, char *argv[]) {
 	if (printHelp) {
 		std::string errorMessage = "Input syntax is options and values. Available options are, \n";
 
-		auto addCommandLineOptSpec = [&](std::string option, std::string meaning)
-		{
+		auto addCommandLineOptSpec = [&](std::string option, std::string meaning) {
 			errorMessage += "\t-" + option + "  =  " + meaning + "\n";
 		};
 
@@ -59,20 +58,17 @@ int main(int argc, char *argv[]) {
 	if (auto errors = cLineParser.errorsEncountered()) {
 		std::cout << "Error in parsing input: " << std::endl;
 
-		for (auto message : errors.value())
-		{
+		for (auto message : errors.value()) {
 			std::cout << message << std::endl;
 		}
 
 		shouldExit = true;
 	}
 
-	if (auto warnings = cLineParser.warningsEncountered())
-	{
+	if (auto warnings = cLineParser.warningsEncountered()) {
 		std::cout << "Warnings generated when parsing input: " << std::endl;
 
-		for (auto message : warnings.value())
-		{
+		for (auto message : warnings.value()) {
 			std::cout << message << std::endl;
 		}
 	}
