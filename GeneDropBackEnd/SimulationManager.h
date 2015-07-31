@@ -22,5 +22,7 @@ private:
 	std::unique_ptr<Breeder> breeder;
 	Pedigree pedigree;
 	State startingState;
+
+	static const std::string founderGenerationName;
 };
 

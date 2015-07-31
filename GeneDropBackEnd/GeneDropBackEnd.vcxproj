@@ -15,6 +15,7 @@
     <ClInclude Include="Chromosome.h" />
     <ClInclude Include="Cross.h" />
     <ClInclude Include="Genotype.h" />
+    <ClInclude Include="OrganismSpecifier.h" />
     <ClInclude Include="Pedigree.h" />
     <ClInclude Include="SimulationManager.h" />
     <ClInclude Include="Locus.h" />
@@ -29,6 +30,7 @@
     <ClCompile Include="Cross.cpp" />
     <ClCompile Include="Genotype.cpp" />
     <ClCompile Include="Locus.cpp" />
+    <ClCompile Include="OrganismSpecifier.cpp" />
     <ClCompile Include="Pedigree.cpp" />
     <ClCompile Include="SimulationManager.cpp" />
     <ClCompile Include="Organism.cpp" />

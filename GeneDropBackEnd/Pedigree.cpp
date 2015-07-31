@@ -1,7 +1,8 @@
 #include <algorithm>
-#include "Pedigree.h"
 #include <functional>
+#include <numeric>
 #include <set>
+#include "Pedigree.h"
 
 
 Pedigree::Pedigree() {}
@@ -10,174 +11,21 @@ Pedigree::Pedigree() {}
 Pedigree::~Pedigree() {}
 
 
-void Pedigree::addCross(std::string fatherName, std::string motherName, std::string childName) {
-	// Work out if the mother and father already exist within the pedigree
-	class IndividualFinder : public NodeChecker {
-	public:
-		std::string name;
-		bool operator()(std::shared_ptr<PedigreeNode> node) {
-			return node->cross.childName == name;
-		}
-	} motherFinder, fatherFinder;
+void Pedigree::addCross(const OrganismSpecifier& father, const OrganismSpecifier& mother, const OrganismSpecifier& child) {
+	// Add the child to the list of nodes
+	nodes.insert(child);
 
-	motherFinder.name = motherName;
-	fatherFinder.name = fatherName;
-	
-	auto motherNode = depthFirstSearchSingleNode(&motherFinder),
-		fatherNode = depthFirstSearchSingleNode(&fatherFinder);
+	// Insert the cross in the adjacency matrix
+	auto& existing = edges[child];
+	existing.insert(father);
+	existing.insert(mother);
 
-	// See if any existing nodes depend on this child
-	class ParentChecker : public NodeChecker {
-	public:
-		std::string name;
-		bool operator()(std::shared_ptr<PedigreeNode> node) {
-			return node->cross.fatherName == name || node->cross.motherName == name;
-		}
-	} parentChecker;
-	parentChecker.name = childName;
-
-	auto needDependency = depthFirstSearchManyNodes(&parentChecker);
-
-	// Create the new node
-	auto newNode = std::make_shared<PedigreeNode>();
-	newNode->cross.childName = childName;
-	newNode->cross.fatherName = fatherName;
-	newNode->cross.motherName = motherName;
-
-	if (motherNode) {
-		newNode->dependencies.push_back(motherNode);
-
-		// Leaves by definition are not a dependency of any other node
-		leaves.erase(std::remove(leaves.begin(), leaves.end(), motherNode), leaves.end());
-	}
-	if (fatherNode) {
-		newNode->dependencies.push_back(fatherNode);
-
-		leaves.erase(std::remove(leaves.begin(), leaves.end(), fatherNode), leaves.end());
-	}
-
-	if (needDependency.size() > 0) {
-		for (auto node : needDependency) {
-			node->dependencies.push_back(newNode);
-		}
-	} else {
-		leaves.push_back(newNode);
-	}
+	// Add the mother and father if they don't exist already
+	nodes.insert(mother);
+	nodes.insert(father);
 
 	mustUpdateCrossOrder = true;
 	pedigreeSize++;
-}
-
-
-// TODO: std::set is faster and probably represents intent more closely
-std::vector<std::shared_ptr<PedigreeNode>> Pedigree::depthFirstSearchManyNodes(bool(*predicate)(std::shared_ptr<PedigreeNode>)) {
-	std::vector<std::shared_ptr<PedigreeNode>> returnNodes;
-
-	std::function<
-		void(std::shared_ptr<PedigreeNode>, bool(std::shared_ptr<PedigreeNode>), std::vector<std::shared_ptr<PedigreeNode>>*)
-	> visitNode = [&visitNode](std::shared_ptr<PedigreeNode> node, bool(*predicate)(std::shared_ptr<PedigreeNode>), std::vector<std::shared_ptr<PedigreeNode>>* nodes) {
-		if (predicate(node)) {
-			// Don't want duplicates
-			if (std::find(nodes->begin(), nodes->end(), node) == nodes->end()) nodes->push_back(node);
-		}
-
-		for (auto child : node->dependencies) {
-			visitNode(child, predicate, nodes);
-		}
-	};
-
-	for (auto leaf : leaves) {
-		visitNode(leaf, predicate, &returnNodes);
-	}
-
-	return returnNodes;
-}
-
-
-std::vector<std::shared_ptr<PedigreeNode>> Pedigree::depthFirstSearchManyNodes(NodeChecker* predicate) {
-	std::vector<std::shared_ptr<PedigreeNode>> returnNodes;
-
-	std::function<void(std::shared_ptr<PedigreeNode>, NodeChecker*, std::vector<std::shared_ptr<PedigreeNode>>*)> visitNode = [&visitNode](std::shared_ptr<PedigreeNode> node, NodeChecker* predicate, std::vector<std::shared_ptr<PedigreeNode>>* nodes) {
-		if ((*predicate)(node)) {
-			if (std::find(nodes->begin(), nodes->end(), node) == nodes->end()) nodes->push_back(node);
-		}
-
-		for (auto child : node->dependencies) {
-			visitNode(child, predicate, nodes);
-		}
-	};
-
-	for (auto leaf : leaves) {
-		visitNode(leaf, predicate, &returnNodes);
-	}
-
-	return returnNodes;
-}
-
-
-std::shared_ptr<PedigreeNode> Pedigree::depthFirstSearchSingleNode(NodeChecker* predicate) {
-	std::shared_ptr<PedigreeNode> returnNode = nullptr;
-
-	std::function<std::shared_ptr<PedigreeNode>(std::shared_ptr<PedigreeNode>, NodeChecker*)> visitNode = [&visitNode](std::shared_ptr<PedigreeNode> node, NodeChecker* predicate) {
-		if ((*predicate)(node)) {
-			return node;
-		}
-
-		for (auto child : node->dependencies) {
-			auto deeperNode = visitNode(child, predicate);
-
-			if (deeperNode != nullptr) {
-				return deeperNode;
-			}
-		}
-
-		return std::shared_ptr<PedigreeNode>();
-	};
-
-	for (auto leaf : leaves) {
-		auto foundNode = visitNode(leaf, predicate);
-
-		if (foundNode != nullptr) {
-			returnNode = foundNode;
-			break;
-		}
-	}
-
-	return returnNode;
-}
-
-
-std::shared_ptr<PedigreeNode> Pedigree::depthFirstSearchSingleNode(bool(*predicate)(std::shared_ptr<PedigreeNode>)) {
-	std::shared_ptr<PedigreeNode> returnNode = nullptr;
-	
-	std::function<
-		std::shared_ptr<PedigreeNode>(std::shared_ptr<PedigreeNode>, bool(std::shared_ptr<PedigreeNode>))
-	> visitNode = [&visitNode](std::shared_ptr<PedigreeNode> node, bool(*predicate)(std::shared_ptr<PedigreeNode>)) {
-		if (predicate(node)) {
-			return node;
-		}
-
-		for (auto child : node->dependencies) {
-			auto deeperNode = visitNode(child, predicate);
-
-			if (deeperNode != nullptr) {
-				return deeperNode;
-			}
-		}
-
-		return std::shared_ptr<PedigreeNode>();
-	};
-
-	for (auto leaf : leaves) {
-		auto foundNode = visitNode(leaf, predicate);
-
-		if (foundNode != nullptr) {
-			returnNode = foundNode;
-			break;
-		}
-	}
-
-	return returnNode;
 }
 
 
@@ -187,118 +35,81 @@ void Pedigree::updateCrossOrder() {
 	// Try to find a path through the pedigree
 	// Use Kahn 1962 algorithm which works if pedigree is DAG (and it has to be if built correctly)
 
-	// Construct list of all edges
-	class EdgeGenerator : public NodeChecker {
-	public:
-		std::map<std::string, std::vector<std::string>> allEdges; // Maps from child to parent(s)
+	auto allEdges = edges;
 
-		bool operator()(std::shared_ptr<PedigreeNode> node) {
-			// TODO: Slightly hacky - should clean this up
+	// TODO: Could maintain this set on construction of the pedigree
+	auto nodesWithNoIncomingEdges = nodes;
 
-			// Account for the founders too
-			bool mustAddMother = true;
-			bool mustAddFather = true;
+	for (const auto& node : nodes) {
+		const auto& connectsTo = edges[node];
 
-			// Add all edges
-			for (auto& dependency : node->dependencies) {
-				std::string from = node->cross.childName;
-				std::string to = dependency->cross.childName;
-
-				if (to == node->cross.motherName) mustAddMother = false;
-				if (to == node->cross.fatherName) mustAddFather = false;
-
-				// Should null-construct if none present
-				auto existingEdges = allEdges[from];
-
-				if (std::find(existingEdges.begin(), existingEdges.end(), to) == existingEdges.end()) {
-					existingEdges.push_back(to);
-					allEdges[from] = existingEdges;
-				}
+		for (const auto& endNode : connectsTo) {
+			if (nodesWithNoIncomingEdges.count(endNode) > 0) {
+				nodesWithNoIncomingEdges.erase(endNode);
 			}
-
-			auto existing = allEdges[node->cross.childName];
-
-			if (mustAddFather) {
-				if (std::find(existing.begin(), existing.end(), node->cross.fatherName) == existing.end()) {
-					existing.push_back(node->cross.fatherName);
-				}
-			}
-			if (mustAddMother) {
-				if (std::find(existing.begin(), existing.end(), node->cross.motherName) == existing.end()) {
-					existing.push_back(node->cross.motherName);
-				}
-			}
-
-			allEdges[node->cross.childName] = existing;
-
-			return false;
 		}
-	} edgeGenerator;
-	
-	depthFirstSearchManyNodes(&edgeGenerator);
-
-	auto& allEdges = edgeGenerator.allEdges;
-	std::vector<std::shared_ptr<PedigreeNode>> nodesWithNoIncomingEdges = leaves;;
-	std::vector<std::string> nodeNamesWithNoIncomingEdges;
-
-	for (const auto& leaf : nodesWithNoIncomingEdges) {
-		nodeNamesWithNoIncomingEdges.push_back(leaf->cross.childName);
 	}
 
+	std::vector<OrganismSpecifier> organismProductionOrder;
+
 	while (nodesWithNoIncomingEdges.size() > 0) {
-		auto nodeName = nodeNamesWithNoIncomingEdges.back();;
-		auto node = nodesWithNoIncomingEdges.back();
-		crossOrder.push_back(node);
-		nodesWithNoIncomingEdges.pop_back();
-		nodeNamesWithNoIncomingEdges.pop_back();
+		// Pop an unconnected node
+		auto node = *nodesWithNoIncomingEdges.begin();
+		nodesWithNoIncomingEdges.erase(node);
 
-		auto connectedTo = allEdges[nodeName];
+		organismProductionOrder.push_back(node);
 
-		while (connectedTo.size() > 0) {
-			auto m = connectedTo.back();
-			connectedTo.pop_back();
+		auto &dependsOn = allEdges[node];
 
-			bool mHasEdges = false;
-			for (auto& entry : allEdges) {
-				auto& vec = entry.second;
+		while (dependsOn.size() > 0) {
+			// Pop one of the dependencies
+			auto m = *(dependsOn.begin());
+			dependsOn.erase(m);
 
-				if (entry.first != nodeName && std::find(vec.begin(), vec.end(), m) != vec.end()) {
-					mHasEdges = true;
+			bool hasIncoming = false;
+
+			for (const auto& edgePair : allEdges) {
+				if (edgePair.second.count(m) > 0) {
+					hasIncoming = true;
 					break;
 				}
 			}
 
-			if (!mHasEdges) {
-				nodeNamesWithNoIncomingEdges.push_back(nodeName);
-
-				if (node != nullptr) {
-					for (auto& dependency : node->dependencies) {
-						if (dependency->cross.childName == m) {
-							nodesWithNoIncomingEdges.push_back(dependency);
-							break;
-						}
-					}
-				}
+			if (!hasIncoming) {
+				nodesWithNoIncomingEdges.insert(m);
 			}
 		}
 
-		allEdges[node->cross.childName] = std::vector<std::string>();
 	}
 
-	int numberOfEdgesLeft = 0;
-
-	for (const auto& edgeSet : allEdges) {
-		numberOfEdgesLeft += edgeSet.second.size();
-	}
+	// If any edges left then we have a cycle
+	auto numberOfEdgesLeft = std::accumulate(allEdges.begin(), allEdges.end(), 0,
+		[](unsigned int total, const std::pair<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& connections) -> unsigned int {
+			return total + connections.second.size();
+	});
 
 	if (numberOfEdgesLeft > 0) {
 		throw std::runtime_error("Found cycle in pedigree.");
 	}
 
-	// Remove the nullptr (founders)
-	crossOrder.erase(std::remove_if(crossOrder.begin(), crossOrder.end(), [](const std::shared_ptr<PedigreeNode>& ptr) {
-		return ptr == nullptr;
-	}), crossOrder.end());
+	// Now convert to the crosses that need to be done
+	for (const auto& organism : organismProductionOrder) {
+		// TODO: maybe worry later about genders
+
+		const auto& parents = edges[organism];
+
+		// TODO: Can make neater
+		if (parents.size() > 0) {
+			auto mother = *parents.begin();
+			auto father = mother;
+
+			if (parents.size() > 1) {
+				father = *++parents.begin();
+			}
+
+			crossOrder.emplace_back(father, mother, organism);
+		}
+	}
 
 	mustUpdateCrossOrder = false;
 }
@@ -347,7 +158,7 @@ CrossIterator CrossIterator::operator++(int) {
 
 
 const Cross& CrossIterator::operator*() {
-	return pedigree->crossOrder[index]->cross;
+	return pedigree->crossOrder[index];
 }
 
 
@@ -365,5 +176,7 @@ bool CrossIterator::operator!=(const CrossIterator& other) {
 
 
 const Cross* CrossIterator::operator->() {
-	return &pedigree->crossOrder[index]->cross;
+	return &pedigree->crossOrder[index];
 }
+
+

@@ -6,6 +6,7 @@
 #include <string>
 #include <vector>
 
+class OrganismSpecifier;
 class OutputMaker;
 
 class State {
@@ -15,25 +16,31 @@ public:
 	State();
 	~State();
 
-	void addOrganism(const Organism& newOrganism);
+	void addOrganism(const Organism& newOrganism, std::string generationID);
 
-	const std::shared_ptr<Organism> getOrganism(const std::string& name) const;
+	std::vector<const std::shared_ptr<Organism>> getMatchingOrganisms(const OrganismSpecifier& specifier) const;
 
 	friend OutputMaker& operator<<(OutputMaker &out, State &state);
 
 	unsigned int numberOfLoci() const;
 
-	unsigned int size() const { return organisms.size(); }
+	unsigned int size() const;
 
 	// TODO: Fix this
 	const Genotype& getPrototypeGenotype() const {
-		return organisms[0].genotype();
+		return generations[0].organisms[0]->genotype();
 	}
 
 	void seed(RNGController::SEED_TYPE seed);
 
 private:
-	std::vector<Organism> organisms;
+	class Generation {
+	public:
+		std::string generationID;
+		std::vector<std::shared_ptr<Organism>> organisms;
+	};
+
+	std::vector<Generation> generations;
 	RNGController::SEED_TYPE generatingSeed = 0;
 };
 

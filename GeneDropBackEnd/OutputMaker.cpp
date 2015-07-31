@@ -22,6 +22,7 @@ bool OutputMaker::open(std::string fileName) {
 	return true;
 }
 
+
 void OutputMaker::close() {
 	if (out.is_open()) {
 		out.close();
@@ -39,23 +40,25 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 			out.writeHeader(state);
 		}
 
-		for (auto& organism : state.organisms) {
-			out.out << out.simulationsSoFar << "," << state.generatingSeed << "," << organism.name();
+		for (auto& generation : state.generations) {
+			for (auto& organism : generation.organisms) {
+				out.out << out.simulationsSoFar << "," << state.generatingSeed << "," << organism->name();
 
-			const auto& prototypeGenome = state.getPrototypeGenotype();
-			unsigned int numberOfChromosomes = prototypeGenome.numberOfChromosomes();
+				const auto& prototypeGenome = state.getPrototypeGenotype();
+				unsigned int numberOfChromosomes = prototypeGenome.numberOfChromosomes();
 
-			for (unsigned int chromosome = 0; chromosome < numberOfChromosomes; chromosome++) {
-				for (int locus = 0; locus < prototypeGenome.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
-					for (unsigned int copy = 0; copy < prototypeGenome.ploidy(); copy++) {
-						out.out << "," << organism.genotype().chromosome(chromosome, copy).locus(locus).getAllele();
+				for (unsigned int chromosome = 0; chromosome < numberOfChromosomes; chromosome++) {
+					for (int locus = 0; locus < prototypeGenome.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
+						for (unsigned int copy = 0; copy < prototypeGenome.ploidy(); copy++) {
+							out.out << "," << organism->genotype().chromosome(chromosome, copy).locus(locus).getAllele();
+						}
 					}
 				}
+
+				out.out << std::endl;
 			}
-
-			out.out << std::endl;
 		}
-
+		
 		out.simulationsSoFar++;
 	}
 

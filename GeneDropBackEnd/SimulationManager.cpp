@@ -4,6 +4,9 @@
 #include <sstream>
 
 
+const std::string SimulationManager::founderGenerationName = "Founder";
+
+
 SimulationManager::SimulationManager() {
 	// Default to the Haldane breeder for now
 	breeder = std::make_unique<HaldaneBreeder>(&rng);
@@ -60,7 +63,11 @@ void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 				counter++;
 			}
 
-			pedigree.addCross(firstParentName, secondParentName, ID);
+			pedigree.addCross(
+				OrganismSpecifier::fromString(firstParentName),
+				OrganismSpecifier::fromString(secondParentName),
+				OrganismSpecifier::fromString(ID)
+			);
 		}
 
 		pedigreeFile.close();
@@ -241,7 +248,7 @@ void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, st
 				newFounder.setName(founderName);
 				newFounder.setGenotype(newFounderGenotype);
 
-				startingState.addOrganism(newFounder);
+				startingState.addOrganism(newFounder, "Founder");
 			}
 		}
 
@@ -263,22 +270,35 @@ State SimulationManager::getRealisation() {
 	for (auto crossIt = pedigree.begin(); crossIt != pedigree.end(); crossIt++) {
 		auto cross = *crossIt;
 
-		auto mother = newState.getOrganism(crossIt->motherName);
-		auto father = newState.getOrganism(crossIt->fatherName);
+		auto mother = newState.getMatchingOrganisms(crossIt->mother);
+		auto father = newState.getMatchingOrganisms(crossIt->father);
 
-		if (!mother || !father) {
-			std::string errorMessage = "Could not find expected organism(s): ";
+		auto t = crossIt->mother;
+		auto t2 = crossIt->father;
 
-			errorMessage += mother ? "" : crossIt->motherName + " ";
-			errorMessage += father ? "" : crossIt->fatherName;
+		if (mother.size() != 1 || father.size() != 1) {
+			std::string errorMessage;
+
+			if (mother.size() == 0 || father.size() == 0) {
+				errorMessage += "Could not find expected organism(s): ";
+				errorMessage += mother.size() == 0 ? crossIt->mother.displayString() + " " : "";
+				errorMessage += father.size() == 0 ? crossIt->father.displayString() : "";
+			}
+			if (mother.size() > 1 || father.size() > 1) {
+				if (mother.size() == 0 || father.size() == 0) errorMessage += "\n";
+
+				errorMessage += "Ambiguous reference to organism(s): ";
+				errorMessage += mother.size() > 1 ? crossIt->mother.displayString() + " " : "";
+				errorMessage += father.size() > 1 ? crossIt->father.displayString() : "";
+			}
 
 			throw std::runtime_error(errorMessage);
 		}
 
-		auto child = breeder->breed(*mother, *father);
-		child.setName(crossIt->childName);
+		auto child = breeder->breed(*mother[0], *father[0]);
+		child.setName(crossIt->child.name());
 
-		newState.addOrganism(child);
+		newState.addOrganism(child, crossIt->child.generation());
 	}
 
 	return newState;

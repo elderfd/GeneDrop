@@ -8,30 +8,33 @@ State::State() {}
 State::~State() {}
 
 
-void State::addOrganism(const Organism& newOrganism) {
-	organisms.push_back(newOrganism);
-}
+void State::addOrganism(const Organism& newOrganism, std::string generationID) {
+	bool added = false;
 
-
-const std::shared_ptr<Organism> State::getOrganism(const std::string& name) const {
-	std::shared_ptr<Organism> retPtr;
-	
-	for (auto& organism : organisms) {
-		if (organism.name() == name) {
-			retPtr = std::make_shared<Organism>(organism);
+	for (auto& generation : generations) {
+		if (generation.generationID == generationID) {
+			generation.organisms.push_back(std::make_shared<Organism>(newOrganism));
+			added = true;
+			break;
 		}
 	}
 
-	return retPtr;
+	if (!added) {
+		Generation newGeneration;
+		newGeneration.generationID = generationID;
+		generations.push_back(newGeneration);
+		generations.back().organisms.push_back(std::make_shared<Organism>(newOrganism));
+	}
+	
 }
 
 
 unsigned int State::numberOfLoci() const {
 	int number = 0;
 	
-	if (organisms.size() > 0) {
-		for (unsigned int i = 0; i < organisms[0].genotype().numberOfChromosomes(); i++) {
-			number += organisms[0].genotype().chromosome(0, i).getNumberOfLoci();
+	if (generations.size() > 0 && generations[0].organisms.size() > 0) {
+		for (unsigned int i = 0; i < generations[0].organisms[0]->genotype().numberOfChromosomes(); i++) {
+			number += generations[0].organisms[0]->genotype().chromosome(0, i).getNumberOfLoci();
 		}
 	}
 
@@ -41,4 +44,36 @@ unsigned int State::numberOfLoci() const {
 
 void State::seed(RNGController::SEED_TYPE seed) {
 	this->generatingSeed = seed;
+}
+
+
+std::vector<const std::shared_ptr<Organism>> State::getMatchingOrganisms(const OrganismSpecifier& specifier) const {
+	std::vector<const std::shared_ptr<Organism>> retVec;
+
+	for (const auto& generation : generations) {
+		OrganismSpecifier thisSpec;
+		thisSpec._generation = generation.generationID;
+		thisSpec.isNull = false;
+
+		for (const auto& organism : generation.organisms) {
+			thisSpec.ID = organism->name();
+			
+			if (thisSpec == specifier) {
+				retVec.push_back(organism);
+			}
+		}
+	}
+
+	return retVec;
+}
+
+
+unsigned int State::size() const {
+	unsigned int sum = 0;
+
+	for (const auto& generation : generations) {
+		sum += generation.organisms.size();
+	}
+
+	return sum;
 }
