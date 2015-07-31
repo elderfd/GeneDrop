@@ -77,8 +77,8 @@ void OutputMaker::writeHeader(const State& state) {
 		int numberOfFounders = -1;
 
 		out << "Number of loci," << std::to_string(numberOfLoci) << std::endl;
-		out << "Number of founders," << std::to_string(numberOfFounders) << std::endl; // TODO: Reimplement
-		out << "Number of generations," << "-" << std::endl;	//TODO: Reimplement this
+		out << "Number of founders," << state.generations[0].organisms.size() << std::endl;
+		out << "Number of generations," << state.generations.size() << std::endl;
 		out << "Number of runs," << "-" << std::endl; // TODO: Reimplement
 
 		// Some spacer lines
