@@ -320,4 +320,59 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 			}
 		}
 	}
+
+	SECTION("Simulation can differentiate individuals with the same name in different generations.") {
+		SimulationManager simManager;
+		simManager.buildPedigreeFromFile(testFileFolder + "backcrossDuplicatedNamesPedigree.csv");
+		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
+
+		std::vector<State> allResults;
+
+		for (auto i = 0; i < numberOfRuns; i++) {
+			auto result = simManager.getRealisation();
+
+			allResults.push_back(result);
+		}
+
+		SECTION("All F1s in this cross must be heterozygous") {
+			OrganismSpecifier F1("", "F1");
+
+			for (const auto& result : allResults) {
+				REQUIRE(result.getMatchingOrganisms(F1)[0]->genotype().allele(0, 0, 0) != result.getMatchingOrganisms(F1)[0]->genotype().allele(0, 0, 1));
+			}
+		}
+
+		SECTION("Expecting 1:1 heterozygote:homozygote ratio in F2") {
+			std::map<std::string, double> expectedCounts;
+			expectedCounts["00"] = 0.5 * numberOfRuns;
+			expectedCounts["01"] = 0.5 * numberOfRuns;
+
+			std::map<std::string, int> genotypeCounts;
+			OrganismSpecifier F2("", "F2");
+
+			for (const auto& result : allResults) {
+				std::string genotype = result.getMatchingOrganisms(F2)[0]->genotype().allele(0, 0, 0) + result.getMatchingOrganisms(F2)[0]->genotype().allele(0, 0, 1);
+
+				// Careful with heterozygotes
+				if (genotype == "10") genotype = "01";
+
+				genotypeCounts[genotype]++;
+			}
+
+			// TODO: Move to an actual stats test for this - chi squared would do it
+			double percentageErrorTolerance = 10;
+
+			for (const auto& expected : expectedCounts) {
+				double absoluteTolerance = percentageErrorTolerance / 100 * expected.second;
+
+				double lowerBound = expected.second - absoluteTolerance;
+				double upperBound = expected.second + absoluteTolerance;
+				int count = genotypeCounts[expected.first];
+
+				bool testPassed = lowerBound <= count  && upperBound >= count;
+
+				REQUIRE(testPassed);
+			}
+		}
+	}
 }

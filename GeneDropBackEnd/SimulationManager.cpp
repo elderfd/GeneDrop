@@ -42,7 +42,6 @@ void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 				case 0:
 					// Generation
 					generationName = token;
-					// TODO: Do something with the generation name
 					break;
 				case 1:
 					// ID
@@ -63,10 +62,12 @@ void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 				counter++;
 			}
 
+			std::string childSpecifier = generationName.empty() ? ID : generationName + "::" + ID;
+
 			pedigree.addCross(
 				OrganismSpecifier::fromString(firstParentName),
 				OrganismSpecifier::fromString(secondParentName),
-				OrganismSpecifier::fromString(ID)
+				OrganismSpecifier::fromString(childSpecifier)
 			);
 		}
 
@@ -268,27 +269,22 @@ State SimulationManager::getRealisation() {
 	newState.seed(rng.seed());
 
 	for (auto crossIt = pedigree.begin(); crossIt != pedigree.end(); crossIt++) {
-		auto cross = *crossIt;
-
 		auto mother = newState.getMatchingOrganisms(crossIt->mother);
 		auto father = newState.getMatchingOrganisms(crossIt->father);
-
-		auto t = crossIt->mother;
-		auto t2 = crossIt->father;
 
 		if (mother.size() != 1 || father.size() != 1) {
 			std::string errorMessage;
 
 			if (mother.size() == 0 || father.size() == 0) {
 				errorMessage += "Could not find expected organism(s): ";
-				errorMessage += mother.size() == 0 ? crossIt->mother.displayString() + " " : "";
+				errorMessage += mother.size() == 0 ? crossIt->mother.displayString() + ", " : "";
 				errorMessage += father.size() == 0 ? crossIt->father.displayString() : "";
 			}
 			if (mother.size() > 1 || father.size() > 1) {
 				if (mother.size() == 0 || father.size() == 0) errorMessage += "\n";
 
 				errorMessage += "Ambiguous reference to organism(s): ";
-				errorMessage += mother.size() > 1 ? crossIt->mother.displayString() + " " : "";
+				errorMessage += mother.size() > 1 ? crossIt->mother.displayString() + ", " : "";
 				errorMessage += father.size() > 1 ? crossIt->father.displayString() : "";
 			}
 

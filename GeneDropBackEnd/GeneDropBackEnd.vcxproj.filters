@@ -55,7 +55,9 @@
     <ClInclude Include="Pedigree.h">
       <Filter>Pedigree\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="OrganismSpecifier.h" />
+    <ClInclude Include="OrganismSpecifier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RNGController.cpp">
@@ -91,6 +93,8 @@
     <ClCompile Include="Pedigree.cpp">
       <Filter>Pedigree\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="OrganismSpecifier.cpp" />
+    <ClCompile Include="OrganismSpecifier.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

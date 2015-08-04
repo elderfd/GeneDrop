@@ -46,6 +46,10 @@ private:
 	void updateCrossOrder();
 	bool mustUpdateCrossOrder = true;
 	
+	// Can't rely on hash collisions due to weak equality
+	static void addNode(std::unordered_set<OrganismSpecifier>& set, const OrganismSpecifier& newNode);
+	static std::unordered_set<OrganismSpecifier>& getSet(std::unordered_map<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& map, OrganismSpecifier setSpecifier);
+
 	std::vector<Cross> crossOrder;
 	std::unordered_set<OrganismSpecifier> nodes;
 	std::unordered_map<OrganismSpecifier, std::unordered_set<OrganismSpecifier>> edges; // Key = child, Value = parents

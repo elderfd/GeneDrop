@@ -21,8 +21,8 @@ bool OrganismSpecifier::operator==(const OrganismSpecifier& other) const {
 	// Weak equality on generation
 	bool generationIsSame = this->_generation.empty() || other._generation.empty() || this->_generation == other._generation;
 	
-	// Strong equality on name
-	bool IDIsSame = this->ID == other.ID;
+	// Weak equality on name (for selecting whole generations)
+	bool IDIsSame = this->ID.empty() || other.ID.empty() || this->ID == other.ID;
 
 	return generationIsSame && IDIsSame;
 }

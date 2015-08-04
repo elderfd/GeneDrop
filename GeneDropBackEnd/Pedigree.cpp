@@ -13,16 +13,16 @@ Pedigree::~Pedigree() {}
 
 void Pedigree::addCross(const OrganismSpecifier& father, const OrganismSpecifier& mother, const OrganismSpecifier& child) {
 	// Add the child to the list of nodes
-	nodes.insert(child);
+	addNode(nodes, child);
 
 	// Insert the cross in the adjacency matrix
-	auto& existing = edges[child];
+	auto& existing = getSet(edges, child);
 	existing.insert(father);
 	existing.insert(mother);
 
 	// Add the mother and father if they don't exist already
-	nodes.insert(mother);
-	nodes.insert(father);
+	addNode(nodes, mother);
+	addNode(nodes, father);
 
 	mustUpdateCrossOrder = true;
 	pedigreeSize++;
@@ -30,7 +30,7 @@ void Pedigree::addCross(const OrganismSpecifier& father, const OrganismSpecifier
 
 
 void Pedigree::updateCrossOrder() {
-	crossOrder.clear();
+  	crossOrder.clear();
 
 	// Try to find a path through the pedigree
 	// Use Kahn 1962 algorithm which works if pedigree is DAG (and it has to be if built correctly)
@@ -44,8 +44,12 @@ void Pedigree::updateCrossOrder() {
 		const auto& connectsTo = edges[node];
 
 		for (const auto& endNode : connectsTo) {
-			if (nodesWithNoIncomingEdges.count(endNode) > 0) {
-				nodesWithNoIncomingEdges.erase(endNode);
+			// In-built count doesn't consider weak equality
+			for (const auto& unconnectedNode : nodesWithNoIncomingEdges) {
+				if (unconnectedNode == endNode) {
+					nodesWithNoIncomingEdges.erase(unconnectedNode);
+					break;
+				}
 			}
 		}
 	}
@@ -59,7 +63,7 @@ void Pedigree::updateCrossOrder() {
 
 		organismProductionOrder.push_back(node);
 
-		auto &dependsOn = allEdges[node];
+		auto &dependsOn = getSet(allEdges, node);
 
 		while (dependsOn.size() > 0) {
 			// Pop one of the dependencies
@@ -69,14 +73,16 @@ void Pedigree::updateCrossOrder() {
 			bool hasIncoming = false;
 
 			for (const auto& edgePair : allEdges) {
-				if (edgePair.second.count(m) > 0) {
-					hasIncoming = true;
-					break;
+				for (const auto& second : edgePair.second) {
+					if (second == m) {
+						hasIncoming = true;
+						break;
+					}
 				}
 			}
 
 			if (!hasIncoming) {
-				nodesWithNoIncomingEdges.insert(m);
+				addNode(nodesWithNoIncomingEdges, m);
 			}
 		}
 
@@ -96,7 +102,7 @@ void Pedigree::updateCrossOrder() {
 	for (const auto& organism : organismProductionOrder) {
 		// TODO: maybe worry later about genders
 
-		const auto& parents = edges[organism];
+		const auto& parents = getSet(edges, organism);
 
 		// TODO: Can make neater
 		if (parents.size() > 0) {
@@ -112,6 +118,52 @@ void Pedigree::updateCrossOrder() {
 	}
 
 	mustUpdateCrossOrder = false;
+}
+
+
+void Pedigree::addNode(std::unordered_set<OrganismSpecifier>& set, const OrganismSpecifier& newNode) {
+	// First check for exact match via hash-collision and equality
+	if (set.count(newNode) > 0) return;
+
+	// Now check for equality with something existing
+	for (auto& node : set) {
+		if (node == newNode) {
+			// See if the new node adds some more information and take this into account
+			if (node.name().empty() && !newNode.name().empty()) {
+				set.erase(node);
+				set.insert(newNode);
+			}
+
+			return;
+		}
+	}
+
+	// If nothing found then just insert the new node as given
+	set.insert(newNode);
+}
+
+
+std::unordered_set<OrganismSpecifier>& Pedigree::getSet(std::unordered_map<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& map, OrganismSpecifier setSpecifier) {
+	// See if the set contains the thing
+	try {
+		return map.at(setSpecifier);
+	} catch (...) {} // Horrible but what else to do?
+
+	// Look with weak equality
+	for (auto& pair : map) {
+		if (pair.first == setSpecifier) {
+			// See if we're adding some new info
+			if (pair.first.name().empty() && !setSpecifier.name().empty()) {
+				map.erase(pair.first);
+				return map[setSpecifier];
+			}
+
+			return pair.second;
+		}
+	}
+
+	// Otherwise insert new element
+	return map[setSpecifier];
 }
 
 
