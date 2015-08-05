@@ -41,6 +41,9 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 		}
 
 		for (auto& generation : state.generations) {
+			// User may have specified printing of only particular generations
+			if (out.generationsToPrint.size() > 0 && std::find(out.generationsToPrint.begin(), out.generationsToPrint.end(), generation.generationID) == out.generationsToPrint.end()) continue;
+
 			for (auto& organism : generation.organisms) {
 				out.out << out.simulationsSoFar << "," << state.generatingSeed << "," << organism->name();
 
@@ -100,4 +103,9 @@ void OutputMaker::writeHeader(const State& state) {
 
 		out << std::endl;
 	}
+}
+
+
+void OutputMaker::printOnlyCertainGenerations(const std::vector<std::string>& toPrint) {
+	generationsToPrint = toPrint;
 }

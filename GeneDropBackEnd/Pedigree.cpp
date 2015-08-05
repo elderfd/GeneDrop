@@ -232,3 +232,14 @@ const Cross* CrossIterator::operator->() {
 }
 
 
+std::vector<std::string> Pedigree::getGenerationsContainingName(const std::string& name) const {
+	std::vector<std::string> retVec;
+
+	for (const auto& node : nodes) {
+		if (node.name() == name) {
+			retVec.push_back(node.generation());
+		}
+	}
+
+	return retVec;
+}

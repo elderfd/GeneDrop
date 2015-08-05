@@ -249,7 +249,7 @@ void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, st
 				newFounder.setName(founderName);
 				newFounder.setGenotype(newFounderGenotype);
 
-				startingState.addOrganism(newFounder, "Founder");
+				startingState.addOrganism(newFounder, SimulationManager::founderGenerationName);
 			}
 		}
 
@@ -294,7 +294,10 @@ State SimulationManager::getRealisation() {
 		auto child = breeder->breed(*mother[0], *father[0]);
 		child.setName(crossIt->child.name());
 
-		newState.addOrganism(child, crossIt->child.generation());
+		// Assume that the first generation found is the right one if not specified
+		auto generationName = crossIt->child.generation().empty() ? pedigree.getGenerationsContainingName(child.name())[0] : crossIt->child.generation();
+
+		newState.addOrganism(child, generationName);
 	}
 
 	return newState;

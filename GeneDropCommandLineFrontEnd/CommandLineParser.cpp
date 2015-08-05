@@ -4,39 +4,31 @@
 #include <fstream>
 
 
-CommandLineParser::CommandLineParser(int argc, char *argv[])
-{
+CommandLineParser::CommandLineParser(int argc, char *argv[]) {
 	parse(argc, argv);
 }
 
 
-CommandLineParser::~CommandLineParser()
-{
-	while (expectedArgs.size() > 0)
-	{
+CommandLineParser::~CommandLineParser() {
+	while (expectedArgs.size() > 0) {
 		delete expectedArgs[expectedArgs.size() - 1];
 		expectedArgs.pop_back();
 	}
 }
 
 
-void CommandLineParser::parse(int argc, char *argv[])
-{
+void CommandLineParser::parse(int argc, char *argv[]) {
 	// Try to match all keys to something
-	for (int argIndex = 0; argIndex < argc; argIndex++)
-	{
+	for (int argIndex = 0; argIndex < argc; argIndex++) {
 		// See if it's a key
-		if (argv[argIndex][0] == '-')
-		{
+		if (argv[argIndex][0] == '-') {
 			// Strip off the dash
 			std::string trimmed = std::string(argv[argIndex]);
 			trimmed.erase(trimmed.begin());
 
 			// Then check if it matches anything (checking we're not at the end of the input first)
-			if (argIndex != argc - 1)
-			{
-				if (auto argMatch = getUnambiguousKeyMatch(trimmed))
-				{
+			if (argIndex != argc - 1) {
+				if (auto argMatch = getUnambiguousKeyMatch(trimmed)) {
 					argIndex++;
 					argMatch.value()->setValue(argv[argIndex]);
 				}
@@ -45,56 +37,43 @@ void CommandLineParser::parse(int argc, char *argv[])
 	}
 
 	// Check that everything is ok
-	for (auto arg : expectedArgs)
-	{
-		if (auto errorMessage = arg->hasError())
-		{
+	for (auto arg : expectedArgs) {
+		if (auto errorMessage = arg->hasError()) {
 			errorStack.push_back(errorMessage.value());
 		}
 	}
 }
 
 
-Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::string key)
-{
+Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::string key) {
 	std::vector<CommandLineArgInterface*> foundArgs;
 	Maybe<CommandLineArgInterface*> returnObj;
 
-	for (auto arg : expectedArgs)
-	{
-		if (arg->matchesKey(key))
-		{
+	for (auto arg : expectedArgs) {
+		if (arg->matchesKey(key)) {
 			foundArgs.push_back(arg);
 		}
 	}
 
 	// If too many found or none found make an error
-	if (foundArgs.size() > 1 || foundArgs.size() == 0)
-	{
+	if (foundArgs.size() > 1 || foundArgs.size() == 0) {
 		std::string errorMessage = "No unambigious matches for key -" + key + " found; ";
 
-		if (foundArgs.size() > 1)
-		{
+		if (foundArgs.size() > 1) {
 			errorMessage += "possible matches are: ";
 			bool firstDone = false;
 
-			for (auto arg : foundArgs)
-			{
-				if (!firstDone)
-				{
+			for (auto arg : foundArgs) {
+				if (!firstDone) {
 					firstDone = true;
-				}
-				else
-				{
+				} else {
 					errorMessage += ",";
 				}
 				errorMessage += arg->getKey();
 			}
 
 			errorMessage += ".";
-		}
-		else
-		{
+		} else {
 			errorMessage += "no matches found.";
 		}
 
@@ -110,12 +89,10 @@ Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::s
 }
 
 
-Maybe<std::vector<std::string>> CommandLineParser::errorsEncountered()
-{
+Maybe<std::vector<std::string>> CommandLineParser::errorsEncountered() {
 	Maybe<std::vector<std::string>> retVal;
 
-	if (errorStack.size() > 0)
-	{
+	if (errorStack.size() > 0) {
 		retVal.setValue(errorStack);
 	}
 
@@ -123,12 +100,10 @@ Maybe<std::vector<std::string>> CommandLineParser::errorsEncountered()
 }
 
 
-Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered()
-{
+Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered() {
 	Maybe<std::vector<std::string>> retVal;
 
-	if (warningStack.size() > 0)
-	{
+	if (warningStack.size() > 0) {
 		retVal.setValue(warningStack);
 	}
 
@@ -136,21 +111,16 @@ Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered()
 }
 
 
-void CommandLineParser::setAllValues()
-{
-	for (auto arg : expectedArgs)
-	{
+void CommandLineParser::setAllValues() {
+	for (auto arg : expectedArgs) {
 		arg->setValueOfParameter();
 	}
 }
 
 
-void CommandLineParser::setSingleValue(std::string key)
-{
-	for (auto arg : expectedArgs)
-	{
-		if (key == arg->getKey())
-		{
+void CommandLineParser::setSingleValue(std::string key) {
+	for (auto arg : expectedArgs) {
+		if (key == arg->getKey()) {
 			arg->setValueOfParameter();
 		}
 	}
