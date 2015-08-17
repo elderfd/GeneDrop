@@ -221,7 +221,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 
 		SECTION("All F1s in this cross must be heterozygous") {
 			OrganismSpecifier firstF1("F1-1", ""), secondF1("F1-2", "");
-			
+
 			for (const auto& result : allResults) {
 				REQUIRE(result.getMatchingOrganisms(firstF1)[0]->genotype().allele(0, 0, 0) != result.getMatchingOrganisms(firstF1)[0]->genotype().allele(0, 0, 1));
 				REQUIRE(result.getMatchingOrganisms(secondF1)[0]->genotype().allele(0, 0, 0) != result.getMatchingOrganisms(secondF1)[0]->genotype().allele(0, 0, 1));
@@ -241,7 +241,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 			for (const auto& result : allResults) {
 				std::string firstGenotype = result.getMatchingOrganisms(firstF2)[0]->genotype().allele(0, 0, 0) + result.getMatchingOrganisms(firstF2)[0]->genotype().allele(0, 0, 1);
 				std::string secondGenotype = result.getMatchingOrganisms(secondF2)[0]->genotype().allele(0, 0, 0) + result.getMatchingOrganisms(secondF2)[0]->genotype().allele(0, 0, 1);
-				
+
 				if (firstGenotype == "10") firstGenotype = "01";
 				if (secondGenotype == "10") secondGenotype = "01";
 
