@@ -18,3 +18,8 @@ include_directories(GeneDropBackEnd)
 add_subdirectory(GeneDropBackEnd)
 add_subdirectory(GeneDropCommandLineFrontEnd)
 add_subdirectory(GeneDropTests)
+add_subdirectory(GeneDropGraphicalFrontEnd)
+
+add_dependencies(GeneDrop Backend)
+add_dependencies(GeneDropPretty Backend)
+add_dependencies(Tests Backend)

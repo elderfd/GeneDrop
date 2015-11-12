@@ -5,8 +5,7 @@
 #include <vector>
 
 class CommandLineArgInterface :
-	public Maybe<std::string>
-{
+	public Maybe < std::string > {
 public:
 	//! Sets the value of the parameter attached to the argument
 	virtual void setValueOfParameter() = 0;
@@ -27,13 +26,12 @@ protected:
 
 
 template<class T> class CommandLineArg :
-	public CommandLineArgInterface
-{
+public CommandLineArgInterface {
 public:
 	CommandLineArg(std::string key, T* parameterToSet);
 	CommandLineArg(std::string key, T* parameterToSet, T defaultValue);
 	~CommandLineArg();
-	
+
 	void setValueOfParameter();
 
 	Maybe<std::string> hasError() const;
@@ -47,16 +45,14 @@ protected:
 };
 
 
-template<class T> CommandLineArg<T>::CommandLineArg(std::string key, T* parameterToSet)
-{
+template<class T> CommandLineArg<T>::CommandLineArg(std::string key, T* parameterToSet) {
 	this->_optional = false;
 	this->_key = key;
 	this->parameterToSet = parameterToSet;
 }
 
 
-template<class T> CommandLineArg<T>::CommandLineArg(std::string key, T* parameterToSet, T defaultValue)
-{
+template<class T> CommandLineArg<T>::CommandLineArg(std::string key, T* parameterToSet, T defaultValue) {
 	this->_optional = true;
 	this->defaultValue = defaultValue;
 	this->_key = key;
@@ -64,29 +60,22 @@ template<class T> CommandLineArg<T>::CommandLineArg(std::string key, T* paramete
 }
 
 
-template<class T> CommandLineArg<T>::~CommandLineArg()
-{
-}
+template<class T> CommandLineArg<T>::~CommandLineArg() {}
 
 
-template<class T> void CommandLineArg<T>::setValueOfParameter()
-{
+template<class T> void CommandLineArg<T>::setValueOfParameter() {
 	*parameterToSet = value();
 }
 
 
-template<class T> T CommandLineArg<T>::value() const
-{
+template<class T> T CommandLineArg<T>::value() const {
 	T value;
 
-	if (!set())
-	{
+	if (!set()) {
 		assert(_optional);
 
 		value = defaultValue;
-	}
-	else
-	{
+	} else {
 		value = convertValue(Maybe<std::string>::value());
 	}
 
@@ -94,12 +83,10 @@ template<class T> T CommandLineArg<T>::value() const
 }
 
 
-template<class T> Maybe<std::string> CommandLineArg<T>::hasError() const
-{
+template<class T> Maybe<std::string> CommandLineArg<T>::hasError() const {
 	Maybe<std::string> errorMessage;
 
-	if (!(set() || _optional))
-	{
+	if (!(set() || _optional)) {
 		errorMessage.setValue("Required key \"" + _key + "\" not given value.");
 	}
 

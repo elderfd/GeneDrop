@@ -9,12 +9,11 @@
 //! Used to extract options from the args supplied to the program
 /*!
 	Verifies the input.
-*/
-class CommandLineParser
-{
+	*/
+class CommandLineParser {
 public:
 	CommandLineParser(int argc, char *argv[]);
-	CommandLineParser(){};
+	CommandLineParser() {};
 	~CommandLineParser();
 
 	template<class T> void addArg(std::string key, T* parameterToSet);
@@ -35,7 +34,7 @@ public:
 	//! Sets the value for a single parameter
 	void setSingleValue(std::string key);
 
-protected:	
+protected:
 	Maybe<CommandLineArgInterface*> getUnambiguousKeyMatch(std::string key);
 
 	static const std::string
@@ -58,13 +57,11 @@ protected:
 };
 
 
-template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet)
-{
+template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet) {
 	expectedArgs.push_back(new CommandLineArg<T>(key, parameterToSet));
 }
 
 
-template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet, T defaultValue)
-{
+template<class T> void CommandLineParser::addArg(std::string key, T* parameterToSet, T defaultValue) {
 	expectedArgs.push_back(new CommandLineArg<T>(key, parameterToSet, defaultValue));
 }

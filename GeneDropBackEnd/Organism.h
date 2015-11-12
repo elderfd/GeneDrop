@@ -12,7 +12,7 @@ public:
 	Organism();
 	~Organism();
 
-	std::string name() const {
+	const std::string& name() const {
 		return _name;
 	}
 
@@ -20,7 +20,7 @@ public:
 		_name = name;
 	}
 
-	unsigned int numberOfChromosomes() const {
+	const unsigned int numberOfChromosomes() const {
 		return _genotype.numberOfChromosomes();
 	}
 

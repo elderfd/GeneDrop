@@ -9,6 +9,8 @@ add_executable(GeneDropPretty
     geneDropPretty.cpp
     MainWindow.cpp
     MainWindow.h
+    ProgramOptions.cpp
+    ProgramOptions.h
 )
 qt5_use_modules(GeneDropPretty Widgets)
 # target_link_libraries(GeneDropPretty Qt5::Widgets)
