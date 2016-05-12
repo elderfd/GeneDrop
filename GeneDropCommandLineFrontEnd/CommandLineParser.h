@@ -32,7 +32,7 @@ public:
 	void setAllValues();
 
 	//! Sets the value for a single parameter
-	void setSingleValue(std::string key);
+	void setSingleValue(const std::string& key);
 
 protected:
 	Maybe<CommandLineArgInterface*> getUnambiguousKeyMatch(std::string key);

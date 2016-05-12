@@ -1,7 +1,7 @@
 #include "CommandLineArg.h"
 
 
-bool CommandLineArgInterface::matchesKey(std::string key)
+bool CommandLineArgInterface::matchesKey(const std::string& key)
 {
 	bool matched = true;
 

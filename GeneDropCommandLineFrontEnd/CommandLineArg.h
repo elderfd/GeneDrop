@@ -14,7 +14,7 @@ public:
 	virtual Maybe<std::string> hasError() const = 0;
 
 	//! Checks if the supplied key matches the key the parameter expects
-	bool matchesKey(std::string key);
+	bool matchesKey(const std::string& key);
 
 	//! Returns the key
 	std::string getKey() const { return _key; }

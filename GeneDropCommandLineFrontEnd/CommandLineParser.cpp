@@ -17,6 +17,8 @@ CommandLineParser::~CommandLineParser() {
 }
 
 
+#include <iostream>
+
 void CommandLineParser::parse(int argc, char *argv[]) {
 	// Try to match all keys to something
 	for (int argIndex = 0; argIndex < argc; argIndex++) {
@@ -26,18 +28,30 @@ void CommandLineParser::parse(int argc, char *argv[]) {
 			std::string trimmed = std::string(argv[argIndex]);
 			trimmed.erase(trimmed.begin());
 
+			bool takesValue = true;
+
+			// Check if it takes options
+			if (trimmed[0] == '-') {
+				takesValue = false;
+				trimmed.erase(trimmed.begin());
+			}
+
 			// Then check if it matches anything (checking we're not at the end of the input first)
-			if (argIndex != argc - 1) {
-				if (auto argMatch = getUnambiguousKeyMatch(trimmed)) {
-					argIndex++;
-					argMatch.value()->setValue(argv[argIndex]);
+			if (argIndex != (takesValue ? argc - 1 : argc)) {
+				if (auto& argMatch = getUnambiguousKeyMatch(trimmed)) {
+					if (takesValue) {
+						argIndex++;
+						argMatch.value()->setValue(argv[argIndex]);
+					} else {
+						argMatch.value()->setValue("T");
+					}
 				}
 			}
 		}
 	}
 
 	// Check that everything is ok
-	for (auto arg : expectedArgs) {
+	for (auto& arg : expectedArgs) {
 		if (auto errorMessage = arg->hasError()) {
 			errorStack.push_back(errorMessage.value());
 		}
@@ -63,7 +77,7 @@ Maybe<CommandLineArgInterface*> CommandLineParser::getUnambiguousKeyMatch(std::s
 			errorMessage += "possible matches are: ";
 			bool firstDone = false;
 
-			for (auto arg : foundArgs) {
+			for (auto& arg : foundArgs) {
 				if (!firstDone) {
 					firstDone = true;
 				} else {
@@ -112,14 +126,14 @@ Maybe<std::vector<std::string>> CommandLineParser::warningsEncountered() {
 
 
 void CommandLineParser::setAllValues() {
-	for (auto arg : expectedArgs) {
+	for (auto& arg : expectedArgs) {
 		arg->setValueOfParameter();
 	}
 }
 
 
-void CommandLineParser::setSingleValue(std::string key) {
-	for (auto arg : expectedArgs) {
+void CommandLineParser::setSingleValue(const std::string& key) {
+	for (auto& arg : expectedArgs) {
 		if (key == arg->getKey()) {
 			arg->setValueOfParameter();
 		}

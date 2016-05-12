@@ -38,10 +38,13 @@ int main(int argc, char *argv[]) {
 
 	// First check if we asked for help printing
 	if (printHelp) {
-		std::string errorMessage = "Input syntax is options and values. Available options are, \n";
+		std::string errorMessage = "Input syntax is options and values or flags. Options are specified with -<option> -<value>, and flags with --<flag>. Available options are, \n";
 
 		auto addCommandLineOptSpec = [&](std::string option, std::string meaning) {
 			errorMessage += "\t-" + option + "  =  " + meaning + "\n";
+		};
+		auto addCommandLineFlagSpec = [&](std::string option, std::string meaning) {
+			errorMessage += "\t--" + option + "  =  " + meaning + "\n";
 		};
 
 		addCommandLineOptSpec("pedigree", "The path to the pedigree file to use.");
@@ -49,9 +52,12 @@ int main(int argc, char *argv[]) {
 		addCommandLineOptSpec("loci", "The path to the loci file to use.");
 		addCommandLineOptSpec("numberOfRuns", "The number of simulations to carry out for this dataset.");
 		addCommandLineOptSpec("numberOfThreads", "The number of threads to use for simulations.");
-		addCommandLineOptSpec("help", "Print help message for the program.");
 		addCommandLineOptSpec("out", "The directory to output the results to.");
 		addCommandLineOptSpec("print", "A comma-separated list of which generations to produce output for.");
+
+		errorMessage += "Available flags are, \n";
+
+		addCommandLineFlagSpec("help", "Print help message for the program.");
 
 		std::cout << errorMessage << std::endl;
 
@@ -154,7 +160,7 @@ int main(int argc, char *argv[]) {
 				out << result;
 
 				if (i % reportEvery == 0 || i == numberOfRuns - 1) {
-					std::cout << "Done " << i + 1 << " runs out of " << numberOfRuns;
+					std::cout << "Done " << i + 1 << " runs out of " << numberOfRuns << std::endl;
 				}
 			}
 		} catch (std::exception& e) {
