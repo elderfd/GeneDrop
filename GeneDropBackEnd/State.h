@@ -18,7 +18,7 @@ public:
 
 	void addOrganism(const Organism& newOrganism, std::string generationID);
 
-	std::vector<const std::shared_ptr<Organism>> getMatchingOrganisms(const OrganismSpecifier& specifier) const;
+	std::vector<std::shared_ptr<Organism>> getMatchingOrganisms(const OrganismSpecifier& specifier) const;
 
 	friend OutputMaker& operator<<(OutputMaker &out, State &state);
 

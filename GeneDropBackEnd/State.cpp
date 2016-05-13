@@ -47,8 +47,8 @@ void State::seed(RNGController::SEED_TYPE seed) {
 }
 
 
-std::vector<const std::shared_ptr<Organism>> State::getMatchingOrganisms(const OrganismSpecifier& specifier) const {
-	std::vector<const std::shared_ptr<Organism>> retVec;
+std::vector<std::shared_ptr<Organism>> State::getMatchingOrganisms(const OrganismSpecifier& specifier) const {
+	std::vector<std::shared_ptr<Organism>> retVec;
 
 	for (const auto& generation : generations) {
 		OrganismSpecifier thisSpec;

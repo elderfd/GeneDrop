@@ -10,6 +10,8 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif(NOT Boost_FOUND)
 
+set(CMAKE_PREFIX_PATH "C:/Qt/Qt5.6.0/5.6/msvc2015")
+
 cmake_policy(SET CMP0008 OLD)
 
 include_directories(${Boost_INCLUDE_DIRS})
@@ -21,5 +23,5 @@ add_subdirectory(GeneDropTests)
 add_subdirectory(GeneDropGraphicalFrontEnd)
 
 add_dependencies(GeneDrop Backend)
-add_dependencies(GeneDropPretty Backend)
+add_dependencies(GeneDropGUI Backend)
 add_dependencies(Tests Backend)

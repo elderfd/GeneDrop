@@ -1,5 +1,4 @@
 #include "MainWindow.h"
-#include "ProgramOptions.h"
 #include "SimulationManager.h"
 #include <QFileDialog>
 #include <QPushButton>
@@ -28,8 +27,9 @@ void MainWindow::buildDefaultUI() {
 	layout->addWidget(goButton);
 
 	auto outputWindow = new QTextEdit(this);
+	outputWindow->setReadOnly(true);
 
-	connect(this, &MainWindow::message, outputWindow, &OutputWindow::)
+	connect(this, &MainWindow::message, outputWindow, &QTextEdit::append);
 
 	layout->addWidget(outputWindow);
 

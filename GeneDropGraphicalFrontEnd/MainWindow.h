@@ -1,5 +1,6 @@
 #pragma once
 #include <qmainwindow.h>
+#include "ProgramOptions.h"
 
 
 class MainWindow :
