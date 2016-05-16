@@ -11,6 +11,8 @@ public:
 	MainWindow();
 	~MainWindow();
 
+	void runWithCurrentOptions();
+
 signals:
 	void message(const QString& what);
 
@@ -21,6 +23,6 @@ private:
 
 	void run(const ProgramOptions& options);
 
-	QString chooseFile() const;
+	OptionsWidget* settingsWidget;
 };
 

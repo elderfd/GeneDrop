@@ -17,6 +17,9 @@ public:
 	std::string pedigreeFileName;
 	std::string genotypeFileName;
 	std::string lociFileName;
+
+	std::string outputDirectory;
+	std::vector<std::string> generationsToPrint;
 };
 
 
@@ -26,6 +29,5 @@ public:
 	OptionsWidget(QWidget* parent);
 	~OptionsWidget();
 
-private:
 	ProgramOptions options;
 };

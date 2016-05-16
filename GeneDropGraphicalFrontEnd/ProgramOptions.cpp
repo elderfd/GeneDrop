@@ -4,6 +4,10 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QSpinBox>
+#include "FileChoiceWidget.h"
+#include <QFrame>
+#include <QCheckBox>
+
 
 const int ProgramOptions::maximumNumberOfRuns = std::numeric_limits<int>::max();
 const int ProgramOptions::maximumNumberOfThreads = 8;
@@ -32,33 +36,41 @@ OptionsWidget::OptionsWidget(QWidget* parent) : QWidget(parent) {
 
 	layout->addWidget(numberOfRunsSpinner, 0, 1);
 
-	auto genotypeFileButton = new QPushButton("Choose file", this);
-	connect(genotypeFileButton, &QPushButton::clicked, [this]() {
-		auto fileName = QFileDialog::getOpenFileName(this);
-		if (!fileName.isEmpty()) options.genotypeFileName = fileName.toStdString();
+	auto genotypeFileWidget = new FileChoiceWidget(options.genotypeFileName, FileChoiceWidget::OPEN_FILE, this);
+	layout->addWidget(genotypeFileWidget, 1, 1);
+
+	auto pedigreeFileWidget = new FileChoiceWidget(options.pedigreeFileName, FileChoiceWidget::OPEN_FILE, this);
+	layout->addWidget(pedigreeFileWidget, 2, 1);
+
+	auto lociFileWidget = new FileChoiceWidget(options.lociFileName, FileChoiceWidget::OPEN_FILE, this);
+	layout->addWidget(lociFileWidget, 3, 1);
+
+	layout->setColumnMinimumWidth(2, 20);
+
+	layout->addWidget(new QLabel("Output directory:"), 0, 3);
+	auto outputFolderWidget = new FileChoiceWidget(options.outputDirectory, FileChoiceWidget::OPEN_DIR, this);
+	layout->addWidget(outputFolderWidget, 0, 4);
+
+	auto advancedButton = new QCheckBox("Show advanced options", this);
+
+	layout->addWidget(advancedButton, 4, 0, 1, 4);
+
+	auto advancedArea = new QFrame(this);
+	advancedArea->setVisible(false);
+	layout->addWidget(advancedArea, 5, 0, 1, 2);
+
+	auto advancedLayout = new QGridLayout(advancedArea);
+
+	auto numberOfThreadsSpinner = new QSpinBox(this);
+	numberOfThreadsSpinner->setMaximum(ProgramOptions::maximumNumberOfThreads);
+	numberOfThreadsSpinner->setMinimum(1);
+	connect(numberOfThreadsSpinner, static_cast<void (QSpinBox::*)(int)>(&QSpinBox::valueChanged), [this](int val) {
+		options.numberOfThreads = val;
 	});
+	advancedLayout->addWidget(new QLabel("Number of threads:"), 0, 0);
+	advancedLayout->addWidget(numberOfThreadsSpinner, 0, 1);
 
-	layout->addWidget(genotypeFileButton, 1, 1);
-
-	auto pedigreeFileButton = new QPushButton("Choose file", this);
-	connect(pedigreeFileButton, &QPushButton::clicked, [this]() {
-		auto fileName = QFileDialog::getOpenFileName(this);
-		if (!fileName.isEmpty()) options.pedigreeFileName = fileName.toStdString();
-	});
-
-	layout->addWidget(pedigreeFileButton, 2, 1);
-
-	auto lociFileButton = new QPushButton("Choose file", this);
-	connect(lociFileButton, &QPushButton::clicked, [this]() {
-		auto fileName = QFileDialog::getOpenFileName(this);
-		if (!fileName.isEmpty()) options.lociFileName = fileName.toStdString();
-	});
-
-	layout->addWidget(lociFileButton, 3, 1);
-
-	auto advancedButton = new QPushButton("Advanced", this);
-
-	layout->addWidget(advancedButton, 4, 0, 1, 2);
+	connect(advancedButton, &QCheckBox::stateChanged, advancedArea, &QFrame::setVisible);
 }
 
 

@@ -17,6 +17,8 @@ ENDIF (APPLE)
 # with wrong compiler on dev. machine
 add_executable(GeneDropGUI
     ${GUI_TYPE}
+	FileChoiceWidget.cpp
+	FileChoiceWidget.h
     geneDropGUI.cpp
     MainWindow.cpp
     MainWindow.h

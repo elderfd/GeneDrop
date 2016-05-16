@@ -23,6 +23,10 @@ void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 	try {
 		pedigreeFile.open(fileName);
 
+		if (!pedigreeFile.is_open()) {
+			throw std::runtime_error("Could not open pedigree file: " + fileName);
+		}
+
 		std::string line;
 
 		// Skip header
@@ -87,6 +91,10 @@ void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, st
 
 	try {
 		lociFile.open(lociFileName);
+
+		if (!lociFile.is_open()) {
+			throw std::runtime_error("Could not open loci file: " + lociFileName);
+		}
 
 		std::vector<Chromosome> chromosomes;
 
@@ -169,6 +177,10 @@ void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, st
 
 	try {
 		genotypeFile.open(founderFileName);
+
+		if (!genotypeFile.is_open()) {
+			throw std::runtime_error("Could not open founder file: " + founderFileName);
+		}
 
 		// Parse the header first
 		std::string line;
