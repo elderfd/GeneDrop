@@ -22,6 +22,8 @@ public:
 	void disallowSimulations();
 	void allowSimulations();
 
+	void stopSimulations();
+
 signals:
 	void message(const QString& what);
 	void simulationsStarted();
@@ -37,8 +39,9 @@ private:
 	OptionsWidget* settingsWidget;
 
 	QTextEdit* outputWindow;
-	QPushButton* goButton;
+	QPushButton* goButton, *stopButton;
 
 	bool simulationsRunning = false;
+	bool stopDemanded = false;
 };
 

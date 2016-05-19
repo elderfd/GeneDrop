@@ -28,14 +28,20 @@ void MainWindow::buildDefaultUI() {
 	layout->addWidget(settingsWidget);
 
 	goButton = new QPushButton("Run");
+	stopButton = new QPushButton("Stop");
 
-	layout->addWidget(goButton);
+	auto goStopLayout = new QHBoxLayout();
+	goStopLayout->addWidget(goButton);
+	goStopLayout->addWidget(stopButton);
+
+	layout->addLayout(goStopLayout);
 
 	outputWindow = new QTextEdit(this);
 	outputWindow->setReadOnly(true);
 
 	connect(settingsWidget, &OptionsWidget::message, this, &MainWindow::printMessage);
 	connect(goButton, &QPushButton::pressed, this, &MainWindow::runWithCurrentOptions);
+	connect(stopButton, &QPushButton::pressed, this, &MainWindow::stopSimulations);
 
 	layout->addWidget(outputWindow);
 
@@ -46,6 +52,8 @@ void MainWindow::buildDefaultUI() {
 	connect(this, &MainWindow::simulationsStarted, this, &MainWindow::disallowSimulations, Qt::BlockingQueuedConnection);
 	connect(this, &MainWindow::simulationsStopped, this, &MainWindow::allowSimulations, Qt::BlockingQueuedConnection);
 	connect(this, &MainWindow::message, this, &MainWindow::printMessage);
+
+	allowSimulations();
 
 	this->setCentralWidget(centralWidget);
 }
@@ -98,7 +106,7 @@ void MainWindow::run(const ProgramOptions& options) {
 			--numberOfRunningThreads;
 		};
 
-		while (numberOfRunsComplete < options.numberOfRuns) {
+		while (numberOfRunsComplete < options.numberOfRuns && !stopDemanded) {
 			if (numberOfRunningThreads < (int)options.numberOfThreads) {
 				++numberOfRunningThreads;
 				std::thread newThread(runAndWrite);
@@ -108,11 +116,11 @@ void MainWindow::run(const ProgramOptions& options) {
 
 	} catch (std::exception& e) {
 		emit message(QString(e.what()));
-		return;
 	}
 
 	emit simulationsStopped();
 	simulationsRunning = false;
+	stopDemanded = false;
 }
 
 
@@ -137,9 +145,17 @@ void MainWindow::printMessage(const QString& what) {
 
 void MainWindow::disallowSimulations() {
 	goButton->setEnabled(false);
+	stopButton->setEnabled(true);
 }
 
 
 void MainWindow::allowSimulations() {
 	goButton->setEnabled(true);
+	stopButton->setEnabled(false);
+}
+
+
+void MainWindow::stopSimulations() {
+	stopDemanded = true;
+	emit message("Stopping simulations.");
 }
