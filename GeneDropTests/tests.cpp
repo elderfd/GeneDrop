@@ -208,8 +208,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 
 	SECTION("Biallelic locus segregation in F1 and F2") {
 		SimulationManager simManager;
-		simManager.buildPedigreeFromFile(testFileFolder + "singleBiallelicPedigree.csv");
-		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
+		simManager.build(testFileFolder + "singleBiallelicPedigree.csv", testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
 		std::vector<State> allResults;
 
@@ -268,8 +267,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 
 	SECTION("Biallelic segregation in backcross") {
 		SimulationManager simManager;
-		simManager.buildPedigreeFromFile(testFileFolder + "backcrossPedigree.csv");
-		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
+		simManager.build(testFileFolder + "backcrossPedigree.csv", testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
 		std::vector<State> allResults;
 
@@ -323,8 +321,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 
 	SECTION("Simulation can differentiate individuals with the same name in different generations.") {
 		SimulationManager simManager;
-		simManager.buildPedigreeFromFile(testFileFolder + "backcrossDuplicatedNamesPedigree.csv");
-		simManager.buildStartingStateFromFiles(testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
+		simManager.build(testFileFolder + "backcrossDuplicatedNamesPedigree.csv", testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
 		std::vector<State> allResults;
 

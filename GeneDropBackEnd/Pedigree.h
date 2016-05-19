@@ -41,6 +41,7 @@ public:
 	unsigned int size() const { return pedigreeSize;  }
 
 	std::vector<std::string> getGenerationsContainingName(const std::string& name) const;
+	std::vector<std::string> getAllGenerations() const;
 
 private:
 	int pedigreeSize = 0;

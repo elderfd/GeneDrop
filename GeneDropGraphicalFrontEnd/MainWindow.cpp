@@ -29,13 +29,10 @@ void MainWindow::buildDefaultUI() {
 
 	layout->addWidget(goButton);
 
-	auto outputWindow = new QTextEdit(this);
+	outputWindow = new QTextEdit(this);
 	outputWindow->setReadOnly(true);
 
-	connect(this, &MainWindow::message, [outputWindow](const QString& what) {
-		auto message = SimulationManager::makeTimeStamp() + ": " + what.toStdString();
-		outputWindow->append(QString(message.c_str()));
-	});
+	connect(settingsWidget, &OptionsWidget::message, this, &MainWindow::printMessage);
 	connect(goButton, &QPushButton::pressed, this, &MainWindow::runWithCurrentOptions);
 
 	layout->addWidget(outputWindow);
@@ -52,8 +49,7 @@ void MainWindow::run(const ProgramOptions& options) {
 	SimulationManager simManager;
 
 	try {
-		simManager.buildPedigreeFromFile(options.pedigreeFileName);
-		simManager.buildStartingStateFromFiles(options.lociFileName, options.genotypeFileName);
+		simManager.build(options.pedigreeFileName, options.lociFileName, options.genotypeFileName);
 
 		std::string outputFileName = options.outputDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
 		OutputMaker out;
@@ -71,17 +67,17 @@ void MainWindow::run(const ProgramOptions& options) {
 					if ((i + 1) % reportEvery == 0 || i == options.numberOfRuns - 1) {
 						std::stringstream message;
 						message << "Done " << i + 1 << " runs out of " << options.numberOfRuns << std::endl;
-						emit this->message(QString(message.str().c_str()));
+						printMessage(QString(message.str().c_str()));
 					}
 				}
 			} catch (std::exception& e) {
-				emit this->message(QString(e.what()));
+				printMessage(QString(e.what()));
 			}
 
 			out.close();
 		}
 	} catch (std::exception& e) {
-		emit this->message(QString(e.what()));
+		printMessage(QString(e.what()));
 		return;
 	}
 }
@@ -90,4 +86,10 @@ void MainWindow::run(const ProgramOptions& options) {
 void MainWindow::runWithCurrentOptions() {
 	std::thread t(&MainWindow::run, this, settingsWidget->options);
 	t.detach();
+}
+
+
+void MainWindow::printMessage(const QString& what) {
+	auto message = SimulationManager::makeTimeStamp() + ": " + what.toStdString();
+	outputWindow->append(QString(message.c_str()));
 }

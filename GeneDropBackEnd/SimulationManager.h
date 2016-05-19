@@ -10,10 +10,11 @@ public:
 	SimulationManager();
 	~SimulationManager();
 
-	void buildPedigreeFromFile(std::string fileName);
-	void buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName);
+	static Pedigree buildPedigreeFromFile(const std::string& fileName);
 
 	State getRealisation();
+
+	void build(const std::string& pedigreeFileName, const std::string& lociFileName, const std::string& genotypeFileName);
 
 	// TODO: Find better home for this
 	static std::string makeTimeStamp();
@@ -24,5 +25,8 @@ private:
 	State startingState;
 
 	static const std::string founderGenerationName;
+
+	void buildStartingStateFromFiles(const std::string& lociFileName, const std::string& founderFileName);
 };
+
 

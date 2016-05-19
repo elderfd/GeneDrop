@@ -3,6 +3,9 @@
 #include "ProgramOptions.h"
 
 
+class QTextEdit;
+
+
 class MainWindow :
 	public QMainWindow {
 	Q_OBJECT
@@ -12,6 +15,8 @@ public:
 	~MainWindow();
 
 	void runWithCurrentOptions();
+
+	void printMessage(const QString& message);
 
 signals:
 	void message(const QString& what);
@@ -24,5 +29,7 @@ private:
 	void run(const ProgramOptions& options);
 
 	OptionsWidget* settingsWidget;
+
+	QTextEdit* outputWindow;
 };
 

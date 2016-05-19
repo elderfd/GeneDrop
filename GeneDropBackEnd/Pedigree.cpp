@@ -236,7 +236,20 @@ std::vector<std::string> Pedigree::getGenerationsContainingName(const std::strin
 	std::vector<std::string> retVec;
 
 	for (const auto& node : nodes) {
-		if (node.name() == name) {
+		if (node.name() == name && std::find(retVec.begin(), retVec.end(), node.generation()) == retVec.end()) {
+			retVec.push_back(node.generation());
+		}
+	}
+
+	return retVec;
+}
+
+
+std::vector<std::string> Pedigree::getAllGenerations() const {
+	std::vector<std::string> retVec;
+
+	for (const auto& node : nodes) {
+		if (std::find(retVec.begin(), retVec.end(), node.generation()) == retVec.end()) {
 			retVec.push_back(node.generation());
 		}
 	}

@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 #include "FileChoiceWidget.h"
+#include "GenerationChoiceWidget.h"
 #include <QFrame>
 #include <QCheckBox>
 
@@ -50,6 +51,13 @@ OptionsWidget::OptionsWidget(QWidget* parent) : QWidget(parent) {
 	layout->addWidget(new QLabel("Output directory:"), 0, 3);
 	auto outputFolderWidget = new FileChoiceWidget(options.outputDirectory, FileChoiceWidget::OPEN_DIR, this);
 	layout->addWidget(outputFolderWidget, 0, 4);
+
+	auto generationChoiceWidget = new GenerationChoiceWidget(options.generationsToPrint, options.pedigreeFileName, this);
+	layout->addWidget(generationChoiceWidget, 1, 3, 1, 2);
+
+	connect(generationChoiceWidget, &GenerationChoiceWidget::message, [this](const QString& message) {
+		emit this->message(message);
+	});
 
 	auto advancedButton = new QCheckBox("Show advanced options", this);
 

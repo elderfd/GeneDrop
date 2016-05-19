@@ -127,8 +127,7 @@ int main(int argc, char *argv[]) {
 	SimulationManager simManager;
 
 	try {
-		simManager.buildPedigreeFromFile(pedigreeFileName);
-		simManager.buildStartingStateFromFiles(lociFileName, genotypeFileName);
+		simManager.build(pedigreeFileName, lociFileName, genotypeFileName);
 	} catch (std::exception& e) {
 		std::cout << e.what() << std::endl;
 		return 1;

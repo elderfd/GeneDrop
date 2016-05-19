@@ -16,9 +16,10 @@ SimulationManager::SimulationManager() {
 SimulationManager::~SimulationManager() {}
 
 
-void SimulationManager::buildPedigreeFromFile(std::string fileName) {
+Pedigree SimulationManager::buildPedigreeFromFile(const std::string& fileName) {
 	// Parse the pedigree file
 	std::ifstream pedigreeFile;
+	Pedigree pedigree;
 
 	try {
 		pedigreeFile.open(fileName);
@@ -81,10 +82,12 @@ void SimulationManager::buildPedigreeFromFile(std::string fileName) {
 
 		throw e;
 	}
+
+	return pedigree;
 }
 
 
-void SimulationManager::buildStartingStateFromFiles(std::string lociFileName, std::string founderFileName) {
+void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileName, const std::string& founderFileName) {
 	std::ifstream lociFile;
 
 	Genotype prototypeGenotype;
@@ -326,4 +329,10 @@ std::string SimulationManager::makeTimeStamp() {
 	stampStream << std::put_time(std::localtime(&convertedTime), "%H-%M-%S@%d-%m-%Y");
 
 	return stampStream.str();
+}
+
+
+void SimulationManager::build(const std::string& pedigreeFileName, const std::string& lociFileName, const std::string& genotypeFileName) {
+	pedigree = buildPedigreeFromFile(pedigreeFileName);
+	buildStartingStateFromFiles(lociFileName, genotypeFileName);
 }

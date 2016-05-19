@@ -20,6 +20,8 @@ add_executable(GeneDropGUI
 	FileChoiceWidget.cpp
 	FileChoiceWidget.h
     geneDropGUI.cpp
+    GenerationChoiceWidget.h
+    GenerationChoiceWidget.cpp
     MainWindow.cpp
     MainWindow.h
     ProgramOptions.cpp

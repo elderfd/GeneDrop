@@ -30,4 +30,7 @@ public:
 	~OptionsWidget();
 
 	ProgramOptions options;
+
+signals:
+	void message(const QString& what);
 };

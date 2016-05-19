@@ -10,11 +10,8 @@ FileChoiceWidget::FileChoiceWidget(std::string& toSet, Type type, QWidget* paren
 	auto layout = new QHBoxLayout(this);
 
 	auto input = new QLineEdit(this);
-	auto button = new QPushButton("Choose file", this);
 
-	layout->addWidget(input);
-	layout->addWidget(button);
-
+	QString label = "";
 	std::function<QString(void)> chooseFunc = nullptr;
 
 	switch (type) {
@@ -22,18 +19,25 @@ FileChoiceWidget::FileChoiceWidget(std::string& toSet, Type type, QWidget* paren
 			chooseFunc = [this]() {
 				return QFileDialog::getExistingDirectory(this);
 			};
+			label = "Choose directory";
 			break;
 		case SAVE_FILE:
 			chooseFunc = [this]() {
 				return QFileDialog::getSaveFileName(this);
 			};
+			label = "Choose file";
 			break;
 		case OPEN_FILE:
 			chooseFunc = [this]() {
 				return QFileDialog::getOpenFileName(this);
 			};
+			label = "Choose file";
 			break;
 	}
+
+	auto button = new QPushButton(label, this);
+	layout->addWidget(input);
+	layout->addWidget(button);
 
 	connect(button, &QPushButton::clicked, [this, &toSet, input, chooseFunc]() {
 		auto fileName = chooseFunc();
