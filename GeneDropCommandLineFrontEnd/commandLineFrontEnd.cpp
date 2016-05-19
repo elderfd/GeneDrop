@@ -6,6 +6,9 @@
 #include "SimulationManager.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <thread>
+#include <mutex>
+
 
 
 int main(int argc, char *argv[]) {
@@ -19,14 +22,14 @@ int main(int argc, char *argv[]) {
 		lociFileName,
 		outDirectory,
 		printList;
-	int numberOfRuns, numberOfThreads;
+	unsigned int numberOfRuns, numberOfThreads;
 	bool printHelp = false;
 
 	cLineParser.addArg("pedigree", &pedigreeFileName);
 	cLineParser.addArg("genotype", &genotypeFileName);
 	cLineParser.addArg("loci", &lociFileName);
 	cLineParser.addArg("numberOfRuns", &numberOfRuns);
-	cLineParser.addArg("numberOfThreads", &numberOfThreads, 1);
+	cLineParser.addArg<unsigned int>("numberOfThreads", &numberOfThreads, 1);
 	cLineParser.addArg("help", &printHelp, false);
 	cLineParser.addArg(std::string("out"), &outDirectory, std::string("."));
 	cLineParser.addArg(std::string("print"), &printList, std::string());
@@ -145,28 +148,51 @@ int main(int argc, char *argv[]) {
 	//}
 
 	// TODO: This should be done elsewhere
-	std::string outputFileName = outDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
-	OutputMaker out;
-	int reportEvery = 50;
+	unsigned int numberOfRunsComplete = 0;
+	int numberOfRunningThreads = 0;
 
-	if (generationsToPrint.size() > 0) out.printOnlyCertainGenerations(generationsToPrint);
+	std::mutex outputMutex;
 
-	if (out.open(outputFileName)) {
-		try {
-			for (int i = 0; i < numberOfRuns; i++) {
-				auto result = simManager.getRealisation();
+	try {
+		std::string outputFileName = outDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
+		int reportEvery = 50;
 
-				out << result;
+		auto runAndWrite = [&]() {
+			auto result = simManager.getRealisation();
 
-				if (i % reportEvery == 0 || i == numberOfRuns - 1) {
-					std::cout << "Done " << i + 1 << " runs out of " << numberOfRuns << std::endl;
+			OutputMaker out;
+
+			{
+				std::lock_guard<std::mutex> guard(outputMutex);
+
+				if (out.open(outputFileName, numberOfRunsComplete)) {
+					if (generationsToPrint.size() > 0) out.printOnlyCertainGenerations(generationsToPrint);
+
+					out << result;
+
+					if (numberOfRunsComplete % reportEvery == 0 || numberOfRunsComplete == numberOfRuns - 1) {
+						std::cout << "Done " << numberOfRunsComplete + 1 << " runs out of " << numberOfRuns << std::endl;
+					}
+
+					out.close();
 				}
+
+				++numberOfRunsComplete;
 			}
-		} catch (std::exception& e) {
-			std::cout << e.what() << std::endl;
+
+			--numberOfRunningThreads;
+		};
+
+		while (numberOfRunsComplete < (unsigned int)numberOfRuns) {
+			if (numberOfRunningThreads < numberOfThreads) {
+				++numberOfRunningThreads;
+				std::thread newThread(runAndWrite);
+				newThread.detach();
+			}
 		}
-		
-		out.close();
+	} catch (std::exception& e) {
+		std::cout << e.what() << std::endl;
+		return 1;
 	}
 
 	// Exit cleanly

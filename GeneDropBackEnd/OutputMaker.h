@@ -10,7 +10,7 @@ public:
 	~OutputMaker();
 
 	//! Opens connection to output file
-	bool open(std::string fileName);
+	bool open(const std::string& fileName, unsigned int simulationsSoFar = 0);
 
 	//! Closes connection to output file
 	void close();

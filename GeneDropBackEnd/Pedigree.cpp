@@ -29,6 +29,13 @@ void Pedigree::addCross(const OrganismSpecifier& father, const OrganismSpecifier
 }
 
 
+void Pedigree::prepareForUse() {
+	if (mustUpdateCrossOrder) {
+		updateCrossOrder();
+	}
+}
+
+
 void Pedigree::updateCrossOrder() {
   	crossOrder.clear();
 

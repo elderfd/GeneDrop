@@ -4,6 +4,7 @@
 
 
 class QTextEdit;
+class QPushButton;
 
 
 class MainWindow :
@@ -18,8 +19,13 @@ public:
 
 	void printMessage(const QString& message);
 
+	void disallowSimulations();
+	void allowSimulations();
+
 signals:
 	void message(const QString& what);
+	void simulationsStarted();
+	void simulationsStopped();
 
 private:
 	QWidget* centralWidget;
@@ -31,5 +37,8 @@ private:
 	OptionsWidget* settingsWidget;
 
 	QTextEdit* outputWindow;
+	QPushButton* goButton;
+
+	bool simulationsRunning = false;
 };
 

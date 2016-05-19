@@ -13,9 +13,14 @@ OutputMaker::~OutputMaker() {
 }
 
 
-bool OutputMaker::open(std::string fileName) {
+bool OutputMaker::open(const std::string& fileName, unsigned int simulationsSoFar) {
 	if (!out.is_open()) {
-		out.open(fileName, std::ofstream::out);
+		if (simulationsSoFar > 0) {
+			out.open(fileName, std::ofstream::out | std::ofstream::app);
+			this->simulationsSoFar = simulationsSoFar;
+		} else {
+			out.open(fileName, std::ofstream::out | std::ofstream::trunc);
+		}
 	}
 
 	// Exception is only reason for this not to be ok?

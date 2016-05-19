@@ -36,6 +36,8 @@ public:
 	CrossIterator begin();
 	CrossIterator end() const;
 
+	void prepareForUse();
+
 	void addCross(const OrganismSpecifier& father, const OrganismSpecifier& mother, const OrganismSpecifier& child);
 
 	unsigned int size() const { return pedigreeSize;  }

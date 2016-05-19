@@ -9,7 +9,7 @@ const std::string SimulationManager::founderGenerationName = "Founder";
 
 SimulationManager::SimulationManager() {
 	// Default to the Haldane breeder for now
-	breeder = std::make_unique<HaldaneBreeder>(&rng);
+	breeder = std::make_unique<HaldaneBreeder>();
 }
 
 
@@ -280,6 +280,8 @@ State SimulationManager::getRealisation() {
 	State newState = startingState;
 
 	// Reseed and record the seed
+	rngMap[std::this_thread::get_id()] = std::make_unique<RNGController>();
+	RNGController& rng = *rngMap[std::this_thread::get_id()];
 	rng.reseed();
 	newState.seed(rng.seed());
 
@@ -306,7 +308,7 @@ State SimulationManager::getRealisation() {
 			throw std::runtime_error(errorMessage);
 		}
 
-		auto child = breeder->breed(*mother[0], *father[0]);
+		auto child = breeder->breed(*mother[0], *father[0], rng);
 		child.setName(crossIt->child.name());
 
 		// Assume that the first generation found is the right one if not specified
@@ -334,5 +336,6 @@ std::string SimulationManager::makeTimeStamp() {
 
 void SimulationManager::build(const std::string& pedigreeFileName, const std::string& lociFileName, const std::string& genotypeFileName) {
 	pedigree = buildPedigreeFromFile(pedigreeFileName);
+	pedigree.prepareForUse();
 	buildStartingStateFromFiles(lociFileName, genotypeFileName);
 }

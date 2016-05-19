@@ -7,22 +7,19 @@
 //! Handles the breeding of two individuals
 class Breeder {
 public:
-	Breeder(RNGController* rng);
+	Breeder();
 	~Breeder();
 
 	Breeder(const Breeder& other);
-
-	void setRNG(RNGController* rng);
-
 	virtual Breeder* makeCopy() const = 0;
 
 	//! Breeds and sets the child genotype 
-	void breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const;
+	void breed(const Organism& firstParent, const Organism& secondParent, Organism& child, RNGController& rng) const;
 
 	//! Breeds and produces a new child
-	Organism breed(const Organism& firstParent, const Organism& secondParent) const;
+	Organism breed(const Organism& firstParent, const Organism& secondParent, RNGController& rng) const;
 
-	virtual Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const = 0;
+	virtual Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child, RNGController& rng) const = 0;
 
 	class ParentalChromosomeSwitcher {
 	public:
@@ -51,24 +48,22 @@ public:
 	protected:
 		const Chromosome* firstParentChromosome;
 		const Chromosome* secondParentChromosome;
-		RNGController &rng;
 		bool drawingFromFirstParent;
-	};
 
-protected:
-	RNGController *rng;
+		RNGController& rng;
+	};
 };
 
 //! Uses the Haldane mapping function for producing offspring
 class HaldaneBreeder : public Breeder {
 public:
-	HaldaneBreeder(RNGController* rng) : Breeder(rng) {};
+	HaldaneBreeder() {};
 
 	Breeder* makeCopy() const;
 
 	HaldaneBreeder(const HaldaneBreeder& other) : Breeder(other) {};
 
-	Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const;
+	Genotype breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child, RNGController& rng) const;
 
 	//! Converts distance in centimorgans to probability of recombination
 	static double distanceToRecombinationProbability(double distance);

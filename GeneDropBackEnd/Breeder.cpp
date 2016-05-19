@@ -2,8 +2,7 @@
 #include <cassert>
 
 
-Breeder::Breeder(RNGController* rng) {
-	this->rng = rng;
+Breeder::Breeder() {
 }
 
 
@@ -11,7 +10,6 @@ Breeder::~Breeder() {}
 
 
 Breeder::Breeder(const Breeder& other) {
-	this->rng = other.rng;
 }
 
 
@@ -20,32 +18,27 @@ Breeder* HaldaneBreeder::makeCopy() const {
 }
 
 
-void Breeder::setRNG(RNGController* rng) {
-	this->rng = rng;
+void Breeder::breed(const Organism& firstParent, const Organism& secondParent, Organism& child, RNGController& rng) const {
+	breed(firstParent.genotype(), secondParent.genotype(), child.genotype(), rng);
 }
 
 
-void Breeder::breed(const Organism& firstParent, const Organism& secondParent, Organism& child) const {
-	breed(firstParent.genotype(), secondParent.genotype(), child.genotype());
-}
-
-
-Organism Breeder::breed(const Organism& firstParent, const Organism& secondParent) const {
+Organism Breeder::breed(const Organism& firstParent, const Organism& secondParent, RNGController& rng) const {
 	Organism child;
-	breed(firstParent, secondParent, child);
+	breed(firstParent, secondParent, child, rng);
 	return child;
 }
 
 
-Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child) const {
+Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& secondParent, Genotype& child, RNGController& rng) const {
 	// TODO: Since these tests depend on input data - should check this somewhere earlier when data is read in
 	assert(firstParent.numberOfChromosomes() == secondParent.numberOfChromosomes());
 	assert(firstParent.ploidy() == secondParent.ploidy());
 
 	// Generate a hybrid chromosome from each parent
-	auto makeHybrid = [](Chromosome& hybrid, const Genotype& parent, RNGController* rng, int chromosomeIndex) {
+	auto makeHybrid = [](Chromosome& hybrid, const Genotype& parent, RNGController& rng, int chromosomeIndex) {
 		// Randomly choose one of the homologues to start drawing from
-		ParentalChromosomeSwitcher chromosomeSwitcher(&parent.chromosome(chromosomeIndex, 0), &parent.chromosome(chromosomeIndex, 1), *rng);
+		ParentalChromosomeSwitcher chromosomeSwitcher(&parent.chromosome(chromosomeIndex, 0), &parent.chromosome(chromosomeIndex, 1), rng);
 
 		// Set the new chromosome's name
 		hybrid.setID(chromosomeSwitcher.chromosome()->getID());

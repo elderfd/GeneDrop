@@ -112,7 +112,7 @@ TEST_CASE("Testing the Breeder and sub-classes") {
 	}
 
 	SECTION("Testing the Haldane Breeder.") {
-		HaldaneBreeder breeder(&rng);
+		HaldaneBreeder breeder;
 		const double maxDistance = 200;
 		const double distanceStep = 0.5;
 
@@ -152,7 +152,7 @@ TEST_CASE("Testing the Breeder and sub-classes") {
 			firstParentGenotype.addHomologousChromosomes({ tightlyLinkedOne, tightlyLinkedTwo });
 			secondParentGenotype.addHomologousChromosomes({ tightlyLinkedTwo, tightlyLinkedOne });
 
-			breeder.breed(firstParentGenotype, secondParentGenotype, childGenotype);
+			breeder.breed(firstParentGenotype, secondParentGenotype, childGenotype, rng);
 
 			for (unsigned int i = 0; i < childGenotype.numberOfChromosomes(); i++) {
 				for (unsigned int j = 0; j < childGenotype.ploidy() - 1; j++) {
@@ -179,7 +179,7 @@ TEST_CASE("Testing the Breeder and sub-classes") {
 			firstParentGenotype.addHomologousChromosomes({ unlinkedOne, unlinkedTwo });
 			secondParentGenotype.addHomologousChromosomes({ unlinkedTwo, unlinkedOne });
 
-			breeder.breed(firstParentGenotype, secondParentGenotype, childGenotype);
+			breeder.breed(firstParentGenotype, secondParentGenotype, childGenotype, rng);
 
 			for (unsigned int i = 0; i < childGenotype.numberOfChromosomes(); i++) {
 				for (unsigned int j = 0; j < childGenotype.ploidy() - 1; j++) {

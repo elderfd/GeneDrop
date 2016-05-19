@@ -36,6 +36,10 @@ template<> std::string CommandLineArg<std::string>::convertValue(std::string val
 }
 
 
+template<> unsigned int CommandLineArg<unsigned int>::convertValue(std::string value) const {
+	return std::stoul(value);
+}
+
 template<> bool CommandLineArg<bool>::convertValue(std::string value) const
 {
 	auto firstChar = toupper(value[0]);

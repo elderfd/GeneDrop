@@ -1,8 +1,10 @@
 #pragma once
 #include "Breeder.h"
+#include <map>
 #include <memory>
 #include "Pedigree.h"
 #include "State.h"
+#include <thread>
 
 
 class SimulationManager {
@@ -19,7 +21,7 @@ public:
 	// TODO: Find better home for this
 	static std::string makeTimeStamp();
 private:
-	RNGController rng;
+	std::map<std::thread::id, std::unique_ptr<RNGController>> rngMap;
 	std::unique_ptr<Breeder> breeder;
 	Pedigree pedigree;
 	State startingState;
