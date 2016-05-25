@@ -20,7 +20,7 @@ Chromosome | Which chromosome the locus sits on
 An example loci file might look like,
 
 Locus ID | Distance (cM) | Chromosome
---- | ---
+--- | --- | ---
 L1 | 0 | A
 L2 | 0.3 | A
 
@@ -37,7 +37,7 @@ Founder | The name of the founding individual, can take an arbitrary value.
 Arbitrary allele names can be used in the genotype columns, and slashes are used to indicate heterozygosity. An example founder file might look like,
 
 Founder | L1 | L2
---- | ---
+--- | --- | ---
 A | 0 | 1
 B | 1/0 | 0
 
@@ -56,7 +56,7 @@ P2 | Specifier for second parent of this individual.
 If IDs are unique they can be used as a specifier. If IDs are not unique, then one can use the format `<generation name>::<ID>`. One can also refer to founder individuals using the IDs specified in the founders file. An example pedigree file might look like,
 
 Generation | ID | P1 | P2
---- | ---
+--- | --- | --- | ---
 F1 | C | A | B
 F1 | D | A | B
 F2 | E | C | D
