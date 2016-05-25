@@ -12,7 +12,7 @@ GeneDrop takes three input files, each of which is formatted as CSV. Each file s
 This describes the loci to be tracked in the simulations.
 
 Column | Meaning
-- | -
+--- | ---
 Locus ID | An identifier for a given locus
 Distance (cM) | The genetic distance in centimorgans from one end of the chromosome
 Chromosome | Which chromosome the locus sits on
@@ -20,7 +20,7 @@ Chromosome | Which chromosome the locus sits on
 An example loci file might look like,
 
 Locus ID | Distance (cM) | Chromosome
-- | -
+--- | --- | ---
 L1 | 0 | A
 L2 | 0.3 | A
 
@@ -30,14 +30,14 @@ The above examples describes two loci which both sit on chromosome A. L1 sits on
 This describes the genotypes of the founding individuals in the pedigree.
 
 Column | Meaning
-- | -
+--- | ---
 Founder | The name of the founding individual, can take an arbitrary value.
 ... | Columns named after the loci described in the loci file. These give the genotype of the founding individual.
 
 Arbitrary allele names can be used in the genotype columns, and slashes are used to indicate heterozygosity. An example founder file might look like,
 
 Founder | L1 | L2
-- | -
+--- | --- | ---
 A | 0 | 1
 B | 1/0 | 0
 
@@ -47,7 +47,7 @@ The above examples describes founders A and B in terms of their genotype at loci
 This describes the pedigree to be simulated. Each row describes an individual in the pedigree.
 
 Column | Meaning
-- | -
+--- | ---
 Generation | The name of the generation the individual belongs to, can take an arbitrary value.
 ID | A specifier for the individual. Arbitrary but must be unique within a generation.
 P1 | Specifier for first parent of this individual.
@@ -56,7 +56,7 @@ P2 | Specifier for second parent of this individual.
 If IDs are unique they can be used as a specifier. If IDs are not unique, then one can use the format `<generation name>::<ID>`. One can also refer to founder individuals using the IDs specified in the founders file. An example pedigree file might look like,
 
 Generation | ID | P1 | P2
-- | -
+--- | --- | --- | ---
 F1 | C | A | B
 F1 | D | A | B
 F2 | E | C | D
