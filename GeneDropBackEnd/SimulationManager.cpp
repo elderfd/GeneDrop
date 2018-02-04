@@ -1,7 +1,4 @@
-#include <chrono>
-#include <ctime>
 #include <fstream>
-#include <iomanip>
 #include "SimulationManager.h"
 #include <sstream>
 
@@ -320,19 +317,6 @@ State SimulationManager::getRealisation() {
 	}
 
 	return newState;
-}
-
-// Disables unsafe warning for localtime
-#pragma warning(disable: 4996)
-
-std::string SimulationManager::makeTimeStamp() {
-	auto timeNow = std::chrono::system_clock::now();
-	std::time_t convertedTime = std::chrono::system_clock::to_time_t(timeNow);
-
-	std::stringstream stampStream;
-	stampStream << std::put_time(std::localtime(&convertedTime), "%H-%M-%S@%d-%m-%Y");
-
-	return stampStream.str();
 }
 
 

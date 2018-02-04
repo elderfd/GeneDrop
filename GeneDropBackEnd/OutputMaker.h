@@ -1,6 +1,8 @@
 #pragma once
 #include <fstream>
 #include <string>
+#include "TimeHandler.h"
+
 
 class State;
 
@@ -27,5 +29,6 @@ private:
 	std::ofstream out;
 	unsigned int simulationsSoFar = 0;
 	std::vector<std::string> generationsToPrint;
+	TimeHandler timeHandler;
 };
 

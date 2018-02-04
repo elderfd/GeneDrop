@@ -75,7 +75,7 @@ void MainWindow::run(const ProgramOptions& options) {
 	try {
 		simManager.build(options.pedigreeFileName, options.lociFileName, options.genotypeFileName);
 
-		std::string outputFileName = options.outputDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
+		std::string outputFileName = options.outputDirectory + "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
 		int reportEvery = 50;
 
 		auto runAndWrite = [&]() {
@@ -131,7 +131,7 @@ void MainWindow::runWithCurrentOptions() {
 
 
 void MainWindow::printMessage(const QString& what) {
-	auto message = SimulationManager::makeTimeStamp() + ": " + what.toStdString();
+	auto message = timeHandler.getCurrentTimeStamp() + ": " + what.toStdString();
 	
 	bool moveToEnd = false;
 	if (outputWindow->verticalScrollBar()->value() == outputWindow->verticalScrollBar()->maximum()) {

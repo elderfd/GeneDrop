@@ -151,10 +151,12 @@ int main(int argc, char *argv[]) {
 	unsigned int numberOfRunsComplete = 0;
 	unsigned int numberOfRunningThreads = 0;
 
+	TimeHandler timeHandler;
+
 	std::mutex outputMutex;
 
 	try {
-		std::string outputFileName = outDirectory + "/Output(" + SimulationManager::makeTimeStamp() + ").csv";
+		std::string outputFileName = outDirectory + "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
 		int reportEvery = 50;
 
 		auto runAndWrite = [&]() {

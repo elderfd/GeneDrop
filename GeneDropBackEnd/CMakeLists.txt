@@ -25,6 +25,8 @@ add_library(Backend STATIC
 	SimulationManager.cpp
     State.h
 	State.cpp
+	TimeHandler.h
+	TimeHandler.cpp
 )
 
 target_include_directories(Backend PUBLIC include)

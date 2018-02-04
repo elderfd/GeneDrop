@@ -203,7 +203,7 @@ TEST_CASE("Testing the Breeder and sub-classes") {
 
 
 TEST_CASE("Testing the output of the simulation with simple cases") {
-	std::string testFileFolder = "../TestFiles/";
+	std::string testFileFolder = "./../TestFiles/";
 	int numberOfRuns = 2000;
 
 	SECTION("Biallelic locus segregation in F1 and F2") {
@@ -267,6 +267,7 @@ TEST_CASE("Testing the output of the simulation with simple cases") {
 
 	SECTION("Biallelic segregation in backcross") {
 		SimulationManager simManager;
+		
 		simManager.build(testFileFolder + "backcrossPedigree.csv", testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "singleBiallelicFounders.csv");
 
 		std::vector<State> allResults;

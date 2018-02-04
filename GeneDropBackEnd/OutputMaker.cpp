@@ -77,7 +77,7 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 void OutputMaker::writeHeader(const State& state) {
 	if (out && out.is_open()) {
 		// First timestamp
-		std::string timeStamp = SimulationManager::makeTimeStamp();
+		std::string timeStamp = timeHandler.getCurrentTimeStamp();
 		out << timeStamp << std::endl;
 
 		// Then some simulation information

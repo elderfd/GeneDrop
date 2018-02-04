@@ -110,7 +110,6 @@ void Pedigree::updateCrossOrder() {
 	// Now convert to the crosses that need to be done
 	for (const auto& organism : organismProductionOrder) {
 		// TODO: maybe worry later about genders
-
 		const auto& parents = getSet(edges, organism);
 
 		// TODO: Can make neater

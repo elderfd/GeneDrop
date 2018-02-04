@@ -1,0 +1,5 @@
+Generation,ID,P1,P2
+F1,F1-1,A,B
+F1,F1-2,A,B
+F2,F2-1,F1-1,F1-2
+F2,F2-2,F1-1,F1-2

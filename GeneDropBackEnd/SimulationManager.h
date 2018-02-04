@@ -18,8 +18,6 @@ public:
 
 	void build(const std::string& pedigreeFileName, const std::string& lociFileName, const std::string& genotypeFileName);
 
-	// TODO: Find better home for this
-	static std::string makeTimeStamp();
 private:
 	std::map<std::thread::id, std::unique_ptr<RNGController>> rngMap;
 	std::unique_ptr<Breeder> breeder;

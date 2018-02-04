@@ -1,6 +1,7 @@
 #pragma once
 #include <qmainwindow.h>
 #include "ProgramOptions.h"
+#include "TimeHandler.h"
 
 
 class QTextEdit;
@@ -31,6 +32,7 @@ signals:
 
 private:
 	QWidget* centralWidget;
+	TimeHandler timeHandler;
 
 	void buildDefaultUI();
 
