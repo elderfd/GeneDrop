@@ -10,7 +10,7 @@ if(NOT Boost_FOUND)
     message(FATAL_ERROR "Fatal error: Boost required.\n")
 endif(NOT Boost_FOUND)
 
-set(CMAKE_PREFIX_PATH "C:/Qt/Qt5.6.0/5.6/msvc2015")
+find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 
 cmake_policy(SET CMP0008 OLD)
 

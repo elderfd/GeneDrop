@@ -66,9 +66,12 @@ The above example describes a F2 cross where  A and B are founder individals des
 ### Building from source
 The project is set up to use cmake to allow cross-platform compilation. First ensure you have [cmake](https://cmake.org/), [Boost](http://www.boost.org/) and your C++ compiler of choice installed on your system.
 
-1. If you plan to build the Qt front-end then change the `CMAKE_PREFIX_PATH` variable in the top-level CMakeLists.txt to point to your install directory for Qt.
-2. Run `cmake build` to generate a build folder with files appropriate for your system.
-3. Compile from the files generated in the build folder.
+1. If you plan to build the Qt front-end then cmake needs to know where to find it. It will attempt to do this automatically, but if it fails (or you want to use a particular Qt installation) you need to set the `CMAKE_PREFIX_PATH` variable in the top-level CMakeLists.txt to point to the install directory for Qt.
+2. Make a directory called `build`, cd into it and call `cmake ..` to generate a build directory with files appropriate for your system. Future rebuilds of the files can be run by targetting the `build` directory with cmake. Only the initial build needs to be called from that directory but targetting the top level directory.
+3. Compile from the files generated in the build directory. This can be done in with compiler of choice or through cmake directly with `cmake --build .`.
+
+### Typical errors
+1. cmake assumes you are targetting x86. You can switch architecture by editting the generated files for your given compiler. For MSVC this may not work correctly on first try, make sure that the project files are not also specifying the target architecture in the additional compiler options.
 
 # Project structure
 Project Name | Function
