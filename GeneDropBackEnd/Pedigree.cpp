@@ -96,8 +96,11 @@ void Pedigree::updateCrossOrder() {
 	}
 
 	// If any edges left then we have a cycle
-	auto numberOfEdgesLeft = std::accumulate(allEdges.begin(), allEdges.end(), 0,
-		[](unsigned int total, const std::pair<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& connections) -> unsigned int {
+	auto numberOfEdgesLeft = std::accumulate(
+		allEdges.begin(),
+		allEdges.end(),
+		std::size_t{ 0 },
+		[](size_t total, const std::pair<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& connections) -> size_t {
 			return total + connections.second.size();
 	});
 

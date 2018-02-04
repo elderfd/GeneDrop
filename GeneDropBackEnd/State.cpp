@@ -29,8 +29,8 @@ void State::addOrganism(const Organism& newOrganism, std::string generationID) {
 }
 
 
-unsigned int State::numberOfLoci() const {
-	int number = 0;
+size_t State::numberOfLoci() const {
+	size_t number = 0;
 	
 	if (generations.size() > 0 && generations[0].organisms.size() > 0) {
 		for (unsigned int i = 0; i < generations[0].organisms[0]->genotype().numberOfChromosomes(); i++) {
@@ -68,8 +68,8 @@ std::vector<std::shared_ptr<Organism>> State::getMatchingOrganisms(const Organis
 }
 
 
-unsigned int State::size() const {
-	unsigned int sum = 0;
+size_t State::size() const {
+	size_t sum = 0;
 
 	for (const auto& generation : generations) {
 		sum += generation.organisms.size();

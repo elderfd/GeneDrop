@@ -12,20 +12,19 @@ public:
 	//! Homologous set of chromosomes
 	class Homology {
 	public:
-
-		unsigned int ploidy() const {
+		size_t ploidy() const {
 			return chromosomes.size();
 		}
 
 		std::vector<Chromosome> chromosomes;
 	};
 
-	unsigned int ploidy() const {
+	size_t ploidy() const {
 		// Should all have same ploidy - can ensure is true on construction
 		return homologousChromosomes[0].ploidy();
 	}
 
-	unsigned int numberOfChromosomes() const {
+	size_t numberOfChromosomes() const {
 		return homologousChromosomes.size();
 	}
 
@@ -52,7 +51,7 @@ public:
 
 	const Chromosome& chromosome(unsigned int setIndex, unsigned int chromosomeIndex) const;
 
-	unsigned int numberOfLoci(int chromosomeIndex) const;
+	size_t numberOfLoci(int chromosomeIndex) const;
 
 protected:
 	// Sets of homologous chromosomes

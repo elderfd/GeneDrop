@@ -20,7 +20,7 @@ public:
 		_name = name;
 	}
 
-	const unsigned int numberOfChromosomes() const {
+	size_t numberOfChromosomes() const {
 		return _genotype.numberOfChromosomes();
 	}
 

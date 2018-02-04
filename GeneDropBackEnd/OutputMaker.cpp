@@ -53,7 +53,7 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 				out.out << out.simulationsSoFar << "," << state.generatingSeed << "," << organism->name();
 
 				const auto& prototypeGenome = state.getPrototypeGenotype();
-				unsigned int numberOfChromosomes = prototypeGenome.numberOfChromosomes();
+				const auto numberOfChromosomes = prototypeGenome.numberOfChromosomes();
 
 				for (unsigned int chromosome = 0; chromosome < numberOfChromosomes; chromosome++) {
 					for (int locus = 0; locus < prototypeGenome.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
@@ -81,7 +81,7 @@ void OutputMaker::writeHeader(const State& state) {
 		out << timeStamp << std::endl;
 
 		// Then some simulation information
-		int numberOfLoci = state.numberOfLoci();;
+		const auto numberOfLoci = state.numberOfLoci();;
 		int numberOfFounders = -1;
 
 		out << "Number of loci," << std::to_string(numberOfLoci) << std::endl;

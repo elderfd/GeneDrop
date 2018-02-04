@@ -1,6 +1,10 @@
 #include "RNGController.h"
 #include <limits.h>
 
+#ifdef _WIN32
+#include <intrin.h>
+#endif
+
 RNGController::RNGController() :
 engine(_seed = produceSeedFromProcessor()),
 uniformGenerator(&engine, uniformDistribution),

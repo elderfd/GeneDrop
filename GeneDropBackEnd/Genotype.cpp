@@ -51,6 +51,6 @@ std::pair<int, int> Genotype::getChromosomeAndLocusIndexForLocus(std::string loc
 }
 
 
-unsigned int Genotype::numberOfLoci(int chromosomeIndex) const {
+size_t Genotype::numberOfLoci(int chromosomeIndex) const {
 	return homologousChromosomes[chromosomeIndex].chromosomes[0].getNumberOfLoci();
 }

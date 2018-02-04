@@ -21,7 +21,7 @@ public:
 
 private:
 	const Pedigree* pedigree = nullptr;
-	unsigned int index = 0;
+	size_t index = 0;
 };
 
 

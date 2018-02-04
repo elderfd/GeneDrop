@@ -1,5 +1,7 @@
 #include <chrono>
+#include <ctime>
 #include <fstream>
+#include <iomanip>
 #include "SimulationManager.h"
 #include <sstream>
 

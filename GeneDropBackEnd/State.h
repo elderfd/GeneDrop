@@ -22,9 +22,9 @@ public:
 
 	friend OutputMaker& operator<<(OutputMaker &out, State &state);
 
-	unsigned int numberOfLoci() const;
+	size_t numberOfLoci() const;
 
-	unsigned int size() const;
+	size_t size() const;
 
 	// TODO: Fix this
 	const Genotype& getPrototypeGenotype() const {

@@ -149,7 +149,7 @@ int main(int argc, char *argv[]) {
 
 	// TODO: This should be done elsewhere
 	unsigned int numberOfRunsComplete = 0;
-	int numberOfRunningThreads = 0;
+	unsigned int numberOfRunningThreads = 0;
 
 	std::mutex outputMutex;
 

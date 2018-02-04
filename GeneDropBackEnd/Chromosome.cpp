@@ -27,7 +27,7 @@ double Chromosome::getGeneticDistance(int locusIndex) const {
 	return loci[locusIndex].getGeneticDistance();
 }
 
-int Chromosome::getNumberOfLoci() const {
+size_t Chromosome::getNumberOfLoci() const {
 	return loci.size();
 }
 

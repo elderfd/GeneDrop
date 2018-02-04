@@ -32,7 +32,7 @@ public:
 
 	void addLocus(const Locus &newLocus);
 
-	int getNumberOfLoci() const;
+	size_t getNumberOfLoci() const;
 
 	bool operator==(const Chromosome &otherChromosome) const;
 	bool operator!=(const Chromosome& otherChromosome) const;
