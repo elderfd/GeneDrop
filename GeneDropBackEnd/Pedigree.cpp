@@ -92,7 +92,6 @@ void Pedigree::updateCrossOrder() {
 				addNode(nodesWithNoIncomingEdges, m);
 			}
 		}
-
 	}
 
 	// If any edges left then we have a cycle
