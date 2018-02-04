@@ -10,6 +10,9 @@ If you've used the old versin of GeneDrop then the following features are new,
 ## How do I use it?
 You can either build from source or use one of the prebuilt binaries.
 
+### Program versions
+There is both a graphical version (GeneDropGUI.exe) and command line version (GeneDrop.exe). The use of the graphical version should be self-explanatory and the available options for the command line version can be obtained via `GeneDrop.exe --help`.
+
 ### Input files
 GeneDrop takes three input files, each of which is formatted as CSV. Each file should have a header, with columns described as follows.
 
