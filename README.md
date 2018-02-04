@@ -2,8 +2,16 @@
 ## What is this?
 GeneDrop is a tool for simulating the breeding of diploid organisms with known linkage maps.
 
+## What's new?
+If you've used the old versin of GeneDrop then the following features are new,
+- Support for overlapping generations
+- Support for individuals in different generations having the same ID (use the new <Generation>::<ID> syntax in the pedigree)
+
 ## How do I use it?
 You can either build from source or use one of the prebuilt binaries.
+
+### Program versions
+There is both a graphical version (GeneDropGUI.exe) and command line version (GeneDrop.exe). The use of the graphical version should be self-explanatory and the available options for the command line version can be obtained via `GeneDrop.exe --help`.
 
 ### Input files
 GeneDrop takes three input files, each of which is formatted as CSV. Each file should have a header, with columns described as follows.
@@ -70,7 +78,7 @@ The project is set up to use cmake to allow cross-platform compilation. First en
 2. Make a directory called `build`, cd into it and call `cmake ..` to generate a build directory with files appropriate for your system. Future rebuilds of the files can be run by targetting the `build` directory with cmake. Only the initial build needs to be called from that directory but targetting the top level directory.
 3. Compile from the files generated in the build directory. This can be done in with compiler of choice or through cmake directly with `cmake --build .`.
 
-### Typical errors
+### Typical issues
 1. cmake assumes you are targetting x86. You can switch architecture by editting the generated files for your given compiler. For MSVC this may not work correctly on first try, make sure that the project property files are not also specifying the target architecture in the additional compiler options. In MSVC 2017 this option can be found under `Properties > Librarian > All Options` (for Backend) or `Configuration Options > Linker > All Options` (for other projects). You may also have to update the output directory for the Backend shared library (`Properties > General > Output Directory`) and linker input directories for the other projects (`Properties > Linker > General > Additional Library Directories`).
 
 # Project structure
