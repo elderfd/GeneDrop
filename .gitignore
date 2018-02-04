@@ -232,5 +232,6 @@ FakesAssemblies/
 
 ## Extras
 *.csv
+!TestFiles/*.csv
 moc_*
 *_automoc.cpp
