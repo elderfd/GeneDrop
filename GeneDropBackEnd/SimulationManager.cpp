@@ -193,7 +193,7 @@ void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileN
 		bool isHeader = true;
 
 		// Maps the column number to the right chromosome and locus number
-		std::map<int, std::pair<int, int>> columnToChromosomeAndLocusMap;
+		std::map<int, std::pair<size_t, size_t>> columnToChromosomeAndLocusMap;
 
 		while (std::getline(genotypeFile, line)) {
 			std::stringstream lineStream(line);
@@ -226,7 +226,7 @@ void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileN
 						founderName = token;
 					} else {
 						// Otherwise is an allele
-						std::pair<int, int> chromosomeAndLocusIndex = columnToChromosomeAndLocusMap[columnNumber];
+						auto chromosomeAndLocusIndex = columnToChromosomeAndLocusMap[columnNumber];
 
 						std::string firstAllele, secondAllele;
 

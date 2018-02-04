@@ -11,19 +11,19 @@ Chromosome::Chromosome(int numberOfLociIn) {
 
 Chromosome::~Chromosome() {}
 
-void Chromosome::setAllele(int locus, std::string value) {
+void Chromosome::setAllele(const size_t  locus, std::string value) {
 	loci[locus].setAllele(value);
 }
 
-std::string Chromosome::getAllele(int locus) const {
+std::string Chromosome::getAllele(const size_t  locus) const {
 	return loci[locus].getAllele();
 }
 
-void Chromosome::setGeneticDistance(int locusIndex, double value) {
+void Chromosome::setGeneticDistance(const size_t  locusIndex, double value) {
 	loci[locusIndex].setGeneticDistance(value);
 }
 
-double Chromosome::getGeneticDistance(int locusIndex) const {
+double Chromosome::getGeneticDistance(const size_t  locusIndex) const {
 	return loci[locusIndex].getGeneticDistance();
 }
 
@@ -108,7 +108,7 @@ void Chromosome::setID(std::string newID) {
 }
 
 
-Locus Chromosome::getLocusCopy(int locusIndex) const {
+Locus Chromosome::getLocusCopy(const size_t locusIndex) const {
 	return loci[locusIndex];
 }
 
@@ -120,7 +120,7 @@ void Chromosome::setAllele(std::string locusID, std::string value) {
 }
 
 // TODO: Distance may not be additive?
-double Chromosome::distanceBetweenLoci(int firstLocus, int secondLocus) const {
+double Chromosome::distanceBetweenLoci(const size_t firstLocus, const size_t secondLocus) const {
 	return abs(loci[firstLocus].getGeneticDistance() - loci[secondLocus].getGeneticDistance());
 }
 
@@ -130,11 +130,11 @@ double Chromosome::distanceBetweenLoci(std::string firstLocus, std::string secon
 }
 
 
-const Locus& Chromosome::locus(int index) const {
+const Locus& Chromosome::locus(const size_t index) const {
 	return loci[index];
 }
 
 
-std::string Chromosome::getLocusID(int locusIndex) const {
+std::string Chromosome::getLocusID(const size_t locusIndex) const {
 	return loci[locusIndex].getID();
 }

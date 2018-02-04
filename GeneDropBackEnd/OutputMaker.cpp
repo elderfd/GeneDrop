@@ -55,9 +55,9 @@ OutputMaker& operator<<(OutputMaker &out, State &state) {
 				const auto& prototypeGenome = state.getPrototypeGenotype();
 				const auto numberOfChromosomes = prototypeGenome.numberOfChromosomes();
 
-				for (unsigned int chromosome = 0; chromosome < numberOfChromosomes; chromosome++) {
-					for (int locus = 0; locus < prototypeGenome.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
-						for (unsigned int copy = 0; copy < prototypeGenome.ploidy(); copy++) {
+				for (size_t chromosome = 0; chromosome < numberOfChromosomes; chromosome++) {
+					for (std::size_t locus = 0; locus < prototypeGenome.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
+						for (size_t copy = 0; copy < prototypeGenome.ploidy(); copy++) {
 							out.out << "," << organism->genotype().chromosome(chromosome, copy).locus(locus).getAllele();
 						}
 					}
@@ -99,7 +99,7 @@ void OutputMaker::writeHeader(const State& state) {
 		auto& prototypeGenotype = state.getPrototypeGenotype();
 
 		for (unsigned int chromosome = 0; chromosome < prototypeGenotype.numberOfChromosomes(); chromosome++) {
-			for (int locus = 0; locus < prototypeGenotype.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
+			for (std::size_t locus = 0; locus < prototypeGenotype.chromosome(chromosome, 0).getNumberOfLoci(); locus++) {
 				for (unsigned int copy = 0; copy < prototypeGenotype.ploidy(); copy++) {
 					out << "," << prototypeGenotype.chromosome(chromosome, 0).locus(locus).getID() << "-" << copy;
 				}

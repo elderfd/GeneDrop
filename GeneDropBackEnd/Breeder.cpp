@@ -47,7 +47,7 @@ Genotype HaldaneBreeder::breed(const Genotype& firstParent, const Genotype& seco
 		hybrid.addLocus(chromosomeSwitcher.chromosome()->getLocusCopy(0));
 
 		// Keep drawing alleles til we can draw no more
-		for (int x = 1; x < chromosomeSwitcher.chromosome()->getNumberOfLoci(); x++) {
+		for (std::size_t x = 1; x < chromosomeSwitcher.chromosome()->getNumberOfLoci(); x++) {
 			// See if we need to recombine
 			double distance = chromosomeSwitcher.chromosome()->distanceBetweenLoci(x - 1, x);
 			double recombinationProbability = distanceToRecombinationProbability(distance);

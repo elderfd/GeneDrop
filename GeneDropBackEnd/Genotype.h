@@ -36,20 +36,20 @@ public:
 	/*!
 		set controls which of the homologous chromosomes is inspected.
 	*/
-	std::string allele(int chromosomeIndex, int locusIndex, int set) const;
+	std::string allele(const size_t chromosomeIndex, const size_t locusIndex, const size_t set) const;
 
 	//! Sets the allele value at a given chromosome and locus.
 	/*!
 		set controls which of the homologous chromosomes is affected.
 	*/
-	void setAllele(int chromosomeIndex, int locusIndex, int set, std::string allele);
+	void setAllele(const size_t chromosomeIndex, const size_t locusIndex, const size_t set, std::string allele);
 
-	std::pair<int, int> getChromosomeAndLocusIndexForLocus(std::string locusID) const;
+	std::pair<const size_t, const size_t> getChromosomeAndLocusIndexForLocus(std::string locusID) const;
 
 	void addHomologousChromosomes(const std::vector<Chromosome> &chromosomes);
 	void addHomologousChromosomes(const Homology& homology);
 
-	const Chromosome& chromosome(unsigned int setIndex, unsigned int chromosomeIndex) const;
+	const Chromosome& chromosome(const size_t setIndex, const size_t chromosomeIndex) const;
 
 	size_t numberOfLoci(int chromosomeIndex) const;
 
