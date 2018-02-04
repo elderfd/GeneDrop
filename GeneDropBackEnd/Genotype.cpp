@@ -1,5 +1,6 @@
 #include "Genotype.h"
 #include <cassert>
+#include <sstream>
 
 
 Genotype::Genotype() {}
@@ -44,12 +45,12 @@ std::pair<const size_t, const size_t> Genotype::getChromosomeAndLocusIndexForLoc
 		}
 	}
 
-	// TODO: Tidy this bit up
+	std::stringstream errorMessage;
+	errorMessage << "Unknown locus "
+		<< locusID
+		<< " requested.";
 
-	// Shouldn't get here
-	assert(false);
-
-	return std::pair<const size_t, const size_t>(0, 0);
+	throw std::runtime_error(errorMessage.str());
 }
 
 
