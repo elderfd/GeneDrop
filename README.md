@@ -71,7 +71,7 @@ The project is set up to use cmake to allow cross-platform compilation. First en
 3. Compile from the files generated in the build directory. This can be done in with compiler of choice or through cmake directly with `cmake --build .`.
 
 ### Typical errors
-1. cmake assumes you are targetting x86. You can switch architecture by editting the generated files for your given compiler. For MSVC this may not work correctly on first try, make sure that the project files are not also specifying the target architecture in the additional compiler options.
+1. cmake assumes you are targetting x86. You can switch architecture by editting the generated files for your given compiler. For MSVC this may not work correctly on first try, make sure that the project property files are not also specifying the target architecture in the additional compiler options. In MSVC 2017 this option can be found under `Properties > Librarian > All Options` (for Backend) or `Configuration Options > Linker > All Options` (for other projects). You may also have to update the output directory for the Backend shared library (`Properties > General > Output Directory`) and linker input directories for the other projects (`Properties > Linker > General > Additional Library Directories`).
 
 # Project structure
 Project Name | Function
