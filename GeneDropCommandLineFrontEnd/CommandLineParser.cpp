@@ -17,8 +17,6 @@ CommandLineParser::~CommandLineParser() {
 }
 
 
-#include <iostream>
-
 void CommandLineParser::parse(int argc, char *argv[]) {
 	// Try to match all keys to something
 	for (int argIndex = 0; argIndex < argc; argIndex++) {
