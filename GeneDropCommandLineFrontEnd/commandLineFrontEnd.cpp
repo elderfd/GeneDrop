@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
 	cLineParser.addArg("genotype", &genotypeFileName);
 	cLineParser.addArg("loci", &lociFileName);
 	cLineParser.addArg("numberOfRuns", &numberOfRuns);
-	cLineParser.addArg<unsigned int>("numberOfThreads", &numberOfThreads, 1);
+	cLineParser.addArg("numberOfThreads", &numberOfThreads, 1u);
 	cLineParser.addArg("help", &printHelp, false);
 	cLineParser.addArg(std::string("out"), &outDirectory, std::string("."));
 	cLineParser.addArg(std::string("print"), &printList, std::string());
