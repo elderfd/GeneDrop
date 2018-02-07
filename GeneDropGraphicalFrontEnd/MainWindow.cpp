@@ -118,7 +118,6 @@ void MainWindow::run(const ProgramOptions& options) {
 
 		while (numberOfRunsComplete < options.numberOfRuns && !stopDemanded) {
 			if (numberOfRunningThreads < (int)options.numberOfThreads) {
-
 				++numberOfRunningThreads;
 				std::thread newThread(runAndWrite);
 				newThread.detach();
