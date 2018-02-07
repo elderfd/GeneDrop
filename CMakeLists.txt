@@ -3,7 +3,7 @@ cmake_minimum_required (VERSION 2.8.11)
 project(GeneDrop)
 set(GeneDrop_VERSION_MAJOR 0)
 set(GeneDrop_VERSION_MINOR 1)
-set(GeneDrop_VERSION_PATCH 0)
+set(GeneDrop_VERSION_PATCH 1)
 
 # TODO: Work out the minimum boost version needed
 find_package(Boost REQUIRED)
