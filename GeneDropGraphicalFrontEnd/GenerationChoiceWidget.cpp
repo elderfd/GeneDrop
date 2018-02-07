@@ -132,22 +132,25 @@ std::string GenerationChoiceWidget::generationVectorToString(const std::vector<s
 
 std::vector<std::string> GenerationChoiceWidget::stringToGenerationVector(const std::string& string) {
 	std::vector<std::string> tokens;
-	std::size_t start = 0, end = 0;
-	
-	while ((end = string.find(",", start)) != std::string::npos) {
-		std::string tok = string.substr(start, end - start);
-		
-		auto leftMost = string.find_first_not_of(" \n\r\t");
 
-		if (leftMost != std::string::npos) {
-			auto rightMost = string.find_last_not_of(" \n\r\t");
-			tok = tok.substr(leftMost, rightMost - leftMost);
-			tokens.push_back(tok);
+	if (!string.empty()) {
+		std::size_t start = 0, end = 0;
+
+		while ((end = string.find(",", start)) != std::string::npos) {
+			std::string tok = string.substr(start, end - start);
+
+			auto leftMost = string.find_first_not_of(" \n\r\t");
+
+			if (leftMost != std::string::npos) {
+				auto rightMost = string.find_last_not_of(" \n\r\t");
+				tok = tok.substr(leftMost, rightMost - leftMost);
+				tokens.push_back(tok);
+			}
+
+			start = end + 1;
 		}
-
-		start = end + 1;
+		tokens.push_back(string.substr(start));
 	}
-	tokens.push_back(string.substr(start));
 	
 	return tokens;
 }

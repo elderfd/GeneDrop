@@ -61,7 +61,7 @@ void MainWindow::buildDefaultUI() {
 
 void MainWindow::run(const ProgramOptions& options) {
 	if (simulationsRunning) return;
-	
+
 	simulationsRunning = true;
 	emit simulationsStarted();
 
@@ -75,7 +75,13 @@ void MainWindow::run(const ProgramOptions& options) {
 	try {
 		simManager.build(options.pedigreeFileName, options.lociFileName, options.genotypeFileName);
 
-		std::string outputFileName = options.outputDirectory + "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
+		std::string outputFileName = options.outputDirectory;
+		if (outputFileName.empty()) {
+			outputFileName += "Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
+		} else {
+			outputFileName += "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
+		}
+
 		int reportEvery = 50;
 
 		auto runAndWrite = [&]() {
@@ -98,6 +104,10 @@ void MainWindow::run(const ProgramOptions& options) {
 					}
 
 					out.close();
+				} else {
+					std::stringstream messageStr;
+					messageStr << "Failed to open output file: " << outputFileName << std::endl;
+					emit message(QString(messageStr.str().c_str()));
 				}
 
 				++numberOfRunsComplete;
@@ -108,6 +118,7 @@ void MainWindow::run(const ProgramOptions& options) {
 
 		while (numberOfRunsComplete < options.numberOfRuns && !stopDemanded) {
 			if (numberOfRunningThreads < (int)options.numberOfThreads) {
+
 				++numberOfRunningThreads;
 				std::thread newThread(runAndWrite);
 				newThread.detach();
