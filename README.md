@@ -2,6 +2,9 @@
 ## What is this?
 GeneDrop is a tool for simulating the breeding of diploid organisms with known linkage maps.
 
+## Attribution
+Feel free to use this in any way you see fit, as long as you attribute me. If you use this in scientific work, then please cite the paper in which we introduce GeneDrop (https://www.sciencedirect.com/science/article/pii/S2212066116300321).
+
 ## What's new?
 If you've used the old versin of GeneDrop then the following features are new,
 - Support for overlapping generations
