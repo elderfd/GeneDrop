@@ -67,8 +67,8 @@ void MainWindow::run(const ProgramOptions& options) {
 
 	SimulationManager simManager;
 
-	unsigned int numberOfRunsComplete = 0;
-	int numberOfRunningThreads = 0;
+	volatile unsigned int numberOfRunsComplete = 0;
+	volatile unsigned int numberOfRunningThreads = 0;
 
 	std::mutex outputMutex;
 
