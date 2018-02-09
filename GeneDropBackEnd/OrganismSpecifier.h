@@ -28,7 +28,14 @@ public:
 	}
 
 	std::string displayString() const {
-		return _generation + "::" + ID;
+		std::string forDisplay = _generation;
+
+		if (!ID.empty()) {
+			if (!_generation.empty()) forDisplay += "::";
+			forDisplay += ID;
+		}
+		
+		return forDisplay;
 	}
 
 	// For reading in from human input
