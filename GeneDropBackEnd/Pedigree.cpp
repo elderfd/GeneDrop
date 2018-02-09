@@ -40,7 +40,7 @@ void Pedigree::updateCrossOrder() {
   	crossOrder.clear();
 
 	// Try to find a path through the pedigree
-	// Use Kahn 1962 algorithm which works if pedigree is DAG (and it has to be if built correctly)
+	// Use Kahn 1962 algorithm which works out if pedigree is DAG (and it has to be if built correctly)
 
 	auto allEdges = edges;
 
@@ -153,10 +153,11 @@ void Pedigree::addNode(std::unordered_set<OrganismSpecifier>& set, const Organis
 
 std::unordered_set<OrganismSpecifier>& Pedigree::getSet(std::unordered_map<OrganismSpecifier, std::unordered_set<OrganismSpecifier>>& map, OrganismSpecifier setSpecifier) {
 	// See if the set contains the thing
-	try {
-		return map.at(setSpecifier);
-	} catch (...) {} // Horrible but what else to do?
-
+	auto it = map.find(setSpecifier);
+	if (it != map.end())
+		return it->second;
+	}
+	
 	// Look with weak equality
 	for (auto& pair : map) {
 		if (pair.first == setSpecifier) {
