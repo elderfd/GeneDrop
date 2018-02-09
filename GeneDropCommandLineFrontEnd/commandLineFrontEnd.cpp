@@ -148,45 +148,78 @@ int main(int argc, char *argv[]) {
 	//}
 
 	// TODO: This should be done elsewhere
-	unsigned int numberOfRunsComplete = 0;
-	unsigned int numberOfRunningThreads = 0;
+	volatile unsigned int numberOfRunsComplete = 0;
+	volatile unsigned int numberOfRunningThreads = 0;
 
 	TimeHandler timeHandler;
 
 	std::mutex outputMutex;
 
+	std::mutex threadExceptionMutex;
+	std::map<unsigned int, std::exception_ptr> threadExceptions;
+	unsigned int exceptionPtrCounter = 0;
+
 	try {
-		std::string outputFileName = outDirectory + "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
+		const std::string outputFileName = (outDirectory.empty() ? outDirectory : outDirectory + "/") + "Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
 		int reportEvery = 50;
 
-		auto runAndWrite = [&]() {
-			auto result = simManager.getRealisation();
+		threadExceptionMutex.lock();
+		threadExceptions[exceptionPtrCounter] = nullptr;
+		threadExceptionMutex.unlock();
+		
+		++exceptionPtrCounter;
 
-			OutputMaker out;
+		auto runAndWrite = [&, exceptionPtrCounter]() {
+			try {
+				auto result = simManager.getRealisation();
 
-			{
-				std::lock_guard<std::mutex> guard(outputMutex);
+				OutputMaker out;
 
-				if (out.open(outputFileName, numberOfRunsComplete)) {
-					if (generationsToPrint.size() > 0) out.printOnlyCertainGenerations(generationsToPrint);
+				{
+					std::lock_guard<std::mutex> guard(outputMutex);
 
-					out << result;
+					if (out.open(outputFileName, numberOfRunsComplete)) {
+						if (generationsToPrint.size() > 0) out.printOnlyCertainGenerations(generationsToPrint);
 
-					if (numberOfRunsComplete % reportEvery == 0 || numberOfRunsComplete == numberOfRuns - 1) {
-						std::cout << "Done " << numberOfRunsComplete + 1 << " runs out of " << numberOfRuns << std::endl;
+						out << result;
+
+						if (numberOfRunsComplete % reportEvery == 0 || numberOfRunsComplete == numberOfRuns - 1) {
+							std::cout << "Done " << numberOfRunsComplete + 1 << " runs out of " << numberOfRuns << std::endl;
+						}
+
+						out.close();
 					}
 
-					out.close();
+					++numberOfRunsComplete;
 				}
+			} catch (std::exception&) {
+				threadExceptionMutex.lock();
+				threadExceptions[exceptionPtrCounter] = std::current_exception();
+				threadExceptionMutex.unlock();
+				
+				--numberOfRunningThreads;
 
-				++numberOfRunsComplete;
+				return;
 			}
+			
+			threadExceptionMutex.lock();
+			threadExceptions.erase(exceptionPtrCounter);
+			threadExceptionMutex.unlock();
 
 			--numberOfRunningThreads;
 		};
 
 		while (numberOfRunsComplete < (unsigned int)numberOfRuns) {
 			if (numberOfRunningThreads < numberOfThreads) {
+				// Make sure nothing has broken
+				threadExceptionMutex.lock();
+				for (const auto& kv : threadExceptions) {
+					if (kv.second != nullptr) {
+						std::rethrow_exception(kv.second);
+					}
+				}
+				threadExceptionMutex.unlock();
+
 				++numberOfRunningThreads;
 				std::thread newThread(runAndWrite);
 				newThread.detach();

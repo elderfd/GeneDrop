@@ -72,58 +72,85 @@ void MainWindow::run(const ProgramOptions& options) {
 
 	std::mutex outputMutex;
 
+	std::mutex threadExceptionMutex;
+	std::map<unsigned int, std::exception_ptr> threadExceptions;
+	unsigned int exceptionPtrCounter = 0;
+
 	try {
 		simManager.build(options.pedigreeFileName, options.lociFileName, options.genotypeFileName);
 
-		std::string outputFileName = options.outputDirectory;
-		if (outputFileName.empty()) {
-			outputFileName += "Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
-		} else {
-			outputFileName += "/Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
-		}
+		const std::string outputFileName = (options.outputDirectory.empty() ? options.outputDirectory : options.outputDirectory + "/") + "Output(" + timeHandler.getCurrentTimeStamp() + ").csv";
 
 		int reportEvery = 50;
 
+		threadExceptionMutex.lock();
+		threadExceptions[exceptionPtrCounter] = nullptr;
+		threadExceptionMutex.unlock();
+
+		++exceptionPtrCounter;
+
 		auto runAndWrite = [&]() {
-			auto result = simManager.getRealisation();
+			try {
+				auto result = simManager.getRealisation();
 
-			OutputMaker out;
+				OutputMaker out;
 
-			{
-				std::lock_guard<std::mutex> guard(outputMutex);
+				{
+					std::lock_guard<std::mutex> guard(outputMutex);
 
-				if (out.open(outputFileName, numberOfRunsComplete)) {
-					if (options.generationsToPrint.size() > 0) out.printOnlyCertainGenerations(options.generationsToPrint);
+					if (out.open(outputFileName, numberOfRunsComplete)) {
+						if (options.generationsToPrint.size() > 0) out.printOnlyCertainGenerations(options.generationsToPrint);
 
-					out << result;
+						out << result;
 
-					if ((numberOfRunsComplete + 1) % reportEvery == 0 || numberOfRunsComplete == options.numberOfRuns - 1) {
+						if ((numberOfRunsComplete + 1) % reportEvery == 0 || numberOfRunsComplete == options.numberOfRuns - 1) {
+							std::stringstream messageStr;
+							messageStr << "Done " << numberOfRunsComplete + 1 << " runs out of " << options.numberOfRuns << std::endl;
+							emit message(QString(messageStr.str().c_str()));
+						}
+
+						out.close();
+					} else {
 						std::stringstream messageStr;
-						messageStr << "Done " << numberOfRunsComplete + 1 << " runs out of " << options.numberOfRuns << std::endl;
+						messageStr << "Failed to open output file: " << outputFileName << std::endl;
 						emit message(QString(messageStr.str().c_str()));
 					}
 
-					out.close();
-				} else {
-					std::stringstream messageStr;
-					messageStr << "Failed to open output file: " << outputFileName << std::endl;
-					emit message(QString(messageStr.str().c_str()));
+					++numberOfRunsComplete;
 				}
+			} catch (std::exception& e) {
+				threadExceptionMutex.lock();
+				threadExceptions[exceptionPtrCounter] = std::current_exception();
+				threadExceptionMutex.unlock();
 
-				++numberOfRunsComplete;
+				--numberOfRunningThreads;
+
+				return;
 			}
+
+			threadExceptionMutex.lock();
+			threadExceptions.erase(exceptionPtrCounter);
+			threadExceptionMutex.unlock();
 
 			--numberOfRunningThreads;
 		};
 
 		while (numberOfRunsComplete < options.numberOfRuns && !stopDemanded) {
 			if (numberOfRunningThreads < (int)options.numberOfThreads) {
+				// Make sure nothing has broken
+				threadExceptionMutex.lock();
+				for (const auto& kv : threadExceptions) {
+					if (kv.second != nullptr) {
+						std::rethrow_exception(kv.second);
+					}
+				}
+				threadExceptionMutex.unlock();
+
 				++numberOfRunningThreads;
 				std::thread newThread(runAndWrite);
 				newThread.detach();
 			}
 		}
-
 	} catch (std::exception& e) {
 		emit message(QString(e.what()));
 	}

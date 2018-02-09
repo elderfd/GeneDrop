@@ -191,6 +191,7 @@ void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileN
 
 		// Maps the column number to the right chromosome and locus number
 		std::map<int, std::pair<size_t, size_t>> columnToChromosomeAndLocusMap;
+		unsigned lineCounter = 1;
 
 		while (std::getline(genotypeFile, line)) {
 			std::stringstream lineStream(line);
@@ -221,6 +222,12 @@ void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileN
 					if (columnNumber == 0) {
 						// Is the founder name
 						founderName = token;
+
+						if (founderName.empty()) {
+							std::stringstream errorMessage;
+							errorMessage << "Founder with empty ID on line " << lineCounter << " of genotype file";
+							throw std::runtime_error(errorMessage.str());
+						}
 					} else {
 						// Otherwise is an allele
 						auto chromosomeAndLocusIndex = columnToChromosomeAndLocusMap[columnNumber];
@@ -265,6 +272,8 @@ void SimulationManager::buildStartingStateFromFiles(const std::string& lociFileN
 
 				startingState.addOrganism(newFounder, SimulationManager::founderGenerationName);
 			}
+
+			++lineCounter;
 		}
 
 		genotypeFile.close();
