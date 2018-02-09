@@ -202,6 +202,19 @@ TEST_CASE("Testing the Breeder and sub-classes") {
 }
 
 
+TEST_CASE("Testing robustness of reading erroneous input") {
+	std::string testFileFolder = "./../TestFiles/";
+	int numberOfRuns = 1;
+
+	SECTION("Empty ID in genotype file") {
+		SimulationManager simManager;
+		REQUIRE_THROWS_WITH(
+			simManager.build(testFileFolder + "singleBiallelicPedigree.csv", testFileFolder + "singleBiallelicLoci.csv", testFileFolder + "genotypeWithEmptyID.csv"),
+			"Founder with empty ID on line 3 of genotype file"
+		);
+	}
+}
+
 TEST_CASE("Testing the output of the simulation with simple cases") {
 	std::string testFileFolder = "./../TestFiles/";
 	int numberOfRuns = 2000;
