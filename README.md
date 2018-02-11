@@ -9,6 +9,7 @@ Feel free to use this in any way you see fit, as long as you attribute me. If yo
 If you've used the old versin of GeneDrop then the following features are new,
 - Support for overlapping generations
 - Support for individuals in different generations having the same ID (use the new <Generation>::<ID> syntax in the pedigree)
+- Multiallelic loci. Alleles can be now specified as any string that doesn't include a comma.
 
 ## How do I use it?
 You can either build from source or use one of the prebuilt binaries.
