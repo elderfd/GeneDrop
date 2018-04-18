@@ -7,4 +7,4 @@ add_executable(GeneDrop
 )
 target_link_libraries(GeneDrop ${LIB_INCLUDE_DIR}/BackEnd)
 include_directories(${LIB_INCLUDE_DIR})
-include_directories($(BOOST_INCLUDE_DIR))
+include_directories(${BOOST_INCLUDE_DIR})

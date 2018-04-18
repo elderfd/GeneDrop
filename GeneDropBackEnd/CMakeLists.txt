@@ -1,4 +1,4 @@
-set(LIB_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/$(Configuration) PARENT_SCOPE)
+set(LIB_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/${Configuration} PARENT_SCOPE)
 
 add_library(Backend STATIC
 	Breeder.h
