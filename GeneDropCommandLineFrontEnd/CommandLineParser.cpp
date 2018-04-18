@@ -23,7 +23,7 @@ void CommandLineParser::parse(int argc, char *argv[]) {
 		// See if it's a key
 		if (argv[argIndex][0] == '-') {
 			// Strip off the dash
-			std::string trimmed = std::string(argv[argIndex]);
+			auto trimmed = std::string(argv[argIndex]);
 			trimmed.erase(trimmed.begin());
 
 			bool takesValue = true;
@@ -36,7 +36,7 @@ void CommandLineParser::parse(int argc, char *argv[]) {
 
 			// Then check if it matches anything (checking we're not at the end of the input first)
 			if (argIndex != (takesValue ? argc - 1 : argc)) {
-				if (auto& argMatch = getUnambiguousKeyMatch(trimmed)) {
+				if (auto argMatch = getUnambiguousKeyMatch(trimmed)) {
 					if (takesValue) {
 						argIndex++;
 						argMatch.value()->setValue(argv[argIndex]);
