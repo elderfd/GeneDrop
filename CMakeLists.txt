@@ -5,6 +5,8 @@ set(GeneDrop_VERSION_MAJOR 0)
 set(GeneDrop_VERSION_MINOR 1)
 set(GeneDrop_VERSION_PATCH 2)
 
+set(CMAKE_CXX_STANDARD 14)
+
 # TODO: Work out the minimum boost version needed
 find_package(Boost REQUIRED)
 if(NOT Boost_FOUND)
