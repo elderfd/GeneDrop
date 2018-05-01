@@ -62,7 +62,7 @@ namespace std {
 	};
 
 
-	template<> struct equal_to <OrganismSpecifier> {
+	template<> struct equal_to<OrganismSpecifier> {
 		bool operator()(const OrganismSpecifier& lhs, const OrganismSpecifier& rhs) const {
 			return lhs == rhs;
 		}
