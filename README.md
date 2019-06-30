@@ -1,4 +1,6 @@
 # GeneDrop
+[![CircleCI](https://circleci.com/gh/elderfd/GeneDrop/tree/master.svg?style=svg)](https://circleci.com/gh/elderfd/GeneDrop/tree/master)
+
 ## What is this?
 GeneDrop is a tool for simulating the breeding of diploid organisms with known linkage maps.
 
