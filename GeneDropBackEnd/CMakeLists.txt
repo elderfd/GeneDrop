@@ -1,32 +1,30 @@
-set(LIB_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/${Configuration} PARENT_SCOPE)
-
 add_library(Backend STATIC
-	Breeder.h
-    Breeder.cpp
-    Chromosome.h
-	Chromosome.cpp
-    Cross.h
-	Cross.cpp
-    Genotype.h
-	Genotype.cpp
-    Locus.h
-	Locus.cpp
-    Organism.h
-	Organism.cpp
-    OrganismSpecifier.h
-	OrganismSpecifier.cpp
-    OutputMaker.h
-	OutputMaker.cpp
-    Pedigree.h
-	Pedigree.cpp
-    RNGController.h
-	RNGController.cpp
-    SimulationManager.h
-	SimulationManager.cpp
-    State.h
-	State.cpp
-	TimeHandler.h
-	TimeHandler.cpp
+	src/Breeder.h
+    src/Breeder.cpp
+    src/Chromosome.h
+	src/Chromosome.cpp
+    src/Cross.h
+	src/Cross.cpp
+    src/Genotype.h
+	src/Genotype.cpp
+    src/Locus.h
+	src/Locus.cpp
+    src/Organism.h
+	src/Organism.cpp
+    src/OrganismSpecifier.h
+	src/OrganismSpecifier.cpp
+    src/OutputMaker.h
+	src/OutputMaker.cpp
+    src/Pedigree.h
+	src/Pedigree.cpp
+    src/RNGController.h
+	src/RNGController.cpp
+    src/SimulationManager.h
+	src/SimulationManager.cpp
+    src/State.h
+	src/State.cpp
+	src/TimeHandler.h
+	src/TimeHandler.cpp
 )
 
-target_include_directories(Backend PUBLIC include)
+target_include_directories(Backend PUBLIC src)

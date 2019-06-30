@@ -18,7 +18,7 @@ find_package(Qt5 COMPONENTS Core Widgets REQUIRED)
 cmake_policy(SET CMP0008 OLD)
 
 include_directories(${Boost_INCLUDE_DIRS})
-include_directories(GeneDropBackEnd)
+include_directories(GeneDropBackEnd/src)
 
 add_subdirectory(GeneDropBackEnd)
 add_subdirectory(GeneDropCommandLineFrontEnd)

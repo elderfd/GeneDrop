@@ -1,3 +1,6 @@
+dist
+.vscode
+
 ### Cmake ###
 CMakeCache.txt
 CMakeFiles

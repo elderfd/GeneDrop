@@ -1,10 +1,14 @@
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
 add_executable(GeneDrop
-    CommandLineArg.h
-	CommandLineArg.cpp
-    commandLineFrontEnd.cpp
-    CommandLineParser.h
-	CommandLineParser.cpp
+    src/CommandLineArg.h
+	src/CommandLineArg.cpp
+    src/commandLineFrontEnd.cpp
+    src/CommandLineParser.h
+	src/CommandLineParser.cpp
 )
-target_link_libraries(GeneDrop ${LIB_INCLUDE_DIR}/BackEnd)
-include_directories(${LIB_INCLUDE_DIR})
+
 include_directories(${BOOST_INCLUDE_DIR})
+target_link_libraries(GeneDrop Backend)
+target_link_libraries(GeneDrop Threads::Threads)
